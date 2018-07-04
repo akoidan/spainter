@@ -1,0 +1,152 @@
+{
+  "name": "",
+  "css_prefix_text": "icon-",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 1000,
+  "glyphs": [
+    {
+      "uid": "b3a9e2dab4d19ea3b2f628242c926bfe",
+      "css": "brush-1",
+      "code": 59453,
+      "src": "iconic"
+    },
+    {
+      "uid": "ebc57fa8400e4ede049ac5dc665210e1",
+      "css": "eraser",
+      "code": 61741,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "6605ee6441bf499ffa3c63d3c7409471",
+      "css": "move",
+      "code": 61511,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "09bdae120f85e79f2db16145a9e1f6d8",
+      "css": "crop",
+      "code": 61733,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "dc46a4f493f80cf8f99366c30cd377d4",
+      "css": "line",
+      "code": 61701,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M835.9 68.4L93.4 810.9 164.1 881.6 906.6 139.1 835.9 68.4Z",
+        "width": 1000
+      },
+      "search": [
+        "line"
+      ]
+    },
+    {
+      "uid": "94a7a962bfc0b7fca69c535cdcb4e73c",
+      "css": "ellipse",
+      "code": 61700,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M500 125A375 375 0 0 0 125 500 375 375 0 0 0 500 875 375 375 0 0 0 875 500 375 375 0 0 0 500 125ZM500 213.2A286.8 286.8 0 0 1 786.8 500 286.8 286.8 0 0 1 500 786.8 286.8 286.8 0 0 1 213.2 500 286.8 286.8 0 0 1 500 213.2Z",
+        "width": 1000
+      },
+      "search": [
+        "ellipse"
+      ]
+    },
+    {
+      "uid": "0b7b87971fc16d1ee0741be89ef9d280",
+      "css": "text",
+      "code": 61711,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M150 150L150 250 450 250 450 900 550 900 550 250 850 250 850 150 150 150Z",
+        "width": 1000
+      },
+      "search": [
+        "text"
+      ]
+    },
+    {
+      "uid": "fcaa81f2def7ac5f4e0f1c141c78f48e",
+      "css": "rect",
+      "code": 61707,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M125 175L125 275 125 775 225 775 875 775 875 675 875 275 875 175 775 175 225 175 125 175ZM225 275L775 275 775 675 225 675 225 275Z",
+        "width": 1000
+      },
+      "search": [
+        "rect"
+      ]
+    },
+    {
+      "uid": "57776e51a50e3b4d92701bdbbba01588",
+      "css": "resize",
+      "code": 59459,
+      "src": "elusive"
+    },
+    {
+      "uid": "83d2127efd748060fca854c5a7be735b",
+      "css": "fill",
+      "code": 59461,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M443.8 106.3L368.7 175 225 25C187.5-6.3 125-6.3 87.5 25 75 43.8 62.5 68.7 62.5 93.8S75 143.8 87.5 162.5L237.5 312.5 0 543.8 400 943.8 837.5 500 443.8 106.3ZM131.3 118.8C131.3 112.5 125 100 125 93.8S131.3 75 131.3 68.8C143.8 62.5 168.8 62.5 181.3 68.8L331.3 218.8 281.3 262.5 131.3 118.8ZM131.3 500L368.8 262.5 443.8 337.5C450 343.8 456.3 343.8 468.8 343.8S487.5 343.8 493.8 337.5C500 325 500 306.3 487.5 293.8L412.5 218.8 437.5 193.8 750 500H131.3ZM843.8 562.5C843.8 562.5 750 856.3 750 906.3S793.8 1000 843.8 1000 937.5 956.3 937.5 906.3 843.8 562.5 843.8 562.5Z",
+        "width": 1000
+      },
+      "search": [
+        "fill"
+      ]
+    },
+    {
+      "uid": "7fcc20d8d90abb1e4abb1439cdc5f4aa",
+      "css": "selection",
+      "code": 59463,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M956.1 890.2H1000V1000H890.2V956.1H956.1V890.2ZM265.9 1000H422V956.1H265.9V1000ZM578 1000H734.1V956.1H578V1000ZM43.9 890.2H0V1000H109.8V956.1H43.9V890.2ZM43.9 578H0V734.1H43.9V578ZM43.9 265.9H0V422H43.9V265.9ZM0 109.8H43.9V43.9H109.8V0H0V109.8ZM422 0H265.9V43.9H422V0ZM578 43.9H734.1V0H578V43.9ZM890.2 0V43.9H956.1V109.8H1000V0H890.2ZM956.1 734.1H1000V578H956.1V734.1ZM956.1 422H1000V265.9H956.1V422Z",
+        "width": 1000
+      },
+      "search": [
+        "selection-symbol-for-interface-of-a-square-of-broken-line"
+      ]
+    },
+    {
+      "uid": "b6e36940bdb2ca60e7970d6fd0dcc8c7",
+      "css": "crop",
+      "code": 61699,
+      "src": "custom_icons",
+      "selected": false,
+      "svg": {
+        "path": "M675 75L675 225 325 225 225 225 225 325 225 675 75 675 75 775 225 775 225 925 325 925 325 775 775 775 775 675 775 325 925 325 925 225 775 225 775 75 675 75ZM325 325L675 325 675 675 325 675 325 325Z",
+        "width": 1000
+      },
+      "search": [
+        "crop"
+      ]
+    },
+    {
+      "uid": "dff59cf4cafdcc479656c983df471870",
+      "css": "resize",
+      "code": 61708,
+      "src": "custom_icons",
+      "selected": false,
+      "svg": {
+        "path": "M945.8 54.3L550 150 750 200 750 200 500 350 650 500 800 250 800 250 850 450ZM45.8 954.3L450 850 250 800 250 800 500 650 350 500 200 750 200 750 150 550Z",
+        "width": 1000
+      },
+      "search": [
+        "resize"
+      ]
+    }
+  ]
+}
