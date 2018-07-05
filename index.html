@@ -15,22 +15,78 @@
             height:100%;
         }
         .active-icon {
-            background-color: red;
+            color: red;
+        }
+        #saveBlobExampleHolder {
+            position: absolute;
+            z-index: 1;
+            display: block;
+            background: white;
+            padding: 10px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px dashed red;
+
         }
     </style>
+    <script src="./index.js"></script>
 </head>
 <body>
 
-
 <div class="pad1">
-<div id="containerPainer">
-
+    <div id="containerPainer"></div>
+    <div id="saveBlobExampleHolder" style="display: none">
+        <img id="saveBlobExample"/>
+        <input type="button" value="upload" id="uploadBtn"/>
+        <input type="button" value="close" id="closebtn"/>
+        <a id="textValue"></a>
+    </div>
 </div>
 
-</div>
-<script src="./index.js"></script>
 <script>
-  var p = new Painter(containerPainer)
+    const host = 'http://api.pychat.org';
+  var p = new Painter(containerPainer, {
+    logger: {
+      debug: function log() {
+        var args = Array.prototype.slice.call(arguments);
+        var parts = args.shift().split('{}');
+        var params = [window.console, '%c' + 'painter', 'red'];
+        for (var i = 0; i < parts.length; i++) {
+          params.push(parts[i]);
+          if (typeof args[i] !== 'undefined') { // args can be '0'
+            params.push(args[i])
+          }
+        }
+        return Function.prototype.bind.apply(console.log, params);
+      }
+    },
+    onBlobPaste: function(blob) {
+      saveBlobExample.src = URL.createObjectURL(blob);
+      saveBlobExampleHolder.style.display = 'block';
+      textValue.style.display = 'none';
+
+      uploadBtn.onclick = function() {
+        var formData = new FormData();
+        formData.append('file', blob, new Date().toDateString() + '.png');
+        fetch(`${host}/upload_file`, {
+          method: "POST",
+          body: formData,
+        }).then(e => {
+          return e.text();
+        }).then(e => {
+          textValue.style.display = 'block';
+          let href = `${host}${e}`;
+          textValue.href = href;
+          textValue.textContent = href
+        });
+      }
+    }
+  })
+  closebtn.onclick = function() {
+    saveBlobExampleHolder.style.display = 'none';
+  }
+
 </script>
 </body>
 </html>

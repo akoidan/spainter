@@ -1,4 +1,18 @@
-function Painter(containerPaitner, onBlobPaste) {
+function Painter(containerPaitner, conf) {
+  var logger;
+  if (!conf) {
+    conf = {}
+  }
+  if (conf.logger) {
+    logger = conf.logger;
+  } else {
+    logger = {
+      debug: function () {
+        return function () {
+        };
+      }
+    }
+  }
 
   var FLOOD_FILL_CURSOR = '<?xml version="1.0" encoding="UTF-8" standalone="no"?> <svg    xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"    xmlns:dc="http://purl.org/dc/elements/1.1/"    xmlns:cc="http://creativecommons.org/ns#"    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"    xmlns:svg="http://www.w3.org/2000/svg"    xmlns="http://www.w3.org/2000/svg"    xmlns:xlink="http://www.w3.org/1999/xlink"    height="128"    width="128"    id="svg12"    xml:space="preserve"    enable-background="new 0 0 1000 1000"    viewBox="0 0 128 128"    y="0px"    x="0px"    version="1.1"><defs      id="defs16"><linearGradient        osb:paint="solid"        id="linearGradient4668"><stop          id="stop4666"          offset="0"          style="stop-color:#a70000;stop-opacity:1;" /></linearGradient><linearGradient        gradientUnits="userSpaceOnUse"        y2="129.24489"        x2="8692.8536"        y1="129.24489"        x1="124.50469"        id="linearGradient4670"        xlink:href="#linearGradient4668" /></defs><metadata      id="metadata2"> Svg Vector Icons : http://www.onlinewebfonts.com/icon <rdf:RDF><cc:Work      rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type        rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><g      transform="matrix(-0.06545548,0,0,0.06545548,96.091518,32.9054)"      id="g10"><g        id="g8"        transform="matrix(0.1,0,0,-0.1,0,511)"><path          style="fill-opacity:1;fill:url(#linearGradient4670)"          id="path4"          d="M 2923.3,4723.5 C 2495.2541,4641.7289 2116.2015,4282.4666 2019.575,3861.7722 2010.936,2974.8482 2002.3121,2087.9242 1993.7,1201 1372.6067,561.9446 713.75686,-43.111911 124.50469,-711.1 177.79443,-1124.6012 696.18046,-1384.5817 946.92256,-1721.6746 1873.0645,-2644.7129 2784.7436,-3583.1992 3733.8,-4482.7 c 414.8568,-14.5444 672.1458,554.0816 1010.5846,786.2741 C 5933.4015,-2520.7561 7113.1744,-1335.7883 8297.1,-155 8684.9234,-201.73044 8869.3553,83.429201 8467.4077,323.01301 7303.9011,1506.5241 6142.0458,2693.2924 4939.988,3837.6106 4686.657,4091.5786 4729.7111,3391.5044 4719.1559,3565.1616 4714.1012,2956.3168 4711.3726,2347.458 4708.5,1738.6 5031.0341,1335.4454 4991.2388,661.12765 4526.4426,380.70059 4035.9919,26.383144 3257.4044,327.55874 3152.1031,931.46414 c -39.8563,589.13426 159.3241,863.35076 203.329,893.32976 2.2707,246.6969 2.431,493.4008 2.1679,740.1061 -300.1928,-300.1072 -600.3595,-600.2405 -900.5,-900.4 12.8139,725.2498 -32.7477,1454.2178 35.8271,2176.4281 162.6751,558.7872 1062.6877,586.7614 1253.7345,27.8061 112.979,-515.8061 41.7341,-1055.8192 61.1384,-1582.3166 -12.3655,-253.837 24.6538,-527.0728 -18.3526,-768.8737 -333.2237,-217.6526 -244.4878,-787.61406 173.4897,-834.19331 511.1059,-79.84462 657.2051,617.00781 295.0629,870.31461 -13.3602,773.8703 35.6765,1552.1607 -42.4,2322.3348 -122.666,568.0766 -724.5835,955.0335 -1292.3,847.5 z" /><path          style="fill:{};fill-opacity:1"          id="path6"          d="m 8652.1,-872.8 c -387.3878,-526.6483 -739.4695,-1099.2442 -952.5422,-1720.4453 -255.0408,-767.135 561.8384,-1583.3109 1332.0652,-1367.7587 707.6368,133.0412 1091.285,1010.324 735.7851,1630.769 -236.9486,492.8542 -488.9007,986.3895 -824.0081,1420.335 -74.892,70.77849 -202.3378,99.68687 -291.3,37.1 z" /></g></g></svg>';
 
@@ -26,37 +40,37 @@ function Painter(containerPaitner, onBlobPaste) {
     <div class="bottomTools">
         <div title="Color" class="paintColor spainterHidden">
             <span>C:</span>
-            <input type="color" value="#ff0000" class="value"/>
+            <input type="color" value="#ff0000" class="painterValue"/>
         </div>
         <div title="Alpha (color transparency)"
              class="paintOpacity spainterHidden">
             <span>A:</span>
-            <input type="text" step="1" class="value" value="100"/>
+            <input type="text" step="1" class="painterValue" value="100"/>
             <div>
                 <input type="range" step="1" max="100" min="0" value="100"/>
             </div>
         </div>
         <div title="Fill color" class="paintColorFill spainterHidden">
             <span>CF:</span>
-            <input type="color" value="#0000ff" class="value"/>
+            <input type="color" value="#0000ff" class="painterValue"/>
         </div>
         <div title="Fill alpha" class="paintFillOpacity spainterHidden">
             <span>AF:</span>
-            <input type="text" step="1" class="value" value="100"/>
+            <input type="text" step="1" class="painterValue" value="100"/>
             <div>
                 <input type="range" step="1" max="100" min="0" value="100"/>
             </div>
         </div>
         <div title="Width" class="paintRadius spainterHidden">
             <span>W:</span>
-            <input type="text" step="1" class="value" value="10"/>
+            <input type="text" step="1" class="painterValue" value="10"/>
             <div>
                 <input type="range" step="1" max="100" min="1" value="10"/>
             </div>
         </div>
         <div title="Font" class="paintFont spainterHidden">
             <span>F:</span>
-            <select class="value"></select>
+            <select class="painterValue"></select>
         </div>
         <div class="paintResizeTools spainterHidden">
             <input type="text" placeholder="width"/>
@@ -64,9 +78,9 @@ function Painter(containerPaitner, onBlobPaste) {
             <input type="text" placeholder="height"/>
         </div>
         <div class="paintApplyText spainterHidden">
-            <input type="button" value="Apply" class="blue-btn value"/>
+            <input type="button" value="Apply" class=" painterValue"/>
         </div>
-        <input type="button" value="Paste" class="paintSend value blue-btn"/>
+        <input type="button" value="Paste" class="paintSend painterValue "/>
         <div class="paintXYdimens">
             <span class="paintXY" title="[x, y] zoom"></span>
             <span class="paintDimensions" title="width x height"></span><input
@@ -75,7 +89,6 @@ function Painter(containerPaitner, onBlobPaste) {
         </div>
     </div>`;
 
-  var logsEnabled = true;
   var mouseWheelEventName = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
   var tmpCanvasContext = document.createElement('canvas').getContext('2d');
 
@@ -152,23 +165,6 @@ function Painter(containerPaitner, onBlobPaste) {
   CssUtils.addClass(containerPaitner, 'spainterContainer');
 
 
-  function log() {
-    if (!logsEnabled) {
-      return function dummy() {};
-    }
-    var args = Array.prototype.slice.call(arguments);
-    var parts = args.shift().split('{}');
-    var params = [window.console, '%c' + 'painter', 'red'];
-    for (var i = 0; i < parts.length; i++) {
-      params.push(parts[i]);
-      if (typeof args[i] !== 'undefined') { // args can be '0'
-        params.push(args[i])
-      }
-    }
-    return Function.prototype.bind.apply(console.log, params);
-  }
-
-
   var $ = function (selector) {
     return containerPaitner.querySelector(selector);
   };
@@ -207,7 +203,22 @@ function Painter(containerPaitner, onBlobPaste) {
     trimImage :  $('.trimImage'),
     header: document.createElement('div'),
     canvasResize: $('.canvasResize'),
-    canvasWrapper: $('.canvasWrapper')
+    canvasWrapper: $('.canvasWrapper'),
+    painterTools: $('.painterTools'),
+    paintPastedImg: $('.paintPastedImg'),
+    paintSend: $('.paintSend'),
+    applyBtn: $('.paintApplyText input[type=button]'),
+    paintCrpRect: $('.paint-crp-rect'),
+    paintTextSpan:  $('.paintTextSpan'),
+    paintResizeTools: $('.paintResizeTools'),
+    paintColor: $('.paintColor'),
+    paintColorFill: $('.paintColorFill'),
+    paintFillOpacity: $('.paintFillOpacity'),
+    paintApplyText: $('.paintApplyText'),
+    paintOpacity: $('.paintOpacity'),
+    paintRadius: $('.paintRadius'),
+    paintFont: $('.paintFont')
+
   };
   self.tmp = new function() {
     var tool = this;
@@ -218,7 +229,7 @@ function Painter(containerPaitner, onBlobPaste) {
       tool.tmpCanvas.height = self.dom.canvas.height;
       tool.tmpData.clearRect(0, 0, self.dom.canvas.width, self.dom.canvas.height);
       tool.tmpData.drawImage(self.dom.canvas, 0, 0);
-      log("Context saved")();
+      logger.debug("Context saved")();
     };
     tool.restoreState = function() {
       self.ctx.clearRect(0, 0, self.dom.canvas.width, self.dom.canvas.height);
@@ -228,21 +239,21 @@ function Painter(containerPaitner, onBlobPaste) {
   };
   self.instruments = {
     color: {
-      holder: $('.paintColor'),
+      holder: self.dom.paintColor,
       handler: 'onChangeColor',
       ctxSetter: function (v) {
         self.ctx.strokeStyle = v;
       }
     },
     colorFill: {
-      holder: $('.paintColorFill'),
+      holder: self.dom.paintColorFill,
       handler: 'onChangeColorFill',
       ctxSetter: function (v) {
         self.ctx.fillStyle = v;
       }
     },
     opacityFill: {
-      holder: $('.paintFillOpacity'),
+      holder: self.dom.paintFillOpacity,
       handler: 'onChangeFillOpacity',
       range: true,
       ctxSetter: function (v) {
@@ -250,12 +261,12 @@ function Painter(containerPaitner, onBlobPaste) {
       }
     },
     apply: {
-      holder: $('.paintApplyText'),
+      holder: self.dom.paintApplyText,
       trigger: 'click',
       handler: 'onApply'
     },
     opacity: {
-      holder: $('.paintOpacity'),
+      holder: self.dom.paintOpacity,
       handler: 'onChangeOpacity',
       range: true,
       ctxSetter: function (v) {
@@ -265,14 +276,14 @@ function Painter(containerPaitner, onBlobPaste) {
     },
     width: {
       range: true,
-      holder: $('.paintRadius'),
+      holder: self.dom.paintRadius,
       handler: 'onChangeRadius',
       ctxSetter: function (v) {
         self.ctx.lineWidth = v;
       },
     },
     font: {
-      holder: $('.paintFont'),
+      holder: self.dom.paintFont,
       handler: 'onChangeFont',
       ctxSetter: function (v) {
         self.ctx.fontFamily = v;
@@ -310,7 +321,7 @@ function Painter(containerPaitner, onBlobPaste) {
     initInstruments: function () { // TODO this looks bad
       Object.keys(self.instruments).forEach(function (k) {
         var instr = self.instruments[k];
-        instr.value = instr.holder.querySelector('.value')
+        instr.value = instr.holder.querySelector('.painterValue')
         instr.value.addEventListener(instr.trigger || 'input', function (e) {
           if (instr.range && instr.value.value.length > 2 && this.value != 100) { // != isntead !== in case it's a string
             instr.value.value = this.value.slice(0, 2)
@@ -344,10 +355,14 @@ function Painter(containerPaitner, onBlobPaste) {
       });
     },
     initTools: function () {
-      var toolsHolder = $('.painterTools');
+      var toolsHolder = self.dom.painterTools;
       self.keyProcessors = [];
-      $('.paintPastedImg').ondragstart= function(e) {e.preventDefault()};
-      $('.paintSend').onclick = self.helper.pasteToTextArea;
+      self.dom.paintPastedImg.ondragstart= function(e) {e.preventDefault()};
+      if (conf.onBlobPaste) {
+        self.dom.paintSend.onclick = self.helper.pasteToTextArea;
+      } else {
+        CssUtils.hideElement(self.dom.paintSend)
+      }
       function createIcon(keyActivator,f) {
         var i = document.createElement('i');
         toolsHolder.appendChild(i);
@@ -377,7 +392,7 @@ function Painter(containerPaitner, onBlobPaste) {
         }
         check.push(proc.code);
       });
-      log("Registered keys: {}", JSON.stringify(check))();
+      logger.debug("Registered keys: {}", JSON.stringify(check))();
     },
     initCanvas: function () {
       [
@@ -442,13 +457,13 @@ function Painter(containerPaitner, onBlobPaste) {
       if (self.dom.trimImage.checked) {
         var trimImage = self.helper.trimImage();
         if (trimImage) {
-          trimImage.toBlob(onBlobPaste);
+          trimImage.toBlob(conf.onBlobPaste);
           self.hide();
         } else {
-          log("image is empty")();
+          logger.debug("image is empty")();
         }
       } else {
-        self.dom.canvas.toBlob(onBlobPaste);
+        self.dom.canvas.toBlob(conf.onBlobPaste);
         self.hide();
       }
     },
@@ -578,7 +593,7 @@ function Painter(containerPaitner, onBlobPaste) {
   };
   self.Appliable = function() {
     var tool = this;
-    tool.applyBtn = $('.paintApplyText input[type=button]');
+    tool.applyBtn = self.dom.applyBtn;
     tool.enableApply = function() {
       tool.applyBtn.removeAttribute('disabled');
     };
@@ -594,7 +609,7 @@ function Painter(containerPaitner, onBlobPaste) {
         return;
       }
       self.helper.setOffset(e);
-      // log("{} mouse down", self.mode)();
+      // logger.debug("{} mouse down", self.mode)();
       self.events.mouseDown = true
       var rect = self.dom.canvas.getBoundingClientRect();
       var imgData;
@@ -621,7 +636,7 @@ function Painter(containerPaitner, onBlobPaste) {
         }
         var mu = tool.onMouseUp;
         if (mu) {
-          // log("{} mouse up", self.mode)();
+          // logger.debug("{} mouse up", self.mode)();
           mu(e)
         }
       }
@@ -642,7 +657,7 @@ function Painter(containerPaitner, onBlobPaste) {
       self.dom.canvasWrapper.scrollTop = scrollTop;
     },
     contKeyPress: function (event) {
-      log("keyPress: {} ({})", event.keyCode, event.code)();
+      logger.debug("keyPress: {} ({})", event.keyCode, event.code)();
       if (event.keyCode === 13) {
         if (self.tools[self.mode].onApply) {
           self.tools[self.mode].onApply();
@@ -667,7 +682,7 @@ function Painter(containerPaitner, onBlobPaste) {
         self.dom.canvasWrapper.style.width = w - pxy.pageX + cxy.pageX + 'px';
         self.dom.canvasWrapper.style.height = h - pxy.pageY + cxy.pageY + 'px';
       };
-      log("Added mousmove. touchmove")();
+      logger.debug("Added mousmove. touchmove")();
       document.addEventListener('mousemove', listener);
       document.addEventListener('touchmove', listener);
       var remove = function() {
@@ -694,7 +709,7 @@ function Painter(containerPaitner, onBlobPaste) {
     if (files) {
       for (var i = 0; i < files.length; i++) {
         if (files[i].type.indexOf('image') >= 0) {
-          log("Pasting images")();
+          logger.debug("Pasting images")();
           self.setMode('img');
           self.tools.img.readAndPasteCanvas(getter(files[i]));
           self.preventDefault(e);
@@ -707,7 +722,7 @@ function Painter(containerPaitner, onBlobPaste) {
     var tool = this;
     tool.cursorStyle = document.createElement('style');
     document.head.appendChild(tool.cursorStyle);
-    tool.imgHolder = $('.paint-crp-rect');
+    tool.imgHolder = self.dom.paintCrpRect;
     tool.params = {
       alias: {
         width: 'ow',
@@ -716,13 +731,13 @@ function Painter(containerPaitner, onBlobPaste) {
         left: 'ox'
       },
       restoreOrd: function(name, padd) {
-        log("restore ord {} {}", name, padd)();
+        logger.debug("restore ord {} {}", name, padd)();
         var alias = tool.params.alias[name];
         tool.params[name] = tool.params.lastCoord[alias] + (padd ? tool.params.lastCoord[padd] : 0)  ;
         tool.imgHolder.style[name] = tool.params[name]* self.zoom + 'px';
       },
       setOrd: function(name, v, ampl, padding) {
-        log("setOrd ord {} {} {} {}", name, v, ampl, padding)();
+        logger.debug("setOrd ord {} {} {} {}", name, v, ampl, padding)();
         ampl = ampl || 1;
         padding = padding || 0;
         var alias = tool.params.alias[name];
@@ -762,20 +777,20 @@ function Painter(containerPaitner, onBlobPaste) {
     };
     tool.show = function () {
       CssUtils.showElement(tool.imgHolder);
-      log("Adding mouseUp doc listener")();
+      logger.debug("Adding mouseUp doc listener")();
       document.addEventListener('mouseup', tool.docMouseUp);
       document.addEventListener('touchend', tool.docMouseUp);
     };
     tool.hide = function() {
       tool._setCursor(null);
       CssUtils.hideElement(tool.imgHolder);
-      log("Removing mouseUp doc listener")();
+      logger.debug("Removing mouseUp doc listener")();
       tool.docMouseUp();
       document.removeEventListener('mouseup', tool.docMouseUp);
       document.removeEventListener('touchend', tool.docMouseUp);
     };
     tool.trackMouseMove = function(e, mode) {
-      log("Resizer mousedown")();
+      logger.debug("Resizer mousedown")();
       tool.mode = mode || e.target.getAttribute('pos');
       self.dom.canvasWrapper.addEventListener('mousemove', tool.handleMouseMove);
       self.dom.canvasWrapper.addEventListener('touchmove', tool.handleMouseMove);
@@ -799,7 +814,7 @@ function Painter(containerPaitner, onBlobPaste) {
       tool.params.lastCoord.nl = Math.pow(tool.params.lastCoord.op, 2) + 1;
     };
     tool.docMouseUp = function (e) {
-      //log("Resizer mouseup")();
+      //logger.debug("Resizer mouseup")();
       self.dom.canvasWrapper.removeEventListener('mousemove', tool.handleMouseMove);
       self.dom.canvasWrapper.removeEventListener('touchmove', tool.handleMouseMove);
     };
@@ -873,7 +888,7 @@ function Painter(containerPaitner, onBlobPaste) {
       return {x: x, y: y};
     };
     tool.handleMouseMove = function (e) {
-      //log('handleMouseMove {}', e)();
+      //logger.debug('handleMouseMove {}', e)();
       var pxy =self.helper.getPageXY(e);
       var x = pxy.pageX - tool.params.lastCoord.x;
       var y = pxy.pageY - tool.params.lastCoord.y;
@@ -882,7 +897,7 @@ function Painter(containerPaitner, onBlobPaste) {
         x = __ret.x;
         y = __ret.y;
       }
-      log('handleMouseMove ({}, {})', x, y)();
+      logger.debug('handleMouseMove ({}, {})', x, y)();
       tool.handlers[tool.mode.charAt(0)](x, y);
       if (tool.mode.length === 2) {
         tool.handlers[tool.mode.charAt(1)](x, y);
@@ -900,7 +915,7 @@ function Painter(containerPaitner, onBlobPaste) {
         title: 'Select (S)'
       };
       tool.bufferHandler = true;
-      tool.domImg = $('.paintPastedImg');
+      tool.domImg = self.dom.paintPastedImg;
       tool.getCursor = function () {
         return 'crosshair';
       };
@@ -913,7 +928,7 @@ function Painter(containerPaitner, onBlobPaste) {
       tool.onDeactivate = function () {
         if (tool.inProgress) {
           var params = self.resizer.params;
-          log(
+          logger.debug(
             'Applying image {}, {}x{}, to  {x: {}, y: {}, w: {}, h:{}',
             tool.imgInfo.width,
             tool.imgInfo.height,
@@ -935,7 +950,7 @@ function Painter(containerPaitner, onBlobPaste) {
         return self.mode === 'select' && tool.inProgress && tool.mouseUpClicked;
       };
       tool.onMouseDown = function (e) {
-        //log('select mouseDown')();
+        //logger.debug('select mouseDown')();
         tool.onDeactivate();
         tool.mouseUpClicked = false;
         self.resizer.show();
@@ -950,7 +965,7 @@ function Painter(containerPaitner, onBlobPaste) {
         if (!params.width || !params.height) {
           self.resizer.hide();
         } else {
-          //log('select mouseUp')();
+          //logger.debug('select mouseUp')();
           tool.inProgress = true;
           tool.mouseUpClicked = true;
           var imageData = self.ctx.getImageData(params.left, params.top, params.width, params.height);
@@ -1010,7 +1025,7 @@ function Painter(containerPaitner, onBlobPaste) {
         tool.onMouseMove(e, coord)
       };
       tool.onMouseMove = function (e, coord) {
-        // log("mouse move,  points {}", JSON.stringify(tool.points))();
+        // logger.debug("mouse move,  points {}", JSON.stringify(tool.points))();
         self.tmp.restoreState();
         tool.points.push(coord);
         self.ctx.beginPath();
@@ -1184,7 +1199,7 @@ function Painter(containerPaitner, onBlobPaste) {
       };
       tool.onMouseDown = function (e) {
         if (!((self.dom.canvas.width * self.dom.canvas.height) < 1000001)) {
-          log("Can't fill image because amount of  data is too huge. Your browser would just explode ;(");
+          logger.debug("Can't fill image because amount of  data is too huge. Your browser would just explode ;(");
         } else {
           var xy = self.helper.getXY(e);
           var image = self.buffer.startAction();
@@ -1307,7 +1322,7 @@ function Painter(containerPaitner, onBlobPaste) {
         icon: 'icon-text',
         title: 'Text (T)'
       };
-      tool.span = $('.paintTextSpan');
+      tool.span = self.dom.paintTextSpan;
       //prevent self.events.contKeyPress
       tool.span.addEventListener('keypress', function (e) {
         if (e.keyCode !== 13 || e.shiftKey) {
@@ -1421,7 +1436,7 @@ function Painter(containerPaitner, onBlobPaste) {
         icon: 'icon-picture spainterHidden',
         title: 'Pasting image'
       };
-      tool.img = $('.paintPastedImg');
+      tool.img = self.dom.paintPastedImg;
       tool.bufferHandler = true;
       tool.imgObj = null;
       tool.readAndPasteCanvas = function (file) {
@@ -1489,7 +1504,7 @@ function Painter(containerPaitner, onBlobPaste) {
       tool.onApply = function () {
         var params = self.resizer.params;
         if (!params.width || !params.height) {
-          log("Can't crop to {}x{}", params.width, params.height)();
+          logger.debug("Can't crop to {}x{}", params.width, params.height)();
         } else {
           self.buffer.startAction();
           var img = self.ctx.getImageData(params.left, params.top, params.width, params.height);
@@ -1530,7 +1545,7 @@ function Painter(containerPaitner, onBlobPaste) {
         icon: 'icon-resize',
         title: 'Change dimensions (W)'
       };
-      tool.container = $('.paintResizeTools');
+      tool.container = self.dom.paintResizeTools;
       tool.width = tool.container.querySelector('[placeholder=width]');
       tool.height = tool.container.querySelector('[placeholder=height]');
       tool.lessThan4 = function(e) {
@@ -1583,11 +1598,11 @@ function Painter(containerPaitner, onBlobPaste) {
         var pxy = self.helper.getPageXY(e);
         var x = tool.lastCoord.x - pxy.pageX;
         var y = tool.lastCoord.y - pxy.pageY;
-        log("Moving to: {{}, {}}", x, y)();
+        logger.debug("Moving to: {{}, {}}", x, y)();
         self.dom.canvasWrapper.scrollTop += y;
         self.dom.canvasWrapper.scrollLeft += x;
         tool.lastCoord = {x: pxy.pageX, y: pxy.pageY};
-        // log('X,Y: {{}, {}}', self.dom.canvasWrapper.scrollLeft, self.dom.canvasWrapper.scrollTop )();
+        // logger.debug('X,Y: {{}, {}}', self.dom.canvasWrapper.scrollLeft, self.dom.canvasWrapper.scrollTop )();
       };
       tool.onMouseUp = function (coord) {
         tool.lastCoord = null;
@@ -1605,7 +1620,7 @@ function Painter(containerPaitner, onBlobPaste) {
         if (self.tools['select'].isSelectionActive()) {
           var m = self.tools.select;
           var d = m.getAreaData();
-          log("{}x{}", d.width, d.height)();
+          logger.debug("{}x{}", d.width, d.height)();
           tmpCanvasContext.canvas.width = d.height; //specify width of your canvas
           tmpCanvasContext.canvas.height = d.width; //specify height of your canvas
           var ctx = tmpCanvasContext;
@@ -1724,7 +1739,7 @@ function Painter(containerPaitner, onBlobPaste) {
         current = restore;
         if (self.dom.canvas.width != current.width
           || self.dom.canvas.height != current.height) {
-          log("Resizing canvas from {}x{} to {}x{}",
+          logger.debug("Resizing canvas from {}x{} to {}x{}",
             self.dom.canvas.width, self.dom.canvas.height,
             current.width, current.height
           )();
@@ -1745,7 +1760,7 @@ function Painter(containerPaitner, onBlobPaste) {
       tool.dodo(undoImages, redoImages);
     };
     tool.finishAction = function (img) {
-      log('finish action')();
+      logger.debug('finish action')();
       if (current) {
         undoImages.push(current);
       }
@@ -1770,7 +1785,7 @@ function Painter(containerPaitner, onBlobPaste) {
       current = newCurrent;
     };
     tool.startAction = function () {
-      log('start action')();
+      logger.debug('start action')();
       if (!current) {
         current = tool.getCanvasImage();
       }
@@ -1812,4 +1827,6 @@ function Painter(containerPaitner, onBlobPaste) {
   });
 }
 
-module.exports =  Painter;
+if (typeof module === 'object') {
+  module.exports =  Painter;
+}

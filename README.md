@@ -8,6 +8,8 @@
 2. in your html file
 
 ```
+<link rel="stylesheet" type="text/css" href="./index.css"/>
+<script src="./index.js"></script>
 <div id="spainterContainer"></div>
 ```
 
@@ -18,6 +20,13 @@ var p = new Painter(containerPainer)
 ```
 
 
+## CAUTION
+
+Spainter uses [flexbox](https://caniuse.com/#feat=flexbox) if you need to support browsers like IE 9 and below, you're free to create a pull request to remove flexbox.
+
 ## build
 You need to have **curl** **bash** **sassc** commands to be able to build. Nope, no node build available atm, sorry.
  - npm run build
+
+## Whe the design looks ugly?
+I intentionally leaved empty styles so you can easily override them according to your website design.
