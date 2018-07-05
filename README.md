@@ -1,6 +1,6 @@
 # lines-logger  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/deathangel908/lines-logger/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter)
 
-# [DEMO](https://deathangel908.github.io/spainter/)
+# [DEMO](http://spainter.pychat.org/)
 # Web browser painter
 
 1. `npm install spainter`
