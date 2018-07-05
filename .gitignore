@@ -1,8 +1,7 @@
 .idea/
 font/
-index.css
-index.css.map
-no-fonts.css
-no-fonts.css.map
+*.css
+*.css.map
+*.scss
 demo.html
-
+.fontello
