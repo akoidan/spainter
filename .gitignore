@@ -4,4 +4,4 @@ demo.html
 font/
 *.css
 *.css.map
-
+!index.css
