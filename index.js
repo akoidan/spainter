@@ -13,16 +13,18 @@ String.prototype.formatPos = function () {
 };
 
 
-function Painter(containerPaitner) {
+function Painter(containerPaitner, onBlobPaste) {
+
+  var FLOOD_FILL_CURSOR = '<?xml version="1.0" encoding="UTF-8" standalone="no"?> <svg    xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"    xmlns:dc="http://purl.org/dc/elements/1.1/"    xmlns:cc="http://creativecommons.org/ns#"    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"    xmlns:svg="http://www.w3.org/2000/svg"    xmlns="http://www.w3.org/2000/svg"    xmlns:xlink="http://www.w3.org/1999/xlink"    height="128"    width="128"    id="svg12"    xml:space="preserve"    enable-background="new 0 0 1000 1000"    viewBox="0 0 128 128"    y="0px"    x="0px"    version="1.1"><defs      id="defs16"><linearGradient        osb:paint="solid"        id="linearGradient4668"><stop          id="stop4666"          offset="0"          style="stop-color:#a70000;stop-opacity:1;" /></linearGradient><linearGradient        gradientUnits="userSpaceOnUse"        y2="129.24489"        x2="8692.8536"        y1="129.24489"        x1="124.50469"        id="linearGradient4670"        xlink:href="#linearGradient4668" /></defs><metadata      id="metadata2"> Svg Vector Icons : http://www.onlinewebfonts.com/icon <rdf:RDF><cc:Work      rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type        rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><g      transform="matrix(-0.06545548,0,0,0.06545548,96.091518,32.9054)"      id="g10"><g        id="g8"        transform="matrix(0.1,0,0,-0.1,0,511)"><path          style="fill-opacity:1;fill:url(#linearGradient4670)"          id="path4"          d="M 2923.3,4723.5 C 2495.2541,4641.7289 2116.2015,4282.4666 2019.575,3861.7722 2010.936,2974.8482 2002.3121,2087.9242 1993.7,1201 1372.6067,561.9446 713.75686,-43.111911 124.50469,-711.1 177.79443,-1124.6012 696.18046,-1384.5817 946.92256,-1721.6746 1873.0645,-2644.7129 2784.7436,-3583.1992 3733.8,-4482.7 c 414.8568,-14.5444 672.1458,554.0816 1010.5846,786.2741 C 5933.4015,-2520.7561 7113.1744,-1335.7883 8297.1,-155 8684.9234,-201.73044 8869.3553,83.429201 8467.4077,323.01301 7303.9011,1506.5241 6142.0458,2693.2924 4939.988,3837.6106 4686.657,4091.5786 4729.7111,3391.5044 4719.1559,3565.1616 4714.1012,2956.3168 4711.3726,2347.458 4708.5,1738.6 5031.0341,1335.4454 4991.2388,661.12765 4526.4426,380.70059 4035.9919,26.383144 3257.4044,327.55874 3152.1031,931.46414 c -39.8563,589.13426 159.3241,863.35076 203.329,893.32976 2.2707,246.6969 2.431,493.4008 2.1679,740.1061 -300.1928,-300.1072 -600.3595,-600.2405 -900.5,-900.4 12.8139,725.2498 -32.7477,1454.2178 35.8271,2176.4281 162.6751,558.7872 1062.6877,586.7614 1253.7345,27.8061 112.979,-515.8061 41.7341,-1055.8192 61.1384,-1582.3166 -12.3655,-253.837 24.6538,-527.0728 -18.3526,-768.8737 -333.2237,-217.6526 -244.4878,-787.61406 173.4897,-834.19331 511.1059,-79.84462 657.2051,617.00781 295.0629,870.31461 -13.3602,773.8703 35.6765,1552.1607 -42.4,2322.3348 -122.666,568.0766 -724.5835,955.0335 -1292.3,847.5 z" /><path          style="fill:{};fill-opacity:1"          id="path6"          d="m 8652.1,-872.8 c -387.3878,-526.6483 -739.4695,-1099.2442 -952.5422,-1720.4453 -255.0408,-767.135 561.8384,-1583.3109 1332.0652,-1367.7587 707.6368,133.0412 1091.285,1010.324 735.7851,1630.769 -236.9486,492.8542 -488.9007,986.3895 -824.0081,1420.335 -74.892,70.77849 -202.3378,99.68687 -291.3,37.1 z" /></g></g></svg>';
 
   containerPaitner.innerHTML = `<div class="toolsAndCanvas">
         <div class="painterTools">
         </div>
         <div class="canvasWrapper">
             <canvas></canvas>
-            <span class="text hidden fixInput paintTextSpan" tabindex="-1"
+            <span class="text spainterHidden paintTextSpan" tabindex="-1"
                   contenteditable="true"></span>
-            <div pos="m" class="paint-crp-rect">
+            <div pos="m" class="paint-crp-rect spainterHidden">
                 <div pos="l"></div>
                 <div pos="r"></div>
                 <div pos="t"></div>
@@ -36,46 +38,46 @@ function Painter(containerPaitner) {
         </div>
     </div>
     <div class="bottomTools">
-        <div title="Color" class="paintColor">
+        <div title="Color" class="paintColor spainterHidden">
             <span>C:</span>
             <input type="color" value="#ff0000" class="value"/>
         </div>
         <div title="Alpha (color transparency)"
-             class="paintOpacity">
+             class="paintOpacity spainterHidden">
             <span>A:</span>
             <input type="text" step="1" class="value" value="100"/>
             <div>
                 <input type="range" step="1" max="100" min="0" value="100"/>
             </div>
         </div>
-        <div title="Fill color" class="paintColorFill">
+        <div title="Fill color" class="paintColorFill spainterHidden">
             <span>CF:</span>
             <input type="color" value="#0000ff" class="value"/>
         </div>
-        <div title="Fill alpha" class="paintFillOpacity">
+        <div title="Fill alpha" class="paintFillOpacity spainterHidden">
             <span>AF:</span>
             <input type="text" step="1" class="value" value="100"/>
             <div>
                 <input type="range" step="1" max="100" min="0" value="100"/>
             </div>
         </div>
-        <div title="Width" class="paintRadius">
+        <div title="Width" class="paintRadius spainterHidden">
             <span>W:</span>
             <input type="text" step="1" class="value" value="10"/>
             <div>
                 <input type="range" step="1" max="100" min="1" value="10"/>
             </div>
         </div>
-        <div title="Font" class="paintFont">
+        <div title="Font" class="paintFont spainterHidden">
             <span>F:</span>
             <select class="value"></select>
         </div>
-        <div class="paintResizeTools ">
+        <div class="paintResizeTools spainterHidden">
             <input type="text" placeholder="width"/>
             <span>X</span>
             <input type="text" placeholder="height"/>
         </div>
-        <div class="paintApplyText ">
+        <div class="paintApplyText spainterHidden">
             <input type="button" value="Apply" class="blue-btn value"/>
         </div>
         <input type="button" value="Paste" class="paintSend value blue-btn"/>
@@ -94,7 +96,7 @@ function Painter(containerPaitner) {
 
 
   var CssUtils = {
-    visibilityClass: 'pntrHidden',
+    visibilityClass: 'spainterHidden',
     showElement: function (element) {
       CssUtils.removeClass(element, CssUtils.visibilityClass)
     },
@@ -162,6 +164,8 @@ function Painter(containerPaitner) {
   })();
 
 
+  CssUtils.addClass(containerPaitner, 'spainterContainer');
+
 
   function log() {
     if (!logsEnabled) {
@@ -180,8 +184,8 @@ function Painter(containerPaitner) {
   }
 
 
-  var $ = function (id) {
-    return containerPaitner.querySelector("." + id);
+  var $ = function (selector) {
+    return containerPaitner.querySelector(selector);
   };
 
 
@@ -191,13 +195,13 @@ function Painter(containerPaitner) {
   self.PICKED_TOOL_CLASS = 'active-icon';
   self.dom = {
     container: containerPaitner,
-    canvas: containerPaitner.querySelector('canvas'),
-    paintDimensions: $('paintDimensions'),
-    paintXY: $('paintXY'),
-    trimImage :  $('trimImage'),
+    canvas: $('canvas'),
+    paintDimensions: $('.paintDimensions'),
+    paintXY: $('.paintXY'),
+    trimImage :  $('.trimImage'),
     header: document.createElement('div'),
-    canvasResize: $('canvasResize'),
-    canvasWrapper: $('canvasWrapper')
+    canvasResize: $('.canvasResize'),
+    canvasWrapper: $('.canvasWrapper')
   };
   self.tmp = new function() {
     var tool = this;
@@ -218,21 +222,21 @@ function Painter(containerPaitner) {
   };
   self.instruments = {
     color: {
-      holder: $('paintColor'),
+      holder: $('.paintColor'),
       handler: 'onChangeColor',
       ctxSetter: function (v) {
         self.ctx.strokeStyle = v;
       }
     },
     colorFill: {
-      holder: $('paintColorFill'),
+      holder: $('.paintColorFill'),
       handler: 'onChangeColorFill',
       ctxSetter: function (v) {
         self.ctx.fillStyle = v;
       }
     },
     opacityFill: {
-      holder: $('paintFillOpacity'),
+      holder: $('.paintFillOpacity'),
       handler: 'onChangeFillOpacity',
       range: true,
       ctxSetter: function (v) {
@@ -240,12 +244,12 @@ function Painter(containerPaitner) {
       }
     },
     apply: {
-      holder: $('paintApplyText'),
+      holder: $('.paintApplyText'),
       trigger: 'click',
       handler: 'onApply'
     },
     opacity: {
-      holder: $('paintOpacity'),
+      holder: $('.paintOpacity'),
       handler: 'onChangeOpacity',
       range: true,
       ctxSetter: function (v) {
@@ -255,14 +259,14 @@ function Painter(containerPaitner) {
     },
     width: {
       range: true,
-      holder: $('paintRadius'),
+      holder: $('.paintRadius'),
       handler: 'onChangeRadius',
       ctxSetter: function (v) {
         self.ctx.lineWidth = v;
       },
     },
     font: {
-      holder: $('paintFont'),
+      holder: $('.paintFont'),
       handler: 'onChangeFont',
       ctxSetter: function (v) {
         self.ctx.fontFamily = v;
@@ -297,7 +301,6 @@ function Painter(containerPaitner) {
       self.dom.canvasWrapper.style.height = height * 0.9 - 100 + 'px'
       self.dom.canvasWrapper.style.width = width * 0.9 - 80 + 'px'
     },
-    // fixInput: self.fixInputs, TODO
     initInstruments: function () { // TODO this looks bad
       Object.keys(self.instruments).forEach(function (k) {
         var instr = self.instruments[k];
@@ -311,7 +314,6 @@ function Painter(containerPaitner) {
           handler && handler(e);
           if (instr.range) {
             instr.range.value = instr.value.value;
-            fixInputRangeStyle(instr.range);
           }
         });
         if (instr.range) {
@@ -336,9 +338,10 @@ function Painter(containerPaitner) {
       });
     },
     initTools: function () {
-      var toolsHolder = $('painterTools');
+      var toolsHolder = $('.painterTools');
       self.keyProcessors = [];
-      $('paintSend').onclick = self.helper.pasteToTextArea;
+      $('.paintPastedImg').ondragstart= function(e) {e.preventDefault()};
+      $('.paintSend').onclick = self.helper.pasteToTextArea;
       function createIcon(keyActivator,f) {
         var i = document.createElement('i');
         toolsHolder.appendChild(i);
@@ -427,19 +430,16 @@ function Painter(containerPaitner) {
       }
     },
     pasteToTextArea: function () {
-      if (singlePage.currentPage.pageName != 'channels') {
-        return;
-      }
       if (self.dom.trimImage.checked) {
         var trimImage = self.helper.trimImage();
         if (trimImage) {
-          trimImage.toBlob(Utils.pasteBlobImgToTextArea);
+          trimImage.toBlob(onBlobPaste);
           self.hide();
         } else {
-          growlError("You can't paste empty images");
+          log("image is empty")();
         }
       } else {
-        self.dom.canvas.toBlob(Utils.pasteBlobImgToTextArea);
+        self.dom.canvas.toBlob(onBlobPaste);
         self.hide();
       }
     },
@@ -569,7 +569,7 @@ function Painter(containerPaitner) {
   };
   self.Appliable = function() {
     var tool = this;
-    tool.applyBtn = document.querySelector('#paintApplyText input[type=button]');
+    tool.applyBtn = $('.paintApplyText input[type=button]');
     tool.enableApply = function() {
       tool.applyBtn.removeAttribute('disabled');
     };
@@ -698,7 +698,7 @@ function Painter(containerPaitner) {
     var tool = this;
     tool.cursorStyle = document.createElement('style');
     document.head.appendChild(tool.cursorStyle);
-    tool.imgHolder = $('paint-crp-rect');
+    tool.imgHolder = $('.paint-crp-rect');
     tool.params = {
       alias: {
         width: 'ow',
@@ -891,7 +891,7 @@ function Painter(containerPaitner) {
         title: 'Select (S)'
       };
       tool.bufferHandler = true;
-      tool.domImg = $('paintPastedImg');
+      tool.domImg = $('.paintPastedImg');
       tool.getCursor = function () {
         return 'crosshair';
       };
@@ -1305,7 +1305,7 @@ function Painter(containerPaitner) {
         icon: 'icon-text',
         title: 'Text (T)'
       };
-      tool.span = $('paintTextSpan');
+      tool.span = $('.paintTextSpan');
       //prevent self.events.contKeyPress
       tool.span.addEventListener('keypress', function (e) {
         if (e.keyCode !== 13 || e.shiftKey) {
@@ -1416,10 +1416,10 @@ function Painter(containerPaitner) {
     img: new (function () {
       var tool = this;
       tool.keyActivator = {
-        icon: 'icon-picture hidden',
+        icon: 'icon-picture spainterHidden',
         title: 'Pasting image'
       };
-      tool.img = $('paintPastedImg');
+      tool.img = $('.paintPastedImg');
       tool.bufferHandler = true;
       tool.imgObj = null;
       tool.readAndPasteCanvas = function (file) {
@@ -1528,7 +1528,7 @@ function Painter(containerPaitner) {
         icon: 'icon-resize',
         title: 'Change dimensions (W)'
       };
-      tool.container = $('paintResizeTools');
+      tool.container = $('.paintResizeTools');
       tool.width = tool.container.querySelector('[placeholder=width]');
       tool.height = tool.container.querySelector('[placeholder=height]');
       tool.lessThan4 = function(e) {
