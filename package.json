@@ -1,10 +1,9 @@
 {
   "name": "spainter",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Web browser painter, like mspaint. ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -18,5 +17,6 @@
   "bugs": {
     "url": "https://github.com/Deathangel908/spainter/issues"
   },
-  "homepage": "https://github.com/Deathangel908/spainter#readme"
+  "homepage": "https://github.com/Deathangel908/spainter#readme",
+  "typings": "./index.d.ts"
 }

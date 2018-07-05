@@ -1,18 +1,3 @@
-String.prototype.format = function() {
-  var args = arguments,  replacement = 0;
-  return this.replace(/\{\}/g, function() {
-    return args[replacement++];
-  });
-};
-
-String.prototype.formatPos = function () {
-  var args = arguments;
-  return this.replace(/{(\d+)}/g, function (match, number) {
-    return typeof args[number] != 'undefined' ? args[number] : match;
-  });
-};
-
-
 function Painter(containerPaitner, onBlobPaste) {
 
   var FLOOD_FILL_CURSOR = '<?xml version="1.0" encoding="UTF-8" standalone="no"?> <svg    xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"    xmlns:dc="http://purl.org/dc/elements/1.1/"    xmlns:cc="http://creativecommons.org/ns#"    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"    xmlns:svg="http://www.w3.org/2000/svg"    xmlns="http://www.w3.org/2000/svg"    xmlns:xlink="http://www.w3.org/1999/xlink"    height="128"    width="128"    id="svg12"    xml:space="preserve"    enable-background="new 0 0 1000 1000"    viewBox="0 0 128 128"    y="0px"    x="0px"    version="1.1"><defs      id="defs16"><linearGradient        osb:paint="solid"        id="linearGradient4668"><stop          id="stop4666"          offset="0"          style="stop-color:#a70000;stop-opacity:1;" /></linearGradient><linearGradient        gradientUnits="userSpaceOnUse"        y2="129.24489"        x2="8692.8536"        y1="129.24489"        x1="124.50469"        id="linearGradient4670"        xlink:href="#linearGradient4668" /></defs><metadata      id="metadata2"> Svg Vector Icons : http://www.onlinewebfonts.com/icon <rdf:RDF><cc:Work      rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type        rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><g      transform="matrix(-0.06545548,0,0,0.06545548,96.091518,32.9054)"      id="g10"><g        id="g8"        transform="matrix(0.1,0,0,-0.1,0,511)"><path          style="fill-opacity:1;fill:url(#linearGradient4670)"          id="path4"          d="M 2923.3,4723.5 C 2495.2541,4641.7289 2116.2015,4282.4666 2019.575,3861.7722 2010.936,2974.8482 2002.3121,2087.9242 1993.7,1201 1372.6067,561.9446 713.75686,-43.111911 124.50469,-711.1 177.79443,-1124.6012 696.18046,-1384.5817 946.92256,-1721.6746 1873.0645,-2644.7129 2784.7436,-3583.1992 3733.8,-4482.7 c 414.8568,-14.5444 672.1458,554.0816 1010.5846,786.2741 C 5933.4015,-2520.7561 7113.1744,-1335.7883 8297.1,-155 8684.9234,-201.73044 8869.3553,83.429201 8467.4077,323.01301 7303.9011,1506.5241 6142.0458,2693.2924 4939.988,3837.6106 4686.657,4091.5786 4729.7111,3391.5044 4719.1559,3565.1616 4714.1012,2956.3168 4711.3726,2347.458 4708.5,1738.6 5031.0341,1335.4454 4991.2388,661.12765 4526.4426,380.70059 4035.9919,26.383144 3257.4044,327.55874 3152.1031,931.46414 c -39.8563,589.13426 159.3241,863.35076 203.329,893.32976 2.2707,246.6969 2.431,493.4008 2.1679,740.1061 -300.1928,-300.1072 -600.3595,-600.2405 -900.5,-900.4 12.8139,725.2498 -32.7477,1454.2178 35.8271,2176.4281 162.6751,558.7872 1062.6877,586.7614 1253.7345,27.8061 112.979,-515.8061 41.7341,-1055.8192 61.1384,-1582.3166 -12.3655,-253.837 24.6538,-527.0728 -18.3526,-768.8737 -333.2237,-217.6526 -244.4878,-787.61406 173.4897,-834.19331 511.1059,-79.84462 657.2051,617.00781 295.0629,870.31461 -13.3602,773.8703 35.6765,1552.1607 -42.4,2322.3348 -122.666,568.0766 -724.5835,955.0335 -1292.3,847.5 z" /><path          style="fill:{};fill-opacity:1"          id="path6"          d="m 8652.1,-872.8 c -387.3878,-526.6483 -739.4695,-1099.2442 -952.5422,-1720.4453 -255.0408,-767.135 561.8384,-1583.3109 1332.0652,-1367.7587 707.6368,133.0412 1091.285,1010.324 735.7851,1630.769 -236.9486,492.8542 -488.9007,986.3895 -824.0081,1420.335 -74.892,70.77849 -202.3378,99.68687 -291.3,37.1 z" /></g></g></svg>';
@@ -22,6 +7,7 @@ function Painter(containerPaitner, onBlobPaste) {
         </div>
         <div class="canvasWrapper">
             <canvas></canvas>
+            <div class="canvasResize"></div>
             <span class="text spainterHidden paintTextSpan" tabindex="-1"
                   contenteditable="true"></span>
             <div pos="m" class="paint-crp-rect spainterHidden">
@@ -87,8 +73,7 @@ function Painter(containerPaitner, onBlobPaste) {
                 type="checkbox" checked title="Trim image on send"
                 class="trimImage"/>
         </div>
-    </div>
-    <div class="canvasResize"></div>`;
+    </div>`;
 
   var logsEnabled = true;
   var mouseWheelEventName = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
@@ -187,6 +172,27 @@ function Painter(containerPaitner, onBlobPaste) {
   var $ = function (selector) {
     return containerPaitner.querySelector(selector);
   };
+
+
+  function format(string) {
+    return  function () {
+      var args = arguments,  replacement = 0;
+      return string.replace(/\{\}/g, function() {
+        return args[replacement++];
+      });
+    };
+  }
+
+
+  function formatPos(string) {
+    return function () {
+      var args = arguments;
+      return string.replace(/{(\d+)}/g, function (match, number) {
+        return typeof args[number] != 'undefined' ? args[number] : match;
+      });
+    }
+  }
+
 
 
   var self = this;
@@ -298,8 +304,8 @@ function Painter(containerPaitner, onBlobPaste) {
       var width = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight,
         document.documentElement.scrollHeight, document.documentElement.offsetHeight);
       self.helper.setDimensions(500, 500);
-      self.dom.canvasWrapper.style.height = height * 0.9 - 100 + 'px'
-      self.dom.canvasWrapper.style.width = width * 0.9 - 80 + 'px'
+      // self.dom.canvasWrapper.style.height = height * 0.9 - 100 + 'px'
+      // self.dom.canvasWrapper.style.width = width * 0.9 - 80 + 'px'
     },
     initInstruments: function () { // TODO this looks bad
       Object.keys(self.instruments).forEach(function (k) {
@@ -412,6 +418,9 @@ function Painter(containerPaitner, onBlobPaste) {
         o.value = t;
       });
     },
+    openCanvas: function() {
+      self.helper.openCanvas();
+    }
   };
   self.helper = {
     setUIText: function(text) {
@@ -458,8 +467,8 @@ function Painter(containerPaitner, onBlobPaste) {
       } else if (width > 126) {
         width = 126;
       }
-      var svg = '<svg xmlns="http://www.w3.org/2000/svg" height="128" width="128"><circle cx="64" cy="64" r="{0}" fill="{1}"{2}/></svg>'.formatPos(width, fill, stroke);
-      return 'url(data:image/svg+xml;base64,{}) {} {}, auto'.format(btoa(svg), 64, 64);
+      var svg = formatPos('<svg xmlns="http://www.w3.org/2000/svg" height="128" width="128"><circle cx="64" cy="64" r="{0}" fill="{1}"{2}/></svg>')(width, fill, stroke);
+      return format('url(data:image/svg+xml;base64,{}) {} {}, auto')(btoa(svg), 64, 64);
     },
     isNumberKey: function (evt) {
       var charCode = evt.which || evt.keyCode;
@@ -564,7 +573,7 @@ function Painter(containerPaitner, onBlobPaste) {
       self.dom.canvas.width = w;
       self.dom.canvas.height = h;
       self.buffer.restoreState(state);
-      self.dom.paintDimensions.textContent = '{}x{}'.format(w, h);
+      self.dom.paintDimensions.textContent = w+ 'x' + h;
     }
   };
   self.Appliable = function() {
@@ -598,7 +607,7 @@ function Painter(containerPaitner, onBlobPaste) {
       var tool = self.tools[self.mode];
       self.helper.setOffset(e);
       var xy = self.helper.getXY(e);
-      self.helper.setUIText("[{},{}]".format(xy.x, xy.y));
+      self.helper.setUIText("["+xy.x+"," +xy.y+"]");
       if (self.events.mouseDown && tool.onMouseMove) {
         tool.onMouseMove(e, xy);
       }
@@ -743,7 +752,7 @@ function Painter(containerPaitner, onBlobPaste) {
       tool.imgHolder.style.height = h * self.zoom + +2 + 'px';
     };
     tool._setCursor = function (cursor) {
-      tool.cursorStyle.textContent = cursor ? ".paintPastedImg, .paint-crp-rect, .painter {cursor: {} !important}".format(cursor) : ""
+      tool.cursorStyle.textContent = cursor ? (".paintPastedImg, .paint-crp-rect, .painter {cursor: " + cursor + " !important}") : "";
     };
     tool.onZoomChange = function () {
       tool.imgHolder.style.width = tool.params.width * self.zoom + 2 + 'px';
@@ -1069,7 +1078,8 @@ function Painter(containerPaitner, onBlobPaste) {
       };
       tool.bufferHandler = true;
       tool.buildCursor = function() {
-        return 'url(data:image/svg+xml;base64,{}) {} {}, auto'.format(btoa(FLOOD_FILL_CURSOR.format(self.ctx.fillStyle)), 39, 86);
+        let rawString = format(FLOOD_FILL_CURSOR, self.ctx.fillStyle);
+        return format('url(data:image/svg+xml;base64,{}) {} {}, auto')(btoa(rawString), 39, 86);
       }
       tool.getCursor = function() {
         return tool.buildCursor();
@@ -1146,14 +1156,6 @@ function Painter(containerPaitner, onBlobPaste) {
         function pixelCompareAndSet(i, targetcolor, fillcolor, data, length, tolerance) {
           called++;
           if (called > 10000000) {
-            self.ctx.canvas.toBlob(function (blob) {
-              var fd = new FormData();
-              Utils.setBlobName(blob);
-              fd.append('s1', blob, blob.name);
-              doPost('/upload_file', null, function (res) {
-                doPost('/report_issue', {issue: "Error occurred with on x: {}, y: {}. fill {}.{}.{}.{} with response uploadFile: {}".format(xssss, yssss, fillcolorssss.a, fillcolorssss.r, fillcolorssss.g, fillcolorssss.b, res)})
-              }, fd);
-            });
             throw "Unable to flood fill the image, because cycle detected.";
           }
           if (pixelCompare(i, targetcolor, fillcolor, data, length, tolerance)) {
@@ -1182,7 +1184,7 @@ function Painter(containerPaitner, onBlobPaste) {
       };
       tool.onMouseDown = function (e) {
         if (!((self.dom.canvas.width * self.dom.canvas.height) < 1000001)) {
-          growlError("Can't fill image because amount of  data is too huge. Your browser would just explode ;(");
+          log("Can't fill image because amount of  data is too huge. Your browser would just explode ;(");
         } else {
           var xy = self.helper.getXY(e);
           var image = self.buffer.startAction();
@@ -1332,7 +1334,7 @@ function Painter(containerPaitner, onBlobPaste) {
       };
       tool.onApply = function () {
         self.buffer.startAction();
-        self.ctx.font = "{}px {}".format(5 + self.ctx.lineWidth, self.ctx.fontFamily);
+        self.ctx.font = (5 + self.ctx.lineWidth) + "px "+ self.ctx.fontFamily;
         self.ctx.globalAlpha = self.instruments.opacityFill.inputValue;
         var width = 5 + self.ctx.lineWidth; //todo lineheight causes so many issues
         var lineheight = parseInt(width * 1.25);
@@ -1487,7 +1489,7 @@ function Painter(containerPaitner, onBlobPaste) {
       tool.onApply = function () {
         var params = self.resizer.params;
         if (!params.width || !params.height) {
-          growlError("Can't crop to {}x{}".format(params.width, params.height));
+          log("Can't crop to {}x{}", params.width, params.height)();
         } else {
           self.buffer.startAction();
           var img = self.ctx.getImageData(params.left, params.top, params.width, params.height);
@@ -1809,3 +1811,5 @@ function Painter(containerPaitner, onBlobPaste) {
     self.init[k]()
   });
 }
+
+module.exports =  Painter;

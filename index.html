@@ -6,7 +6,13 @@
     <link rel="stylesheet" type="text/css" href="index.css"/>
     <style>
         .pad1 {
-            padding: 100px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        html, body, .pad1 {
+            width: 100%;
+            margin: 0;
+            height:100%;
         }
     </style>
 </head>
@@ -22,7 +28,6 @@
 <script src="./index.js"></script>
 <script>
   var p = new Painter(containerPainer)
-    p.helper.openCanvas();
 </script>
 </body>
 </html>

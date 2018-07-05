@@ -2,6 +2,6 @@
 css/
 demo.html
 font/
-index.css
-index.css.map
+*.css
+*.css.map
 
