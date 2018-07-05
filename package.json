@@ -4,7 +4,7 @@
   "description": "Web browser painter, like mspaint. ",
   "main": "index.js",
   "scripts": {
-    "build": "sassc index.sass index.css && sh generate-fontello.sh generate"
+    "build": "sh generate-fontello.sh generate && sassc index.sass index.css"
   },
   "repository": {
     "type": "git",
