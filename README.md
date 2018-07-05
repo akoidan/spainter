@@ -17,3 +17,7 @@
 var p = new Painter(containerPainer)
 ```
 
+
+## build
+You need to have **curl** **bash** **sassc** commands to be able to build. Nope, no node build available atm, sorry.
+ - npm run build

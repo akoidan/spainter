@@ -4,24 +4,7 @@
   "description": "Web browser painter, like mspaint. ",
   "main": "index.js",
   "scripts": {
-
-    ` fontello_session=$(cat .fontello)
-  printOut "Downloading fontello using fontello session '$fontello_session'"
-  mkdir -p "$TMP_DIR/fontello"
-  safeRunCommand curl -X GET "http://fontello.com/$fontello_session/get" -o "$TMP_DIR/fonts.zip"
-  safeRunCommand unzip "$TMP_DIR/fonts.zip" -d "$TMP_DIR/fontello"
-  dir=$(ls "$TMP_DIR/fontello")
-  cp -v "$TMP_DIR/fontello"/$dir/font/* "$FONT_DIR"
-  cp -v "$TMP_DIR/fontello"/$dir/css/fontello.css "$SASS_DIR/partials/_fontello.scss"
-  cp -v "$TMP_DIR/fontello"/$dir/demo.html "$STATIC_DIR/demo.html"
-  cp -v "$TMP_DIR/fontello"/$dir/config.json "$PROJECT_ROOT"
-
-  if type "sed" &> /dev/null; then
-  sed -i '1i\@charset "UTF-8";' "$SASS_DIR/partials/_fontello.scss"
-  else
-  printError "WARNING: sass would be compiled w/o encoding"
-  fi`
-    "build": "sassc index.sass index.css"
+    "build": "sassc index.sass index.css && sh generate-fontello.sh generate"
   },
   "repository": {
     "type": "git",
