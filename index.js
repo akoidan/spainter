@@ -38,39 +38,12 @@ function Painter(containerPaitner, conf) {
         </div>
     </div>
     <div class="bottomTools">
-        <div title="Color" class="paintColor spainterHidden">
-            <span>C:</span>
-            <input type="color" value="#ff0000" class="painterValue"/>
-        </div>
-        <div title="Alpha (color transparency)"
-             class="paintOpacity spainterHidden">
-            <span>A:</span>
-            <input type="text" step="1" class="painterValue" value="100"/>
-        </div>
-        <div title="Fill color" class="paintColorFill spainterHidden">
-            <span>CF:</span>
-            <input type="color" value="#0000ff" class="painterValue"/>
-        </div>
-        <div title="Fill alpha" class="paintFillOpacity spainterHidden">
-            <span>AF:</span>
-            <input type="text" step="1" class="painterValue" value="100"/>
-        </div>
-        <div title="Width" class="paintRadius spainterHidden">
-            <span>W:</span>
-            <input type="text" step="1" class="painterValue" value="10"/>
-        </div>
-        <div title="Font" class="paintFont spainterHidden">
-            <span>F:</span>
-            <select class="painterValue"></select>
-        </div>
         <div class="paintResizeTools spainterHidden">
             <input type="text" placeholder="width"/>
             <span>X</span>
             <input type="text" placeholder="height"/>
         </div>
-        <div class="paintApplyText spainterHidden">
-            <input type="button" value="Apply" class=" painterValue"/>
-        </div>
+ 
         <div class="paintXYdimens">
            <div>
              <div class="paintXY" title="[x, y] zoom"></div> 
@@ -204,6 +177,7 @@ function Painter(containerPaitner, conf) {
   self.dom = {
     container: containerPaitner,
     canvas: $('canvas'),
+    bottomTools: $('.bottomTools'),
     paintDimensions: $('.paintDimensions'),
     paintXY: $('.paintXY'),
     trimImage :  $('.trimImage'),
@@ -213,17 +187,9 @@ function Painter(containerPaitner, conf) {
     painterTools: $('.painterTools'),
     paintPastedImg: $('.paintPastedImg'),
     paintSend: $('.paintSend'),
-    applyBtn: $('.paintApplyText input[type=button]'),
     paintCrpRect: $('.paint-crp-rect'),
     paintTextSpan:  $('.paintTextSpan'),
     paintResizeTools: $('.paintResizeTools'),
-    paintColor: $('.paintColor'),
-    paintColorFill: $('.paintColorFill'),
-    paintFillOpacity: $('.paintFillOpacity'),
-    paintApplyText: $('.paintApplyText'),
-    paintOpacity: $('.paintOpacity'),
-    paintRadius: $('.paintRadius'),
-    paintFont: $('.paintFont')
 
   };
   self.tmp = new function() {
@@ -245,56 +211,121 @@ function Painter(containerPaitner, conf) {
   };
   self.instruments = {
     color: {
-      holder: self.dom.paintColor,
+      title: 'Color',
+      text: "C:",
+      holderClass: 'paintColor',
+      hiddenByDefault: true,
+      inputFactory: function() {
+        var input = document.createElement('input');
+        input.type = 'color';
+        input.value = '#ff0000';
+        return input;
+      },
       handler: 'onChangeColor',
       ctxSetter: function (v) {
         self.ctx.strokeStyle = v;
       }
     },
-    colorFill: {
-      holder: self.dom.paintColorFill,
-      handler: 'onChangeColorFill',
-      ctxSetter: function (v) {
-        self.ctx.fillStyle = v;
-      }
-    },
-    opacityFill: {
-      holder: self.dom.paintFillOpacity,
-      handler: 'onChangeFillOpacity',
-      range: true,
-      ctxSetter: function (v) {
-        self.instruments.opacityFill.inputValue = v / 100;
-      }
-    },
-    apply: {
-      holder: self.dom.paintApplyText,
-      trigger: 'click',
-      handler: 'onApply'
-    },
     opacity: {
-      holder: self.dom.paintOpacity,
       handler: 'onChangeOpacity',
       range: true,
       ctxSetter: function (v) {
         self.ctx.globalAlpha = v / 100;
         self.instruments.opacity.inputValue = v / 100;
-      }
+      },
+      title: 'Alpha (color transparency)',
+      text: "A:",
+      holderClass: 'paintOpacity',
+      hiddenByDefault: true,
+      inputFactory: function() {
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.setAttribute('step', 1);
+        input.value = '100';
+        return input;
+      },
+    },
+    colorFill: {
+      handler: 'onChangeColorFill',
+      ctxSetter: function (v) {
+        self.ctx.fillStyle = v;
+      },
+      title: 'Fill color',
+      text: "CF:",
+      holderClass: 'paintColorFill',
+      hiddenByDefault: true,
+      inputFactory: function() {
+        var input = document.createElement('input');
+        input.type = 'color';
+        input.value = '#0000ff';
+        return input;
+      },
+
+    },
+    opacityFill: {
+      handler: 'onChangeFillOpacity',
+      range: true,
+      ctxSetter: function (v) {
+        self.instruments.opacityFill.inputValue = v / 100;
+      },
+      title: 'Fill alpha (color transparency)',
+      text: "AF:",
+      holderClass: 'paintFillOpacity',
+      hiddenByDefault: true,
+      inputFactory: function() {
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.setAttribute('step', 1);
+        input.value = '100';
+        return input;
+      },
     },
     width: {
       range: true,
-      holder: self.dom.paintRadius,
       handler: 'onChangeRadius',
       ctxSetter: function (v) {
         self.ctx.lineWidth = v;
       },
+      title: 'Width',
+      text: "W:",
+      holderClass: 'paintRadius',
+      hiddenByDefault: true,
+      inputFactory: function() {
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.setAttribute('step', 1);
+        input.value = '10';
+        return input;
+      },
     },
     font: {
-      holder: self.dom.paintFont,
       handler: 'onChangeFont',
       ctxSetter: function (v) {
         self.ctx.fontFamily = v;
-      }
-    }
+      },
+      title: 'Font',
+      text: "F:",
+      holderClass: 'paintFont',
+      hiddenByDefault: true,
+      inputFactory: function() {
+        var input = document.createElement('select');
+        return input;
+      },
+    },
+    apply: {
+      trigger: 'click',
+      handler: 'onApply',
+      holderClass: 'paintApplyText',
+      hiddenByDefault: true,
+      inputFactory: function() {
+        var input = document.createElement('input');
+        input.type = 'button';
+        input.value = 'Appply';
+        return input;
+      },
+
+    },
+
   };
   self.init = {
     createFullScreen: function () {
@@ -327,7 +358,21 @@ function Painter(containerPaitner, conf) {
     initInstruments: function () { // TODO this looks bad
       Object.keys(self.instruments).forEach(function (k) {
         var instr = self.instruments[k];
-        instr.value = instr.holder.querySelector('.painterValue')
+
+        instr.holder = document.createElement('div')
+        instr.holder.title = instr.title;
+        instr.holder.className = instr.holderClass;
+        if (instr.hiddenByDefault) {
+          CssUtils.hideElement(instr.holder)
+        }
+        if (instr.text) {
+          var span = document.createElement('span');
+          span.innerText = instr.text;
+          instr.holder.appendChild(span);
+        }
+        instr.value =  instr.inputFactory();
+        instr.holder.appendChild(instr.value);
+        self.dom.bottomTools.appendChild(instr.holder);
         instr.value.addEventListener(instr.trigger || 'input', function (e) {
           if (instr.range && instr.value.value.length > 2 && this.value != 100) { // != isntead !== in case it's a string
             instr.value.value = this.value.slice(0, 2)
@@ -608,12 +653,11 @@ function Painter(containerPaitner, conf) {
   };
   self.Appliable = function() {
     var tool = this;
-    tool.applyBtn = self.dom.applyBtn;
     tool.enableApply = function() {
-      tool.applyBtn.removeAttribute('disabled');
+      self.instruments.apply.value.removeAttribute('disabled');
     };
     tool.disableApply = function() {
-      tool.applyBtn.setAttribute('disabled', 'disabled');
+      self.instruments.apply.value.setAttribute('disabled', 'disabled');
     };
   };
   self.events = {
