@@ -46,9 +46,6 @@ function Painter(containerPaitner, conf) {
              class="paintOpacity spainterHidden">
             <span>A:</span>
             <input type="text" step="1" class="painterValue" value="100"/>
-            <div>
-                <input type="range" step="1" max="100" min="0" value="100"/>
-            </div>
         </div>
         <div title="Fill color" class="paintColorFill spainterHidden">
             <span>CF:</span>
@@ -57,16 +54,10 @@ function Painter(containerPaitner, conf) {
         <div title="Fill alpha" class="paintFillOpacity spainterHidden">
             <span>AF:</span>
             <input type="text" step="1" class="painterValue" value="100"/>
-            <div>
-                <input type="range" step="1" max="100" min="0" value="100"/>
-            </div>
         </div>
         <div title="Width" class="paintRadius spainterHidden">
             <span>W:</span>
             <input type="text" step="1" class="painterValue" value="10"/>
-            <div>
-                <input type="range" step="1" max="100" min="1" value="10"/>
-            </div>
         </div>
         <div title="Font" class="paintFont spainterHidden">
             <span>F:</span>
@@ -80,12 +71,15 @@ function Painter(containerPaitner, conf) {
         <div class="paintApplyText spainterHidden">
             <input type="button" value="Apply" class=" painterValue"/>
         </div>
-        <input type="button" value="Paste" class="paintSend painterValue "/>
         <div class="paintXYdimens">
-            <span class="paintXY" title="[x, y] zoom"></span>
-            <span class="paintDimensions" title="width x height"></span><input
-                type="checkbox" checked title="Trim image on send"
-                class="trimImage"/>
+           <div>
+             <div class="paintXY" title="[x, y] zoom"></div> 
+             <div>
+               <span class="paintDimensions" title="width x height"></span>
+               <input type="checkbox" checked title="Trim image on send" class="trimImage"/>  
+             </div>
+           </div>
+           <input type="button" value="Paste" class="paintSend"/>
         </div>
     </div>`;
 
@@ -163,7 +157,19 @@ function Painter(containerPaitner, conf) {
 
 
   CssUtils.addClass(containerPaitner, 'spainterContainer');
-
+  var fixInputs = {
+    'input[type=button]': conf.buttonClass,
+    'input[type=text]': conf.textClass,
+    'input[type=range]': conf.rangeClass
+  };
+  for (let input in fixInputs) {
+    if (fixInputs[input]) {
+      let btns = containerPaitner.querySelectorAll(input);
+      for (let i = 0; i < btns.length; i++) {
+        CssUtils.addClass(btns[i], fixInputs[input])
+      }
+    }
+  }
 
   var $ = function (selector) {
     return containerPaitner.querySelector(selector);
@@ -338,7 +344,15 @@ function Painter(containerPaitner, conf) {
             var charCode = e.which || e.keyCode;
             return charCode > 47 && charCode < 58;
           });
-          instr.range = instr.holder.querySelector('input[type=range]');
+          if (conf.rangeFactory) {
+            instr.range = conf.rangeFactory();
+          } else {
+            instr.range = document.createElement('input');
+            instr.range.type = 'range';
+          }
+          var div = document.createElement('div');
+          div.appendChild(instr.range);
+          instr.holder.appendChild(div);
           instr.range.addEventListener('input', function (e) {
             instr.value.value = instr.range.value;
             instr.ctxSetter(e.target.value);
@@ -361,7 +375,8 @@ function Painter(containerPaitner, conf) {
       if (conf.onBlobPaste) {
         self.dom.paintSend.onclick = self.helper.pasteToTextArea;
       } else {
-        CssUtils.hideElement(self.dom.paintSend)
+        CssUtils.hideElement(self.dom.paintSend);
+        CssUtils.hideElement(self.dom.trimImage);
       }
       function createIcon(keyActivator,f) {
         var i = document.createElement('i');

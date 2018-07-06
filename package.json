@@ -1,6 +1,6 @@
 {
   "name": "spainter",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Web browser painter, like mspaint. ",
   "main": "index.js",
   "scripts": {
