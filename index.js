@@ -129,21 +129,6 @@ function Painter(containerPaitner, conf) {
   })();
 
 
-  CssUtils.addClass(containerPaitner, 'spainterContainer');
-  var fixInputs = {
-    'input[type=button]': conf.buttonClass,
-    'input[type=text]': conf.textClass,
-    'input[type=range]': conf.rangeClass
-  };
-  for (let input in fixInputs) {
-    if (fixInputs[input]) {
-      let btns = containerPaitner.querySelectorAll(input);
-      for (let i = 0; i < btns.length; i++) {
-        CssUtils.addClass(btns[i], fixInputs[input])
-      }
-    }
-  }
-
   var $ = function (selector) {
     return containerPaitner.querySelector(selector);
   };
@@ -406,6 +391,22 @@ function Painter(containerPaitner, conf) {
           });
         }
       });
+    },
+    fixClasses: function() {
+      CssUtils.addClass(containerPaitner, 'spainterContainer');
+      var fixInputs = {
+        'input[type=button]': conf.buttonClass,
+        'input[type=text]': conf.textClass,
+        'input[type=range]': conf.rangeClass
+      };
+      for (let input in fixInputs) {
+        if (fixInputs[input]) {
+          let btns = containerPaitner.querySelectorAll(input);
+          for (let i = 0; i < btns.length; i++) {
+            CssUtils.addClass(btns[i], fixInputs[input])
+          }
+        }
+      }
     },
     setContext: function () {
       Object.keys(self.instruments).forEach(function (k) {
