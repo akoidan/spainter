@@ -773,7 +773,7 @@ function Painter(containerPaitner, conf) {
           logger.debug("Pasting images")();
           self.setMode('img');
           self.tools.img.readAndPasteCanvas(getter(files[i]));
-          self.preventDefault(e);
+          e.preventDefault(e);
           return;
         }
       }
