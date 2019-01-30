@@ -394,6 +394,7 @@ function Painter(containerPaitner, conf) {
     },
     fixClasses: function() {
       CssUtils.addClass(containerPaitner, 'spainterContainer');
+      containerPaitner.setAttribute('tabIndex', 0)
       var fixInputs = {
         'input[type=button]': conf.buttonClass,
         'input[type=text]': conf.textClass,
