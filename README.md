@@ -2,7 +2,7 @@
 
 # Spainter. Web browSer painter
 
-## [DEMO](https://spainter.pychat.org/)
+## [DEMO](http://spainter.pychat.org/)
 
 ### Use:
 
