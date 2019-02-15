@@ -1,8 +1,9 @@
 {
   "name": "spainter",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Web browser painter, like mspaint. ",
   "main": "index.js",
+  "files": ["index.js", "index.css", "README.md", "LICENSE.txt", "fontello-codes.scss", "font", "index.d.ts", "index.sass", "no-fonts.sass"],
   "scripts": {
     "build": "sh generate-fontello.sh generate && sassc index.sass index.css"
   },
