@@ -1076,7 +1076,6 @@ function Painter(containerPaitner, conf) {
       tool.onActivate = function () {
         self.ctx.lineJoin = 'round';
         self.ctx.lineCap = 'round';
-        self.ctx.globalCompositeOperation = "source-over";
       };
       tool.onMouseDown = function (e) {
         var coord = self.helper.getXY(e);
@@ -1476,6 +1475,7 @@ function Painter(containerPaitner, conf) {
       };
       tool.onDeactivate = function () {
         self.ctx.globalAlpha = tool.tmpAlpha;
+        self.ctx.globalCompositeOperation = "source-over";
       };
       tool.onMouseDown = function (e) {
         var coord = self.helper.getXY(e);
