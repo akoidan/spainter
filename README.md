@@ -13,7 +13,7 @@
 ```
 <link rel="stylesheet" type="text/css" href="./index.css"/>
 <script src="./index.js"></script>
-<div id="spainterContainer"></div>
+<div id="containerPainer"></div>
 ```
 
 3. In your javascript
