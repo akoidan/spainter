@@ -19,20 +19,21 @@ import 'spainter/index.sass';
 let logger = new LoggerFactory().getLoggerColor('painter', '#d507bd');
 const containerPainter = document.createElement('div');
 document.body.appendChild(containerPainter);
-const p = new Painter(containerPainter, logger);
+const p = new Painter(containerPainter, {logger}));
 ```
 If you use [fontello](http://fontello.com/) in your server, you can generate single font importing [no-fonts.sass](no-fonts.sass), joining it with [config.json](config.json)
 
  - If you use server rendering and cdn:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/spainter@1.0.1/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/spainter@1.0.0/index.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spainter@1.0.1/index.css"/>
 <div id="containerPainter"></div>
 <script>
 const p = new Painter(containerPainter);
 </script>
 ```
+Target the latest version instead of `1.0.0` [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter)
 
 If you need logging, use:
 ```javascript
@@ -53,13 +54,19 @@ new Painter(containerPainter, {
    }
 })
 ```
-Target the latest version instead of `1.0.1` [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter)
-
-- If you want to get Blob and e.g. upload it to server, you can use 2nd parameter of constructor:
+ - Additional parameters
 
 ```javascript
 new Painter(containerPainer, {
-  onBlobPaste: function(blob) {
+  textClass: 'input-txt-class', // set class for all input[type=text] elements
+  buttonClass: 'input-button-class', // set class for all input[type=button] elements
+  rangeClass: 'input-range-class', // set class for all input[type=range]elements
+  rangeFactory: () => { // use this div for input[range], e.g. you can use material-design
+    var input = document.createElement('input');
+    input.type = 'range';
+    return input;
+  },
+  onBlobPaste: function(blob) { // example of uploading image to server
     var formData = new FormData();
     formData.append('file', blob, 'specifyFileNameHereIfNeeded.png');
     fetch(`${host}/upload_file`, {

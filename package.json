@@ -1,6 +1,6 @@
 {
   "name": "spainter",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Web browser painter, like mspaint. ",
   "main": "index.js",
   "files": ["index.js", "index.css", "README.md", "LICENSE.txt", "fontello-codes.scss", "font", "index.d.ts", "index.sass", "no-fonts.sass"],
