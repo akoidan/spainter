@@ -30,7 +30,13 @@ If you use [fontello](http://fontello.com/) in your server, you can generate sin
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spainter@1.0.1/index.css"/>
 <div id="containerPainter"></div>
 <script>
-const p = new Painter(containerPainter, {
+const p = new Painter(containerPainter);
+</script>
+```
+
+If you need logging, use:
+```javascript
+new Painter(containerPainter, {
    logger: {
      debug: function log() {
        var args = Array.prototype.slice.call(arguments);
@@ -46,7 +52,6 @@ const p = new Painter(containerPainter, {
      }
    }
 })
-</script>
 ```
 Target the latest version instead of `1.0.1` [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter)
 
@@ -73,8 +78,8 @@ Spainter uses [flexbox](https://caniuse.com/#feat=flexbox) if you need to suppor
 
 ### Contribute
 So there're 2 things you need:
- - Download [fontello](http://fontello.com/) icons from [config.json](config.json). You can use `generate-fontello.sh` script for that. The script requires **curl** and **bash** commands
- - Build css from sass. You can use **sassc** index.sass index.css
+ - Download [fontello](http://fontello.com/) icons from [config.json](config.json). You can use [generate-fontello.sh](generate-fontello.sh) script for that. The script requires **curl** and **bash** commands
+ - Build css from sass. You can use ``**sassc** index.sass index.css`, take a look at [sassc](https://github.com/sass/sassc) for more info
  - Open index.html in browser
 
 I also intentionally leaved styles empty so you can easily override them according to your website design. If you want to prettify it a bit, you're wellcome to create a separate .css file with styles.
