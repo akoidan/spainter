@@ -6,21 +6,50 @@
 
 ### Use:
 
-1. `npm install spainter`
+ - If you use bundler like webpack:
 
-2. in your html file
-
-```
-<link rel="stylesheet" type="text/css" href="./index.css"/>
-<script src="./index.js"></script>
-<div id="containerPainer"></div>
+```bash
+npm i spainter lines-logger
 ```
 
-3. In your javascript
+```javascript
+import Painter from 'spainter';
+import  {LoggerFactory} from 'lines-logger';
+import 'spainter/index.sass';
+let logger = new LoggerFactory().getLoggerColor('painter', '#d507bd');
+const containerPainter = document.createElement('div');
+document.body.appendChild(containerPainter);
+const p = new Painter(containerPainter, logger);
+```
 
+ - If you use server rendering and cdn:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/spainter@1.0.0/index.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spainter@1.0.0/index.css"/>
+<div id="containerPainter"></div>
+<script>
+const p = new Painter(containerPainter, {
+   logger: {
+     debug: function log() {
+       var args = Array.prototype.slice.call(arguments);
+       var parts = args.shift().split('{}');
+       var params = [window.console, '%c' + 'painter', 'red'];
+       for (var i = 0; i < parts.length; i++) {
+         params.push(parts[i]);
+         if (typeof args[i] !== 'undefined') {
+           params.push(args[i])
+         }
+       }
+       return Function.prototype.bind.apply(console.log, params);
+     }
+   }
+})
+</script>
+
+Target the latest version instead of `1.0.0` [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter)
 ```
-var p = new Painter(containerPainer)
-```
+
 
 4. If you want to get Blob and e.g. upload it to server, you can use 2nd parameter of constructor:
 
@@ -38,28 +67,6 @@ new Painter(containerPainer, {
   }
 })
 ```
-
-5. By default logs are off, you can turn them on with:
-```
-new Painter(containerPainer, {
-   logger: {
-     debug: function log() {
-       var args = Array.prototype.slice.call(arguments);
-       var parts = args.shift().split('{}');
-       var params = [window.console, '%c' + 'painter', 'red'];
-       for (var i = 0; i < parts.length; i++) {
-         params.push(parts[i]);
-         if (typeof args[i] !== 'undefined') {
-           params.push(args[i])
-         }
-       }
-       return Function.prototype.bind.apply(console.log, params);
-     }
-   }
-})
-```
-
-You can also pass [lines-logger](https://www.npmjs.com/package/lines-logger) instead of the ugly construction above
 
 ### CAUTION
 
