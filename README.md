@@ -81,7 +81,7 @@ Spainter uses [flexbox](https://caniuse.com/#feat=flexbox) if you need to suppor
 ### Contribute
 So there're 2 things you need:
  - Download [fontello](http://fontello.com/) icons from [config.json](config.json). You can use [generate-fontello.sh](generate-fontello.sh) script for that. The script requires **curl** and **bash** commands
- - Build css from sass. You can use ``**sassc** index.sass index.css`, take a look at [sassc](https://github.com/sass/sassc) for more info
- - Open index.html in browser
+ - Build css from sass. You can use `sassc index.sass index.css`, take a look at [sassc](https://github.com/sass/sassc) for more info
+ - Open [index.html](index.html) in browser
 
 I also intentionally leaved styles empty so you can easily override them according to your website design. If you want to prettify it a bit, you're wellcome to create a separate .css file with styles.
