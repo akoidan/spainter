@@ -21,6 +21,7 @@ const containerPainter = document.createElement('div');
 document.body.appendChild(containerPainter);
 const p = new Painter(containerPainter, logger);
 ```
+If you use [fontello](http://fontello.com/) in your server, you can generate single font importing [no-fonts.sass](no-fonts.sass), joining it with [config.json](config.json)
 
  - If you use server rendering and cdn:
 
@@ -51,7 +52,7 @@ Target the latest version instead of `1.0.1` [![npm version](https://img.shields
 
 - If you want to get Blob and e.g. upload it to server, you can use 2nd parameter of constructor:
 
-```
+```javascript
 new Painter(containerPainer, {
   onBlobPaste: function(blob) {
     var formData = new FormData();
@@ -65,7 +66,7 @@ new Painter(containerPainer, {
   }
 })
 ```
- - If you use [fontello](http://fontello.com/) in your server, you can generate single font importing [no-fonts.sass](no-fonts.sass], joining it with [config.json](config.json)
+
 ### CAUTION
 
 Spainter uses [flexbox](https://caniuse.com/#feat=flexbox) if you need to support browsers like IE 9 and below, you're free to create a pull request to remove flexbox.
