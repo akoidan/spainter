@@ -9,17 +9,16 @@
  - If you use bundler like webpack:
 
 ```bash
-npm i spainter lines-logger
+npm i spainter
 ```
 
 ```javascript
 import Painter from 'spainter';
 import  {LoggerFactory} from 'lines-logger';
 import 'spainter/index.sass';
-let logger = new LoggerFactory().getLoggerColor('painter', '#d507bd');
 const containerPainter = document.createElement('div');
 document.body.appendChild(containerPainter);
-const p = new Painter(containerPainter, {logger}));
+const p = new Painter(containerPainter));
 ```
 If you use [fontello](http://fontello.com/) in your server, you can generate single font importing [no-fonts.sass](no-fonts.sass), joining it with [config.json](config.json)
 
@@ -35,25 +34,6 @@ const p = new Painter(containerPainter);
 ```
 Target the latest version instead of `1.0.0` [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter)
 
-If you need logging, use:
-```javascript
-new Painter(containerPainter, {
-   logger: {
-     debug: function log() {
-       var args = Array.prototype.slice.call(arguments);
-       var parts = args.shift().split('{}');
-       var params = [window.console, '%c' + 'painter', 'red'];
-       for (var i = 0; i < parts.length; i++) {
-         params.push(parts[i]);
-         if (typeof args[i] !== 'undefined') {
-           params.push(args[i])
-         }
-       }
-       return Function.prototype.bind.apply(console.log, params);
-     }
-   }
-})
-```
  - Additional parameters
 
 ```javascript
@@ -75,9 +55,24 @@ new Painter(containerPainer, {
     }).then(e => {
       console.log('server response', e);
     });
+  },
+  logger: { // enabling logger
+    debug: function log() {
+      var args = Array.prototype.slice.call(arguments);
+      var parts = args.shift().split('{}');
+      var params = [window.console, '%c' + 'painter', 'red'];
+      for (var i = 0; i < parts.length; i++) {
+        params.push(parts[i]);
+        if (typeof args[i] !== 'undefined') {
+          params.push(args[i])
+        }
+      }
+      return Function.prototype.bind.apply(console.log, params);
+    }
   }
 })
 ```
+For logger you can also check out [lines-logger](https://www.npmjs.com/package/lines-logger). Pass instance of `Logger` class the the parameter.
 
 ### CAUTION
 
