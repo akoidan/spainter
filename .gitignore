@@ -1,5 +1,7 @@
 .idea/
+yarn.lock
 font/
+node_modules
 *.css
 *.css.map
 *.scss

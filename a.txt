@@ -1,0 +1,7 @@
+onChangeColorFill
+onChangeOpacity
+onChangeColor
+onApply
+onChangeFont
+onChangeRadius
+onChangeFillOpacity
