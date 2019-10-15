@@ -9,16 +9,16 @@
  - If you use bundler like webpack:
 
 ```bash
-npm i spainter
+npm i spainter lines-logger
 ```
 
-```javascript
+```ecmascript 6
 import Painter from 'spainter';
-import  {LoggerFactory} from 'lines-logger';
-import 'spainter/index.sass';
+import 'spainter/index.sass'; // you can impor index.css if you don't have sass, ensure that you copy the fonts from the directory as well to production. Set `$FontelloPath: "../node_modules/spainter/font"`
+import {LoggerFactory} from 'lines-logger';
 const containerPainter = document.createElement('div');
 document.body.appendChild(containerPainter);
-const p = new Painter(containerPainter));
+const p = new Painter(containerPainter, {logger: new LoggerFactory().getLoggerColor('spainter', 'blue')});
 ```
 If you use [fontello](http://fontello.com/) in your server, you can generate single font importing [no-fonts.sass](no-fonts.sass), joining it with [config.json](config.json)
 
@@ -29,10 +29,12 @@ If you use [fontello](http://fontello.com/) in your server, you can generate sin
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spainter@1.0.1/index.css"/>
 <div id="containerPainter"></div>
 <script>
-const p = new Painter(containerPainter);
+var p = new Painter(containerPainter);
 </script>
 ```
 Target the latest version instead of `1.0.0` [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter)
+
+ - You can find an example on [pychat](https://github.com/akoidan/pychat/blob/3c82c75c719dc5d84700efde415e2842d355dcf3/fe/src/components/pages/PainterPage.vue)
 
  - Additional parameters
 
