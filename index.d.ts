@@ -1,7 +1,7 @@
 declare module 'spainter' {
 
   interface PainterConf {
-    onBlobPaste(blob: Blob): void;
+    onBlobPaste?(blob: Blob): void;
     logger?: any;
     buttonClass?: string;
     rangeClass?: string;
