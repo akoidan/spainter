@@ -726,6 +726,9 @@ function Painter(containerPaitner, conf) {
           self.helper.pasteToTextArea();
         }
       }
+      if (self.mode === 'text') {
+        return // don't enter into another mode when we enter text
+      }
       self.keyProcessors.forEach(function(proc) {
         if (event.code == proc.code
           && (!proc.ctrlKey || (proc.ctrlKey && event.ctrlKey))) {
