@@ -25,4 +25,4 @@ jobs:
           ssh-keyscan -p ${{ secrets.PORT }} ${{ secrets.HOST }} >> ~/.ssh/known_hosts
       - name: Copy static files to destination server
         run: |
-           scp -r ./font ./index.css ./index.js ./index.html ${{ secrets.SSH_USER }}@${{ secrets.HOST }} -p ${{ secrets.PORT }} /srv/http/spainter/
+           scp -P ${{ secrets.PORT }} -r ./font ./index.css ./index.js ./index.html ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:/srv/http/spainter/
