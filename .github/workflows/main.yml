@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
-  upload_frontend:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -25,4 +25,4 @@ jobs:
           ssh-keyscan -p ${{ secrets.PORT }} ${{ secrets.HOST }} >> ~/.ssh/known_hosts
       - name: Copy static files to destination server
         run: |
-           scp -r ./font ./index.css ./index.js ./index.html ${{ secrets.SSH_USER }}@${{ secrets.HOST }} -p ${{ secrets.PORT }} "rm -rf /srv/http/spainter/"
+           scp -r ./font ./index.css ./index.js ./index.html ${{ secrets.SSH_USER }}@${{ secrets.HOST }} -p ${{ secrets.PORT }} /srv/http/spainter/
