@@ -154,6 +154,9 @@ function Painter(containerPaitner, conf) {
   }
 
 
+  var reverseExponentialMap = {'0': '0', '1': 5, '2': 13, '3': 18, '4': 21, '5': 24, '6': 27, '7': 29, '8': 30, '9': 32, '10': 34, '11': 35, '12': 36, '13': 37, '14': 38, '15': 39, '16': 40, '17': 41, '18': 42, '19': 43, '21': 44, '22': 45, '24': 46, '26': 47, '28': 48, '30': 49, '32': 50, '34': 51, '36': 52, '39': 53, '42': 54, '45': 55, '48': 56, '51': 57, '55': 58, '59': 59, '63': 60, '68': 61, '72': 62, '78': 63, '83': 64, '89': 65, '100': 66};
+  // Fn(x) = Math.round(Math.exp((Math.log(1000)/100) * x
+  var exponentialMap = {'0': 1, '1': 1, '2': 1, '3': 1, '4': 1, '5': 1, '6': 2, '7': 2, '8': 2, '9': 2, '10': 2, '11': 2, '12': 2, '13': 2, '14': 3, '15': 3, '16': 3, '17': 3, '18': 3, '19': 4, '20': 4, '21': 4, '22': 5, '23': 5, '24': 5, '25': 6, '26': 6, '27': 6, '28': 7, '29': 7, '30': 8, '31': 9, '32': 9, '33': 10, '34': 10, '35': 11, '36': 12, '37': 13, '38': 14, '39': 15, '40': 16, '41': 17, '42': 18, '43': 19, '44': 21, '45': 22, '46': 24, '47': 26, '48': 28, '49': 30, '50': 32, '51': 34, '52': 36, '53': 39, '54': 42, '55': 45, '56': 48, '57': 51, '58': 55, '59': 59, '60': 63, '61': 68, '62': 72, '63': 78, '64': 83, '65': 89, '66': 100}
 
   var self = this;
   self.zoom = 1;
@@ -366,7 +369,7 @@ function Painter(containerPaitner, conf) {
           var handler = self.tools[self.mode][instr.handler];
           handler && handler(e);
           if (instr.range) {
-            instr.range.value = instr.value.value;
+            instr.range.value =  reverseExponentialMap[instr.value.value];
           }
         });
         if (instr.range) {
@@ -380,12 +383,15 @@ function Painter(containerPaitner, conf) {
             instr.range = document.createElement('input');
             instr.range.type = 'range';
           }
+          instr.range.max = 66;
           var div = document.createElement('div');
           div.appendChild(instr.range);
           instr.holder.appendChild(div);
           instr.range.addEventListener('input', function (e) {
-            instr.value.value = instr.range.value;
-            instr.ctxSetter(e.target.value);
+            // exponential growth
+            var value = exponentialMap[instr.range.value];
+            instr.value.value = value;
+            instr.ctxSetter(value);
             var handler = self.tools[self.mode][instr.handler];
             handler && handler(e);
           });
@@ -460,6 +466,7 @@ function Painter(containerPaitner, conf) {
       [
         {dom: self.dom.canvas, listener: ['mousedown', 'touchstart'], handler: 'onmousedown'},
         {dom: self.dom.canvas, listener: ['mousemove', 'touchmove'], handler: 'onmousemove'},
+        {dom: self.dom.canvasWrapper, listener: ['mouseleave'], handler: 'onmouseup'},
         {dom: self.dom.container, listener: 'keydown', handler: 'contKeyPress', params: false},
         {dom: document.body, listener: 'paste', handler: 'canvasImagePaste', params: false},
         {dom: self.dom.canvasWrapper, listener: mouseWheelEventName, handler: 'onmousewheel', params: {passive: false}},
