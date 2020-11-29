@@ -730,8 +730,8 @@ function Painter(containerPaitner, conf) {
         return // don't enter into another mode when we enter text
       }
       self.keyProcessors.forEach(function(proc) {
-        if (event.code == proc.code
-          && (!proc.ctrlKey || (proc.ctrlKey && event.ctrlKey))) {
+        if (event.code == proc.code &&
+            ((event.shiftKey && !proc.ctrlKey) || (proc.ctrlKey && event.ctrlKey))) {
           proc.clickAction(event);
         }
       });
@@ -976,7 +976,7 @@ function Painter(containerPaitner, conf) {
         code: 'KeyS',
         icon: '' +
         'icon-selection',
-        title: 'Select (S)'
+        title: 'Select (Shift+S)'
       };
       tool.bufferHandler = true;
       tool.domImg = self.dom.paintPastedImg;
@@ -1062,9 +1062,12 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyB',
         icon: 'icon-brush-1',
-        title: 'Brush (B)'
+        title: 'Brush (Shift+B)'
       };
       tool.onChangeColor = function (e) {
+        self.helper.setCursor(tool.getCursor());
+      };
+      tool.onZoomChange = function (e) {
         self.helper.setCursor(tool.getCursor());
       };
       tool.onChangeRadius = function (e) {
@@ -1074,7 +1077,7 @@ function Painter(containerPaitner, conf) {
         self.helper.setCursor(tool.getCursor());
       };
       tool.getCursor = function () {
-        return self.helper.buildCursor(self.ctx.strokeStyle, '', self.ctx.lineWidth);
+        return self.helper.buildCursor(self.ctx.strokeStyle, '', self.ctx.lineWidth * self.zoom / 2);
       };
       tool.onActivate = function () {
         self.ctx.lineJoin = 'round';
@@ -1108,7 +1111,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyL',
         icon: 'icon-line',
-        title: 'Line (L)'
+        title: 'Line (Shift+L)'
       };
       tool.getCursor = function () {
         return 'crosshair';
@@ -1152,7 +1155,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyF',
         icon: 'icon-fill',
-        title: 'Flood Fill (F)'
+        title: 'Flood Fill (Shift+F)'
       };
       tool.bufferHandler = true;
       tool.buildCursor = function() {
@@ -1279,7 +1282,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyQ',
         icon: 'icon-rect',
-        title: 'Rectangle (Q)'
+        title: 'Rectangle (Shift+Q)'
       };
       tool.getCursor = function () {
         return 'crosshair';
@@ -1323,7 +1326,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyE',
         icon: 'icon-ellipse',
-        title: 'Eclipse (E)'
+        title: 'Eclipse (Shift+E)'
       };
       tool.getCursor = function () {
         return 'crosshair';
@@ -1383,7 +1386,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyT',
         icon: 'icon-text',
-        title: 'Text (T)'
+        title: 'Text (Shift+T)'
       };
       tool.span = self.dom.paintTextSpan;
       //prevent self.events.contKeyPress
@@ -1463,7 +1466,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyD',
         icon: 'icon-eraser',
-        title: 'Eraser (D)'
+        title: 'Eraser (Shift+D)'
       };
       tool.getCursor = function () {
         return self.helper.buildCursor('#aaaaaa', ' stroke="black" stroke-width="2"', self.ctx.lineWidth);
@@ -1559,7 +1562,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyC',
         icon: 'icon-crop',
-        title: 'Crop Image (C)'
+        title: 'Crop Image (Shift+C)'
       };
       tool.bufferHandler = true;
       tool.getCursor = function () {
@@ -1607,7 +1610,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyW',
         icon: 'icon-resize',
-        title: 'Change dimensions (W)'
+        title: 'Change dimensions (Shift+W)'
       };
       tool.container = self.dom.paintResizeTools;
       tool.width = tool.container.querySelector('[placeholder=width]');
@@ -1649,7 +1652,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyM',
         icon: 'icon-move',
-        title: 'Move (M)'
+        title: 'Move (Shift+M)'
       };
       tool.getCursor = function () {
         return 'move';
@@ -1678,7 +1681,7 @@ function Painter(containerPaitner, conf) {
       keyActivator: {
         code: 'KeyR',
         icon: 'icon-rotate',
-        title: 'Rotate (R)'
+        title: 'Rotate (Shift+R)'
       },
       handler: function () {
         if (self.tools['select'].isSelectionActive()) {
@@ -1755,7 +1758,7 @@ function Painter(containerPaitner, conf) {
       keyActivator: {
         code: 'Delete',
         icon: 'icon-trash-circled',
-        title: 'Delete (Del)'
+        title: 'Delete (Shift+Del)'
       },
       handler: function () {
         if (self.tools['select'].isSelectionActive()) {
