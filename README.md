@@ -15,10 +15,10 @@ npm i spainter lines-logger
 ```ecmascript 6
 import Painter from 'spainter';
 import 'spainter/index.sass'; // you can impor index.css if you don't have sass, ensure that you copy the fonts from the directory as well to production. Set `$FontelloPath: "../node_modules/spainter/font"`
-import {LoggerFactory} from 'lines-logger';
+import {LoggerFactory} from 'lines-logger'; // yarn install lines-logger
 const containerPainter = document.createElement('div');
 document.body.appendChild(containerPainter);
-const p = new Painter(containerPainter, {logger: new LoggerFactory().getLoggerColor('spainter', 'blue')});
+const p = new Painter(containerPainter, {logger: new LoggerFactory().getLogger('spainter')});
 ```
 If you use [fontello](http://fontello.com/) in your server, you can generate single font importing [no-fonts.sass](no-fonts.sass), joining it with [config.json](config.json)
 
@@ -58,7 +58,7 @@ new Painter(containerPainer, {
       console.log('server response', e);
     });
   },
-  logger: { // enabling logger
+  logger: { // better use lines-logger instead this constructions. If you don't wanna install it, use this ugly construction below
     debug: function log() {
       var args = Array.prototype.slice.call(arguments);
       var parts = args.shift().split('{}');
@@ -74,16 +74,15 @@ new Painter(containerPainer, {
   }
 })
 ```
-For logger you can also check out [lines-logger](https://www.npmjs.com/package/lines-logger). Pass instance of `Logger` class the the parameter.
 
 ### CAUTION
 
 Spainter uses [flexbox](https://caniuse.com/#feat=flexbox) if you need to support browsers like IE 9 and below, you're free to create a pull request to remove flexbox.
 
 ### Contribute
-So there're 2 things you need:
- - Download [fontello](http://fontello.com/) icons from [config.json](config.json). You can use [generate-fontello.sh](generate-fontello.sh) script for that. The script requires **curl** and **bash** commands
- - Build css from sass. You can use `sassc index.sass index.css`, take a look at [sassc](https://github.com/sass/sassc) for more info
+To build spainter you need
+ - yarn run build
  - Open [index.html](index.html) in browser
+To modify icons use `bash generate-fontello.sh`. it will show you help.
 
 I also intentionally leaved styles empty so you can easily override them according to your website design. If you want to prettify it a bit, you're wellcome to create a separate .css file with styles.
