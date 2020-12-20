@@ -130,7 +130,11 @@ function Painter(containerPaitner, conf) {
 
 
   var $ = function (selector) {
-    return containerPaitner.querySelector(selector);
+    var el = containerPaitner.querySelector(selector);
+    if (!el) {
+      throw Error(selector + " Not found")
+    }
+    return el;
   };
 
 
@@ -451,6 +455,7 @@ function Painter(containerPaitner, conf) {
           self.helper.applyZoom();
         });
       });
+      self.buffer.setIconsState()
     },
     checkEventCodes: function() {
       var check = [];
@@ -546,6 +551,7 @@ function Painter(containerPaitner, conf) {
       self.dom.canvas.style.cursor = text;
     },
     buildCursor: function (fill, stroke, width) {
+      width = width * self.zoom / 2
       if (width < 3) {
         width = 3;
       } else if (width > 126) {
@@ -1084,7 +1090,7 @@ function Painter(containerPaitner, conf) {
         self.helper.setCursor(tool.getCursor());
       };
       tool.getCursor = function () {
-        return self.helper.buildCursor(self.ctx.strokeStyle, '', self.ctx.lineWidth * self.zoom / 2);
+        return self.helper.buildCursor(self.ctx.strokeStyle, '', self.ctx.lineWidth);
       };
       tool.onActivate = function () {
         self.ctx.lineJoin = 'round';
@@ -1235,7 +1241,9 @@ function Painter(containerPaitner, conf) {
         if (!result) {
           throw Error("Invalid color");
         }
-        return a << 24 | (b << 16) | (g << 8) | r;
+        //https://stackoverflow.com/a/14963574/3872976
+        //return a << 24 | (b << 16) | (g << 8) | r; this doesn't work because it's signed int, we need unsinged
+        return new Uint32Array(new Uint8Array([r,g,b,a]).buffer)[0];
       };
       tool.onMouseDown = function (e) {
         if (!((self.dom.canvas.width * self.dom.canvas.height) < 4000001)) {
@@ -1443,6 +1451,9 @@ function Painter(containerPaitner, conf) {
         code: 'KeyD',
         icon: 'icon-eraser',
         title: 'Eraser (Shift+D)'
+      };
+      tool.onZoomChange = function (e) {
+        self.helper.setCursor(tool.getCursor());
       };
       tool.getCursor = function () {
         return self.helper.buildCursor('#aaaaaa', ' stroke="black" stroke-width="2"', self.ctx.lineWidth);
@@ -1753,8 +1764,6 @@ function Painter(containerPaitner, conf) {
     var tool = this;
     var undoImages = [];
     var redoImages = [];
-    // var paintUndo = $('paintUndo');
-    // var paintRedo = $('paintRedo');
     var buStateData = ['lineWidth', 'fillStyle', 'strokeStyle', 'fontFamily', 'font', 'globalAlpha', 'lineJoin', 'lineCap', 'globalCompositeOperation'];
     var current = null;
     tool.getCanvasImage = function (img) {
@@ -1793,8 +1802,8 @@ function Painter(containerPaitner, conf) {
       }
     };
     tool.setIconsState = function() {
-      // CssUtils.setClassToState(paintUndo, undoImages.length, 'disabled');
-      // CssUtils.setClassToState(paintRedo, redoImages.length, 'disabled');
+      CssUtils.setClassToState($('.icon-redo'), redoImages.length, 'disabled');
+      CssUtils.setClassToState($('.icon-undo'), undoImages.length, 'disabled');
     };
     tool.redo = function () {
       tool.dodo(redoImages, undoImages);

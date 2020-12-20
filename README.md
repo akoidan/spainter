@@ -14,7 +14,7 @@ npm i spainter lines-logger
 
 ```ecmascript 6
 import Painter from 'spainter';
-import 'spainter/index.sass'; // you can impor index.css if you don't have sass, ensure that you copy the fonts from the directory as well to production. Set `$FontelloPath: "../node_modules/spainter/font"`
+import 'spainter/index.sass'; // you can import index.css if you don't have sass, ensure that you copy the fonts from the directory as well to production. Set `$FontelloPath: "../node_modules/spainter/font"`
 import {LoggerFactory} from 'lines-logger'; // yarn install lines-logger
 const containerPainter = document.createElement('div');
 document.body.appendChild(containerPainter);
