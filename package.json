@@ -1,6 +1,6 @@
 {
   "name": "spainter",
-  "version": "1.0.4",
+  "version": "1.2.7",
   "description": "Web browser painter, like mspaint. ",
   "main": "index.js",
   "files": [
@@ -15,7 +15,7 @@
     "no-fonts.sass"
   ],
   "scripts": {
-    "build": "sh generate-fontello.sh generate && sassc index.sass index.css"
+    "build": "bash generate-fontello.sh generate && node-sass index.sass index.css"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
@@ -68,5 +68,9 @@
     "url": "https://github.com/Deathangel908/spainter/issues"
   },
   "homepage": "https://github.com/Deathangel908/spainter#readme",
-  "typings": "./index.d.ts"
+  "typings": "./index.d.ts",
+  "devDependencies": {
+    "node-sass": "^5.0.0",
+    "sass": "^1.29.0"
+  }
 }

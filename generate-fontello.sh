@@ -46,15 +46,15 @@ safeRunCommand() {
 
 post_fontello_conf() {
     printOut "Creating fontello config"
-    safeRunCommand curl --silent --show-error --fail --form "config=@./config.json" --output .fontello http://fontello.com
+    safeRunCommand curl --silent --show-error --fail --form "config=@./config.json" --output .fontello https://fontello.com
     fontello_session=$(cat .fontello)
-    url="http://fontello.com/`cat .fontello`"
+    url="https://fontello.com/`cat .fontello`"
     echo "Genereted fontello url: $url"
 }
 
 show_fontello_session() {
     fontello_session=$(cat .fontello)
-    url="http://fontello.com/`cat .fontello`"
+    url="https://fontello.com/`cat .fontello`"
     printOut "Fonts url is: $url"
 }
 
@@ -62,9 +62,10 @@ download_fontello() {
     fontello_session=$(cat .fontello)
     printOut "Downloading fontello using fontello session '$fontello_session'"
     mkdir -p "$TMP_DIR/fontello"
-    safeRunCommand curl -X GET "http://fontello.com/$fontello_session/get" -o "$TMP_DIR/fonts.zip"
+    safeRunCommand curl -X GET "https://fontello.com/$fontello_session/get" -o "$TMP_DIR/fonts.zip"
     safeRunCommand unzip "$TMP_DIR/fonts.zip" -d "$TMP_DIR/fontello"
     dir=$(ls "$TMP_DIR/fontello")
+    safeRunCommand mkdir -p "$FONT_DIR"
     safeRunCommand cp -v "$TMP_DIR/fontello"/$dir/font/* "$FONT_DIR"
     safeRunCommand cp -v "$TMP_DIR/fontello/$dir/css/fontello-codes.css" "$PROJECT_ROOT/fontello-codes.scss"
     safeRunCommand cp -v "$TMP_DIR/fontello"/$dir/demo.html "$PROJECT_ROOT"

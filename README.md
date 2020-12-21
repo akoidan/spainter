@@ -1,4 +1,4 @@
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/deathangel908/lines-logger/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/akoidan/spainter/issues/new) [![HitCount](http://hits.dwyl.io/akoidan/spainter.svg)](http://hits.dwyl.io/akoidan/spainter)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/deathangel908/lines-logger/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/akoidan/spainter/issues/new) [![HitCount](http://hits.dwyl.io/akoidan/spainter.svg)](http://hits.dwyl.io/akoidan/spainter) ![update:spainter.pychat.org](https://github.com/akoidan/spainter/workflows/update:spainter.pychat.org/badge.svg)
 
 # Spainter. Web browSer painter
 
@@ -9,16 +9,16 @@
  - If you use bundler like webpack:
 
 ```bash
-npm i spainter
+npm i spainter lines-logger
 ```
 
-```javascript
+```ecmascript 6
 import Painter from 'spainter';
-import  {LoggerFactory} from 'lines-logger';
-import 'spainter/index.sass';
+import 'spainter/index.sass'; // you can import index.css if you don't have sass, ensure that you copy the fonts from the directory as well to production. Set `$FontelloPath: "../node_modules/spainter/font"`
+import {LoggerFactory} from 'lines-logger'; // yarn install lines-logger
 const containerPainter = document.createElement('div');
 document.body.appendChild(containerPainter);
-const p = new Painter(containerPainter));
+const p = new Painter(containerPainter, {logger: new LoggerFactory().getLogger('spainter')});
 ```
 If you use [fontello](http://fontello.com/) in your server, you can generate single font importing [no-fonts.sass](no-fonts.sass), joining it with [config.json](config.json)
 
@@ -29,10 +29,12 @@ If you use [fontello](http://fontello.com/) in your server, you can generate sin
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spainter@1.0.1/index.css"/>
 <div id="containerPainter"></div>
 <script>
-const p = new Painter(containerPainter);
+var p = new Painter(containerPainter);
 </script>
 ```
 Target the latest version instead of `1.0.0` [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter)
+
+ - You can find an example on [pychat](https://github.com/akoidan/pychat/blob/3c82c75c719dc5d84700efde415e2842d355dcf3/fe/src/components/pages/PainterPage.vue)
 
  - Additional parameters
 
@@ -56,7 +58,7 @@ new Painter(containerPainer, {
       console.log('server response', e);
     });
   },
-  logger: { // enabling logger
+  logger: { // better use lines-logger instead this constructions. If you don't wanna install it, use this ugly construction below
     debug: function log() {
       var args = Array.prototype.slice.call(arguments);
       var parts = args.shift().split('{}');
@@ -72,16 +74,15 @@ new Painter(containerPainer, {
   }
 })
 ```
-For logger you can also check out [lines-logger](https://www.npmjs.com/package/lines-logger). Pass instance of `Logger` class the the parameter.
 
 ### CAUTION
 
 Spainter uses [flexbox](https://caniuse.com/#feat=flexbox) if you need to support browsers like IE 9 and below, you're free to create a pull request to remove flexbox.
 
 ### Contribute
-So there're 2 things you need:
- - Download [fontello](http://fontello.com/) icons from [config.json](config.json). You can use [generate-fontello.sh](generate-fontello.sh) script for that. The script requires **curl** and **bash** commands
- - Build css from sass. You can use `sassc index.sass index.css`, take a look at [sassc](https://github.com/sass/sassc) for more info
+To build spainter you need
+ - yarn run build
  - Open [index.html](index.html) in browser
+To modify icons use `bash generate-fontello.sh`. it will show you help.
 
 I also intentionally leaved styles empty so you can easily override them according to your website design. If you want to prettify it a bit, you're wellcome to create a separate .css file with styles.

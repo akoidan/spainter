@@ -16,45 +16,45 @@ function Painter(containerPaitner, conf) {
 
   var FLOOD_FILL_CURSOR = '<?xml version="1.0" encoding="UTF-8" standalone="no"?> <svg    xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"    xmlns:dc="http://purl.org/dc/elements/1.1/"    xmlns:cc="http://creativecommons.org/ns#"    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"    xmlns:svg="http://www.w3.org/2000/svg"    xmlns="http://www.w3.org/2000/svg"    xmlns:xlink="http://www.w3.org/1999/xlink"    height="128"    width="128"    id="svg12"    xml:space="preserve"    enable-background="new 0 0 1000 1000"    viewBox="0 0 128 128"    y="0px"    x="0px"    version="1.1"><defs      id="defs16"><linearGradient        osb:paint="solid"        id="linearGradient4668"><stop          id="stop4666"          offset="0"          style="stop-color:#a70000;stop-opacity:1;" /></linearGradient><linearGradient        gradientUnits="userSpaceOnUse"        y2="129.24489"        x2="8692.8536"        y1="129.24489"        x1="124.50469"        id="linearGradient4670"        xlink:href="#linearGradient4668" /></defs><metadata      id="metadata2"> Svg Vector Icons : http://www.onlinewebfonts.com/icon <rdf:RDF><cc:Work      rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type        rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><g      transform="matrix(-0.06545548,0,0,0.06545548,96.091518,32.9054)"      id="g10"><g        id="g8"        transform="matrix(0.1,0,0,-0.1,0,511)"><path          style="fill-opacity:1;fill:url(#linearGradient4670)"          id="path4"          d="M 2923.3,4723.5 C 2495.2541,4641.7289 2116.2015,4282.4666 2019.575,3861.7722 2010.936,2974.8482 2002.3121,2087.9242 1993.7,1201 1372.6067,561.9446 713.75686,-43.111911 124.50469,-711.1 177.79443,-1124.6012 696.18046,-1384.5817 946.92256,-1721.6746 1873.0645,-2644.7129 2784.7436,-3583.1992 3733.8,-4482.7 c 414.8568,-14.5444 672.1458,554.0816 1010.5846,786.2741 C 5933.4015,-2520.7561 7113.1744,-1335.7883 8297.1,-155 8684.9234,-201.73044 8869.3553,83.429201 8467.4077,323.01301 7303.9011,1506.5241 6142.0458,2693.2924 4939.988,3837.6106 4686.657,4091.5786 4729.7111,3391.5044 4719.1559,3565.1616 4714.1012,2956.3168 4711.3726,2347.458 4708.5,1738.6 5031.0341,1335.4454 4991.2388,661.12765 4526.4426,380.70059 4035.9919,26.383144 3257.4044,327.55874 3152.1031,931.46414 c -39.8563,589.13426 159.3241,863.35076 203.329,893.32976 2.2707,246.6969 2.431,493.4008 2.1679,740.1061 -300.1928,-300.1072 -600.3595,-600.2405 -900.5,-900.4 12.8139,725.2498 -32.7477,1454.2178 35.8271,2176.4281 162.6751,558.7872 1062.6877,586.7614 1253.7345,27.8061 112.979,-515.8061 41.7341,-1055.8192 61.1384,-1582.3166 -12.3655,-253.837 24.6538,-527.0728 -18.3526,-768.8737 -333.2237,-217.6526 -244.4878,-787.61406 173.4897,-834.19331 511.1059,-79.84462 657.2051,617.00781 295.0629,870.31461 -13.3602,773.8703 35.6765,1552.1607 -42.4,2322.3348 -122.666,568.0766 -724.5835,955.0335 -1292.3,847.5 z" /><path          style="fill:{};fill-opacity:1"          id="path6"          d="m 8652.1,-872.8 c -387.3878,-526.6483 -739.4695,-1099.2442 -952.5422,-1720.4453 -255.0408,-767.135 561.8384,-1583.3109 1332.0652,-1367.7587 707.6368,133.0412 1091.285,1010.324 735.7851,1630.769 -236.9486,492.8542 -488.9007,986.3895 -824.0081,1420.335 -74.892,70.77849 -202.3378,99.68687 -291.3,37.1 z" /></g></g></svg>';
 
-  containerPaitner.innerHTML = `<div class="toolsAndCanvas">
-        <div class="painterTools">
-        </div>
-        <div class="canvasWrapper">
-            <canvas></canvas>
-            <div class="canvasResize"></div>
-            <span class="text spainterHidden paintTextSpan" tabindex="-1"
-                  contenteditable="true"></span>
-            <div pos="m" class="paint-crp-rect spainterHidden">
-                <div pos="l"></div>
-                <div pos="r"></div>
-                <div pos="t"></div>
-                <div pos="b"></div>
-                <div pos="tl"></div>
-                <div pos="tr"></div>
-                <div pos="bl"></div>
-                <div pos="br"></div>
-                <img class="paintPastedImg" pos="m"/>
-            </div>
-        </div>
-    </div>
-    <div class="bottomTools">
-        <div class="paintResizeTools spainterHidden">
-            <input type="text" placeholder="width"/>
-            <span>X</span>
-            <input type="text" placeholder="height"/>
-        </div>
- 
-        <div class="paintXYdimens">
-           <div>
-             <div class="paintXY" title="[x, y] zoom"></div> 
-             <div>
-               <span class="paintDimensions" title="width x height"></span>
-               <input type="checkbox" checked title="Trim image on send" class="trimImage"/>  
-             </div>
-           </div>
-           <input type="button" value="Paste" class="paintSend"/>
-        </div>
-    </div>`;
+  containerPaitner.innerHTML = '<div class="toolsAndCanvas">\
+        <div class="painterTools">\
+        </div>\
+        <div class="canvasWrapper">\
+            <canvas></canvas>\
+            <div class="canvasResize"></div>\
+            <span class="text spainterHidden paintTextSpan" tabindex="-1"\
+                  contenteditable="true"></span>\
+            <div pos="m" class="paint-crp-rect spainterHidden">\
+                <div pos="l"></div>\
+                <div pos="r"></div>\
+                <div pos="t"></div>\
+                <div pos="b"></div>\
+                <div pos="tl"></div>\
+                <div pos="tr"></div>\
+                <div pos="bl"></div>\
+                <div pos="br"></div>\
+                <img class="paintPastedImg" pos="m"/>\
+            </div>\
+        </div>\
+    </div>\
+    <div class="bottomTools">\
+        <div class="paintResizeTools spainterHidden">\
+            <input type="text" placeholder="width"/>\
+            <span>X</span>\
+            <input type="text" placeholder="height"/>\
+        </div>\
+ \
+        <div class="paintXYdimens">\
+           <div>\
+             <div class="paintXY" title="[x, y] zoom"></div> \
+             <div>\
+               <span class="paintDimensions" title="width x height"></span>\
+               <input type="checkbox" checked title="Trim image on send" class="trimImage"/>  \
+             </div>\
+           </div>\
+           <input type="button" value="Paste" class="paintSend"/>\
+        </div>\
+    </div>';
 
   var mouseWheelEventName = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
   var tmpCanvasContext = document.createElement('canvas').getContext('2d');
@@ -130,7 +130,11 @@ function Painter(containerPaitner, conf) {
 
 
   var $ = function (selector) {
-    return containerPaitner.querySelector(selector);
+    var el = containerPaitner.querySelector(selector);
+    if (!el) {
+      throw Error(selector + " Not found")
+    }
+    return el;
   };
 
 
@@ -154,6 +158,9 @@ function Painter(containerPaitner, conf) {
   }
 
 
+  var reverseExponentialMap = {'0': '0', '1': 5, '2': 13, '3': 18, '4': 21, '5': 24, '6': 27, '7': 29, '8': 30, '9': 32, '10': 34, '11': 35, '12': 36, '13': 37, '14': 38, '15': 39, '16': 40, '17': 41, '18': 42, '19': 43, '21': 44, '22': 45, '24': 46, '26': 47, '28': 48, '30': 49, '32': 50, '34': 51, '36': 52, '39': 53, '42': 54, '45': 55, '48': 56, '51': 57, '55': 58, '59': 59, '63': 60, '68': 61, '72': 62, '78': 63, '83': 64, '89': 65, '100': 66};
+  // Fn(x) = Math.round(Math.exp((Math.log(1000)/100) * x
+  var exponentialMap = {'0': 1, '1': 1, '2': 1, '3': 1, '4': 1, '5': 1, '6': 2, '7': 2, '8': 2, '9': 2, '10': 2, '11': 2, '12': 2, '13': 2, '14': 3, '15': 3, '16': 3, '17': 3, '18': 3, '19': 4, '20': 4, '21': 4, '22': 5, '23': 5, '24': 5, '25': 6, '26': 6, '27': 6, '28': 7, '29': 7, '30': 8, '31': 9, '32': 9, '33': 10, '34': 10, '35': 11, '36': 12, '37': 13, '38': 14, '39': 15, '40': 16, '41': 17, '42': 18, '43': 19, '44': 21, '45': 22, '46': 24, '47': 26, '48': 28, '49': 30, '50': 32, '51': 34, '52': 36, '53': 39, '54': 42, '55': 45, '56': 48, '57': 51, '58': 55, '59': 59, '60': 63, '61': 68, '62': 72, '63': 78, '64': 83, '65': 89, '66': 100}
 
   var self = this;
   self.zoom = 1;
@@ -366,7 +373,7 @@ function Painter(containerPaitner, conf) {
           var handler = self.tools[self.mode][instr.handler];
           handler && handler(e);
           if (instr.range) {
-            instr.range.value = instr.value.value;
+            instr.range.value =  reverseExponentialMap[instr.value.value];
           }
         });
         if (instr.range) {
@@ -380,12 +387,15 @@ function Painter(containerPaitner, conf) {
             instr.range = document.createElement('input');
             instr.range.type = 'range';
           }
+          instr.range.max = 66;
           var div = document.createElement('div');
           div.appendChild(instr.range);
           instr.holder.appendChild(div);
           instr.range.addEventListener('input', function (e) {
-            instr.value.value = instr.range.value;
-            instr.ctxSetter(e.target.value);
+            // exponential growth
+            var value = exponentialMap[instr.range.value];
+            instr.value.value = value;
+            instr.ctxSetter(value);
             var handler = self.tools[self.mode][instr.handler];
             handler && handler(e);
           });
@@ -400,10 +410,10 @@ function Painter(containerPaitner, conf) {
         'input[type=text]': conf.textClass,
         'input[type=range]': conf.rangeClass
       };
-      for (let input in fixInputs) {
+      for (var input in fixInputs) {
         if (fixInputs[input]) {
-          let btns = containerPaitner.querySelectorAll(input);
-          for (let i = 0; i < btns.length; i++) {
+          var btns = containerPaitner.querySelectorAll(input);
+          for (var i = 0; i < btns.length; i++) {
             CssUtils.addClass(btns[i], fixInputs[input])
           }
         }
@@ -445,12 +455,13 @@ function Painter(containerPaitner, conf) {
           self.helper.applyZoom();
         });
       });
+      self.buffer.setIconsState()
     },
     checkEventCodes: function() {
       var check = [];
       self.keyProcessors.forEach(function (proc) {
         if (check.indexOf(proc.code) >= 0) {
-          throw "key " + proc.code + "is used";
+          throw Error("key " + proc.code + "is used");
         }
         check.push(proc.code);
       });
@@ -460,6 +471,7 @@ function Painter(containerPaitner, conf) {
       [
         {dom: self.dom.canvas, listener: ['mousedown', 'touchstart'], handler: 'onmousedown'},
         {dom: self.dom.canvas, listener: ['mousemove', 'touchmove'], handler: 'onmousemove'},
+        {dom: self.dom.canvasWrapper, listener: ['mouseleave'], handler: 'onmouseup'},
         {dom: self.dom.container, listener: 'keydown', handler: 'contKeyPress', params: false},
         {dom: document.body, listener: 'paste', handler: 'canvasImagePaste', params: false},
         {dom: self.dom.canvasWrapper, listener: mouseWheelEventName, handler: 'onmousewheel', params: {passive: false}},
@@ -539,6 +551,7 @@ function Painter(containerPaitner, conf) {
       self.dom.canvas.style.cursor = text;
     },
     buildCursor: function (fill, stroke, width) {
+      width = width * self.zoom / 2
       if (width < 3) {
         width = 3;
       } else if (width > 126) {
@@ -726,9 +739,12 @@ function Painter(containerPaitner, conf) {
           self.helper.pasteToTextArea();
         }
       }
+      if (self.mode === 'text') {
+        return // don't enter into another mode when we enter text
+      }
       self.keyProcessors.forEach(function(proc) {
-        if (event.code == proc.code
-          && (!proc.ctrlKey || (proc.ctrlKey && event.ctrlKey))) {
+        if (event.code == proc.code &&
+            ((event.shiftKey && !proc.ctrlKey) || (proc.ctrlKey && event.ctrlKey))) {
           proc.clickAction(event);
         }
       });
@@ -973,7 +989,7 @@ function Painter(containerPaitner, conf) {
         code: 'KeyS',
         icon: '' +
         'icon-selection',
-        title: 'Select (S)'
+        title: 'Select (Shift+S)'
       };
       tool.bufferHandler = true;
       tool.domImg = self.dom.paintPastedImg;
@@ -1059,9 +1075,12 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyB',
         icon: 'icon-brush-1',
-        title: 'Brush (B)'
+        title: 'Brush (Shift+B)'
       };
       tool.onChangeColor = function (e) {
+        self.helper.setCursor(tool.getCursor());
+      };
+      tool.onZoomChange = function (e) {
         self.helper.setCursor(tool.getCursor());
       };
       tool.onChangeRadius = function (e) {
@@ -1105,7 +1124,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyL',
         icon: 'icon-line',
-        title: 'Line (L)'
+        title: 'Line (Shift+L)'
       };
       tool.getCursor = function () {
         return 'crosshair';
@@ -1149,11 +1168,11 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyF',
         icon: 'icon-fill',
-        title: 'Flood Fill (F)'
+        title: 'Flood Fill (Shift+F)'
       };
       tool.bufferHandler = true;
       tool.buildCursor = function() {
-        let rawString = format(FLOOD_FILL_CURSOR, self.ctx.fillStyle);
+        var rawString = format(FLOOD_FILL_CURSOR, self.ctx.fillStyle);
         return format('url(data:image/svg+xml;base64,{}) {} {}, auto')(btoa(rawString), 39, 86);
       }
       tool.getCursor = function() {
@@ -1164,110 +1183,88 @@ function Painter(containerPaitner, conf) {
       };
       tool.onChangeFillOpacity = function(e) {};
       tool.floodFill = (function() {
-        var called;
-        var xssss;
-        var yssss;
-        var fillcolorssss;
-        function floodfill(data, x, y, fillcolor, tolerance, width, height) {
-          called = 0;
-          xssss = x;
-          yssss = y;
-          fillcolorssss = fillcolor;
-          var length = data.length;
-          var Q = [];
-          var i = (x + y * width) * 4;
-          var e = i, w = i, me, mw, w2 = width * 4;
-          var targetcolor = [data[i], data[i + 1], data[i + 2], data[i + 3]];
-          if (!pixelCompare(i, targetcolor, fillcolor, data, length, tolerance)) {
-            return false;
+        /** Flood fill algorithm based on gman stackoverflow answer
+         * https://stackoverflow.com/a/56221940/3872976
+         */
+        function getPixel(x, y, width, height, data) {
+          if (x < 0 || y < 0 || x >= width || y >= height) {
+            return -1;
+          } else {
+            return data[y * width + x];
           }
-          Q.push(i);
-          while (Q.length) {
-            i = Q.pop();
-            if (pixelCompareAndSet(i, targetcolor, fillcolor, data, length, tolerance)) {
-              e = i;
-              w = i;
-              mw = parseInt(i / w2) * w2; //left bound
-              me = mw + w2;             //right bound
-              while (mw < w && mw < (w -= 4) && pixelCompareAndSet(w, targetcolor, fillcolor, data, length, tolerance)); //go left until edge hit
-              while (me > e && me > (e += 4) && pixelCompareAndSet(e, targetcolor, fillcolor, data, length, tolerance)); //go right until edge hit
-              for (var j = w; j < e; j += 4) {
-                if (j - w2 >= 0 && pixelCompare(j - w2, targetcolor, fillcolor, data, length, tolerance)) Q.push(j - w2); //queue y-1
-                if (j + w2 < length && pixelCompare(j + w2, targetcolor, fillcolor, data, length, tolerance)) Q.push(j + w2); //queue y+1
-              }
+        }
+
+
+        function doWhile(pixelsToCheck, width, height, data, targetColor, fillColor, cb) {
+          var tickCount = 1;
+          while (pixelsToCheck.length > 0) {
+            if (tickCount % 5000 === 0) { // do not block event loop
+              // do not block event loop
+              setTimeout(doWhile, 0, pixelsToCheck, width, height, data, targetColor, fillColor, cb);
+              return;
+            }
+            var y = pixelsToCheck.pop();
+            var x = pixelsToCheck.pop();
+            var currentColor = getPixel(x, y, width, height, data);
+            if (currentColor === targetColor) {
+              tickCount++;
+              data[y * width + x] = fillColor;
+              pixelsToCheck.push(x + 1, y);
+              pixelsToCheck.push(x - 1, y);
+              pixelsToCheck.push(x, y + 1);
+              pixelsToCheck.push(x, y - 1);
             }
           }
-          return data;
+          cb();
         }
 
-        function pixelCompare(i, targetcolor, fillcolor, data, length, tolerance) {
-          if (i < 0 || i >= length) return false; //out of bounds
-          if (data[i + 3] === 0 && fillcolor.a > 0) return true;  //surface is invisible and fill is visible
+        function floodFill(data, x, y, fillColor, width, height, cb) {
 
-          if (
-            Math.abs(targetcolor[3] - fillcolor.a) <= tolerance &&
-            Math.abs(targetcolor[0] - fillcolor.r) <= tolerance &&
-            Math.abs(targetcolor[1] - fillcolor.g) <= tolerance &&
-            Math.abs(targetcolor[2] - fillcolor.b) <= tolerance
-          ) return false; //target is same as fill
+          // get the color we're filling
+          var targetColor = getPixel(x,y, width,height, data);
 
-          if (
-            (targetcolor[3] === data[i + 3]) &&
-            (targetcolor[0] === data[i]  ) &&
-            (targetcolor[1] === data[i + 1]) &&
-            (targetcolor[2] === data[i + 2])
-          ) return true; //target matches surface
-
-          if (
-            Math.abs(targetcolor[3] - data[i + 3]) <= (255 - tolerance) &&
-            Math.abs(targetcolor[0] - data[i]) <= tolerance &&
-            Math.abs(targetcolor[1] - data[i + 1]) <= tolerance &&
-            Math.abs(targetcolor[2] - data[i + 2]) <= tolerance
-          ) return true; //target to surface within tolerance
-
-          return false; //no match
-        }
-
-        function pixelCompareAndSet(i, targetcolor, fillcolor, data, length, tolerance) {
-          called++;
-          if (called > 10000000) {
-            throw "Unable to flood fill the image, because cycle detected.";
+          // check we are actually filling a different color
+          if (targetColor !== fillColor) {
+            doWhile([x, y], width, height, data, targetColor, fillColor, cb);
+          } else {
+            cb()
           }
-          if (pixelCompare(i, targetcolor, fillcolor, data, length, tolerance)) {
-            //fill the color
-            data[i] = fillcolor.r;
-            data[i + 1] = fillcolor.g;
-            data[i + 2] = fillcolor.b;
-            data[i + 3] = fillcolor.a;
-            return true;
-          }
-          return false;
         }
-        return floodfill;
+        return floodFill;
       })();
       tool.getRGBA = function () {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(self.ctx.fillStyle);
+        var r = parseInt(result[1], 16);
+        var g = parseInt(result[2], 16);
+        var b =parseInt(result[3], 16);
+        var a =(self.instruments.opacityFill.inputValue || 0) * 255;
         if (!result) {
-          throw "Invalid color";
+          throw Error("Invalid color");
         }
-        return {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16),
-          a: (self.instruments.opacityFill.inputValue || 0) * 255
-        }
+        //https://stackoverflow.com/a/14963574/3872976
+        //return a << 24 | (b << 16) | (g << 8) | r; this doesn't work because it's signed int, we need unsinged
+        return new Uint32Array(new Uint8Array([r,g,b,a]).buffer)[0];
       };
       tool.onMouseDown = function (e) {
-        if (!((self.dom.canvas.width * self.dom.canvas.height) < 1000001)) {
-          logger.debug("Can't fill image because amount of  data is too huge. Your browser would just explode ;(");
+        if (!((self.dom.canvas.width * self.dom.canvas.height) < 4000001)) {
+          alert("Can't flood fill, because your browser is unable to process canvas size " + self.dom.canvas.width + "x" + self.dom.canvas.height+ ", which is more than 4kk pixels.");
         } else {
+          var floodFillIcon = $('.' + tool.keyActivator.icon);
+          if (CssUtils.hasClass(floodFillIcon, 'disabled')) {
+            return
+          }
           var xy = self.helper.getXY(e);
           var image = self.buffer.startAction();
-          var processData = image.data.slice(0);
-          tool.floodFill(processData, xy.x, xy.y, tool.getRGBA(), 0, image.width, image.height);
-          var resultingImg = new ImageData(processData, image.width, image.height);
-          self.ctx.putImageData(resultingImg, 0, 0);
-          self.buffer.finishAction(resultingImg);
+          // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray#Browser_compatibility
+          var processData = new Uint32Array(image.data.slice(0).buffer); // clone data,so we won't modify history
+
+          CssUtils.addClass(floodFillIcon, 'disabled');
+          tool.floodFill(processData, xy.x, xy.y, tool.getRGBA(), image.width, image.height, function() {
+            CssUtils.removeClass(floodFillIcon, 'disabled');
+            var resultingImg = new ImageData(new Uint8ClampedArray(processData.buffer), image.width, image.height);
+            self.ctx.putImageData(resultingImg, 0, 0);
+            self.buffer.finishAction(resultingImg);
+          });
         }
       }
     })(),
@@ -1276,7 +1273,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyQ',
         icon: 'icon-rect',
-        title: 'Rectangle (Q)'
+        title: 'Rectangle (Shift+Q)'
       };
       tool.getCursor = function () {
         return 'crosshair';
@@ -1320,7 +1317,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyE',
         icon: 'icon-ellipse',
-        title: 'Eclipse (E)'
+        title: 'Eclipse (Shift+E)'
       };
       tool.getCursor = function () {
         return 'crosshair';
@@ -1380,7 +1377,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyT',
         icon: 'icon-text',
-        title: 'Text (T)'
+        title: 'Text (Shift+T)'
       };
       tool.span = self.dom.paintTextSpan;
       //prevent self.events.contKeyPress
@@ -1460,7 +1457,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyD',
         icon: 'icon-eraser',
-        title: 'Eraser (D)'
+        title: 'Eraser (Shift+D)'
+      };
+      tool.onZoomChange = function (e) {
+        self.helper.setCursor(tool.getCursor());
       };
       tool.getCursor = function () {
         return self.helper.buildCursor('#aaaaaa', ' stroke="black" stroke-width="2"', self.ctx.lineWidth);
@@ -1556,7 +1556,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyC',
         icon: 'icon-crop',
-        title: 'Crop Image (C)'
+        title: 'Crop Image (Shift+C)'
       };
       tool.bufferHandler = true;
       tool.getCursor = function () {
@@ -1604,7 +1604,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyW',
         icon: 'icon-resize',
-        title: 'Change dimensions (W)'
+        title: 'Change dimensions (Shift+W)'
       };
       tool.container = self.dom.paintResizeTools;
       tool.width = tool.container.querySelector('[placeholder=width]');
@@ -1646,7 +1646,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyM',
         icon: 'icon-move',
-        title: 'Move (M)'
+        title: 'Move (Shift+M)'
       };
       tool.getCursor = function () {
         return 'move';
@@ -1675,7 +1675,7 @@ function Painter(containerPaitner, conf) {
       keyActivator: {
         code: 'KeyR',
         icon: 'icon-rotate',
-        title: 'Rotate (R)'
+        title: 'Rotate (Shift+R)'
       },
       handler: function () {
         if (self.tools['select'].isSelectionActive()) {
@@ -1752,7 +1752,7 @@ function Painter(containerPaitner, conf) {
       keyActivator: {
         code: 'Delete',
         icon: 'icon-trash-circled',
-        title: 'Delete (Del)'
+        title: 'Delete (Shift+Del)'
       },
       handler: function () {
         if (self.tools['select'].isSelectionActive()) {
@@ -1771,9 +1771,7 @@ function Painter(containerPaitner, conf) {
     var tool = this;
     var undoImages = [];
     var redoImages = [];
-    // var paintUndo = $('paintUndo');
-    // var paintRedo = $('paintRedo');
-    var buStateData = ['lineWidth', 'strokeStyle', 'globalAlpha', 'lineJoin', 'lineCap', 'globalCompositeOperation'];
+    var buStateData = ['lineWidth', 'fillStyle', 'strokeStyle', 'fontFamily', 'font', 'globalAlpha', 'lineJoin', 'lineCap', 'globalCompositeOperation'];
     var current = null;
     tool.getCanvasImage = function (img) {
       return {
@@ -1811,8 +1809,8 @@ function Painter(containerPaitner, conf) {
       }
     };
     tool.setIconsState = function() {
-      // CssUtils.setClassToState(paintUndo, undoImages.length, 'disabled');
-      // CssUtils.setClassToState(paintRedo, redoImages.length, 'disabled');
+      CssUtils.setClassToState($('.icon-redo'), redoImages.length, 'disabled');
+      CssUtils.setClassToState($('.icon-undo'), undoImages.length, 'disabled');
     };
     tool.redo = function () {
       tool.dodo(redoImages, undoImages);

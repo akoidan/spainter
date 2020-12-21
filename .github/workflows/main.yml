@@ -1,0 +1,28 @@
+name: update:spainter.pychat.org
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: '12.10'
+      - name: Install npm dependencies
+        run: |
+          yarn install
+      - name: Build
+        run: yarn run build
+      - name: Setup ssh
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ID_RSA }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{ secrets.PORT }} ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+      - name: Copy static files to destination server
+        run: |
+           scp -P ${{ secrets.PORT }} -r ./font ./index.css ./index.js ./index.html ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:/srv/http/spainter/
