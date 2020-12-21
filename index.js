@@ -1200,7 +1200,6 @@ function Painter(containerPaitner, conf) {
           while (pixelsToCheck.length > 0) {
             if (tickCount % 5000 === 0) { // do not block event loop
               // do not block event loop
-              logger.debug("Postponing action")();
               setTimeout(doWhile, 0, pixelsToCheck, width, height, data, targetColor, fillColor, cb);
               return;
             }
@@ -1227,8 +1226,9 @@ function Painter(containerPaitner, conf) {
           // check we are actually filling a different color
           if (targetColor !== fillColor) {
             doWhile([x, y], width, height, data, targetColor, fillColor, cb);
+          } else {
+            cb()
           }
-          return data;
         }
         return floodFill;
       })();
@@ -1249,11 +1249,18 @@ function Painter(containerPaitner, conf) {
         if (!((self.dom.canvas.width * self.dom.canvas.height) < 4000001)) {
           alert("Can't flood fill, because your browser is unable to process canvas size " + self.dom.canvas.width + "x" + self.dom.canvas.height+ ", which is more than 4kk pixels.");
         } else {
+          var floodFillIcon = $('.' + tool.keyActivator.icon);
+          if (CssUtils.hasClass(floodFillIcon, 'disabled')) {
+            return
+          }
           var xy = self.helper.getXY(e);
           var image = self.buffer.startAction();
           // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray#Browser_compatibility
           var processData = new Uint32Array(image.data.slice(0).buffer); // clone data,so we won't modify history
+
+          CssUtils.addClass(floodFillIcon, 'disabled');
           tool.floodFill(processData, xy.x, xy.y, tool.getRGBA(), image.width, image.height, function() {
+            CssUtils.removeClass(floodFillIcon, 'disabled');
             var resultingImg = new ImageData(new Uint8ClampedArray(processData.buffer), image.width, image.height);
             self.ctx.putImageData(resultingImg, 0, 0);
             self.buffer.finishAction(resultingImg);
