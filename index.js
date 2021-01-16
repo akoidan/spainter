@@ -484,6 +484,12 @@ function Painter(containerPaitner, conf) {
         });
 
       });
+      // do not scroll when painting, otherwise the canvas will
+      self.dom.canvas.addEventListener('touchmove', function(e) {
+        if (self.mode !== 'move') {
+          e.preventDefault()
+        }
+      })
     },
     createFonts: function () {
       var select = self.instruments.font.value;
