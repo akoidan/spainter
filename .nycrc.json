@@ -1,0 +1,20 @@
+{
+  "cache": false,
+  "all": true,
+  "lines": 100,
+  "branches": 100,
+  "statements": 100,
+  "functions": 100,
+  "include": [
+     "src"
+  ],
+  "extension": [
+    ".ts",
+    ".vue"
+  ],
+  "report-dir": "nyc/coverage-cypress",
+  "temp-dir": "nyc/coverage-cypress-output",
+  "reporter": [
+    "html"
+  ]
+}

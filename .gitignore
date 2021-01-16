@@ -1,9 +1,9 @@
-.idea/
-yarn.lock
-font/
+dist/
 node_modules
-*.css
-*.css.map
-*.scss
-demo.html
-.fontello
+.idea
+yarn-error.log
+cypress/screenshots
+cypress/videos
+nyc
+cypress/match-screenshots/diff
+cypress/match-screenshots/new

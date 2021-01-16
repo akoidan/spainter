@@ -1,0 +1,7 @@
+{
+  "API_URL": "https://cors-anywhere.herokuapp.com/https://api.github.com/repos/akoidan/vue-webpack-typescript",
+  "APP_PUBLIC_PATH":  "/",
+  "APP_TEST": false,
+  "APP_FILE_MODE": false,
+  "APP_VERSION": null
+}

@@ -323,11 +323,11 @@ function Painter(containerPaitner, conf) {
     createFullScreen: function () {
       self.dom.header.ondblclick = function () {
         var w = window,
-          d = document,
-          e = d.documentElement,
-          g = d.getElementsByTagName('body')[0],
-          x = w.innerWidth || e.clientWidth || g.clientWidth,
-          y = w.innerHeight || e.clientHeight || g.clientHeight
+            d = document,
+            e = d.documentElement,
+            g = d.getElementsByTagName('body')[0],
+            x = w.innerWidth || e.clientWidth || g.clientWidth,
+            y = w.innerHeight || e.clientHeight || g.clientHeight
 
         self.dom.canvasWrapper.style.width = x - 60 + 'px';
         self.dom.canvasWrapper.style.height = y - 95 + 'px';
@@ -340,9 +340,9 @@ function Painter(containerPaitner, conf) {
       self.ctx.imageSmoothingEnabled= false;
       self.ctx.mozImageSmoothingEnabled = false;
       var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight,
-        document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+          document.documentElement.scrollHeight, document.documentElement.offsetHeight);
       var width = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight,
-        document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+          document.documentElement.scrollHeight, document.documentElement.offsetHeight);
       self.helper.setDimensions(500, 500);
       // self.dom.canvasWrapper.style.height = height * 0.9 - 100 + 'px'
       // self.dom.canvasWrapper.style.width = width * 0.9 - 80 + 'px'
@@ -566,15 +566,15 @@ function Painter(containerPaitner, conf) {
     },
     trimImage: function () { // TODO this looks bad
       var pixels = self.ctx.getImageData(0, 0, self.dom.canvas.width, self.dom.canvas.height),
-        l = pixels.data.length,
-        i,
-        bound = {
-          top: null,
-          left: null,
-          right: null,
-          bottom: null
-        },
-        x, y;
+          l = pixels.data.length,
+          i,
+          bound = {
+            top: null,
+            left: null,
+            right: null,
+            bottom: null
+          },
+          x, y;
       for (i = 0; i < l; i += 4) {
         if (pixels.data[i + 3] !== 0) {
           x = (i / 4) % self.dom.canvas.width;
@@ -600,7 +600,7 @@ function Painter(containerPaitner, conf) {
         }
       }
       var trimHeight = bound.bottom - bound.top,
-        trimWidth = bound.right - bound.left;
+          trimWidth = bound.right - bound.left;
       if (trimWidth && trimHeight) {
         var trimmed = self.ctx.getImageData(bound.left, bound.top, trimWidth, trimHeight);
         tmpCanvasContext.canvas.width = trimWidth;
@@ -988,7 +988,7 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyS',
         icon: '' +
-        'icon-selection',
+            'icon-selection',
         title: 'Select (Shift+S)'
       };
       tool.bufferHandler = true;
@@ -1006,17 +1006,17 @@ function Painter(containerPaitner, conf) {
         if (tool.inProgress) {
           var params = self.resizer.params;
           logger.debug(
-            'Applying image {}, {}x{}, to  {x: {}, y: {}, w: {}, h:{}',
-            tool.imgInfo.width,
-            tool.imgInfo.height,
-            params.left,
-            params.top,
-            params.width,
-            params.height
+              'Applying image {}, {}x{}, to  {x: {}, y: {}, w: {}, h:{}',
+              tool.imgInfo.width,
+              tool.imgInfo.height,
+              params.left,
+              params.top,
+              params.width,
+              params.height
           )();
           self.helper.drawImage(tool.domImg,
-            0, 0, tool.imgInfo.width, tool.imgInfo.height,
-            params.left, params.top, params.width, params.height);
+              0, 0, tool.imgInfo.width, tool.imgInfo.height,
+              params.left, params.top, params.width, params.height);
           self.buffer.finishAction();
           tool.inProgress = false; // don't restore in onDeactivate
         }
@@ -1341,12 +1341,12 @@ function Painter(containerPaitner, conf) {
       };
       tool.draw = function (x, y, w, h) {
         var kappa = .5522848,
-          ox = (w / 2) * kappa, // control point offset horizontal
-          oy = (h / 2) * kappa, // control point offset vertical
-          xe = x + w,           // x-end
-          ye = y + h,           // y-end
-          xm = x + w / 2,       // x-middle
-          ym = y + h / 2;       // y-middle
+            ox = (w / 2) * kappa, // control point offset horizontal
+            oy = (h / 2) * kappa, // control point offset vertical
+            xe = x + w,           // x-end
+            ye = y + h,           // y-end
+            xm = x + w / 2,       // x-middle
+            ym = y + h / 2;       // y-middle
         self.ctx.moveTo(x, ym);
         self.ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
         self.ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
@@ -1509,10 +1509,10 @@ function Painter(containerPaitner, conf) {
           tool.imgObj.onload = function () {
             tool.img.src = b64;
             self.resizer.setData(
-              self.dom.canvasWrapper.scrollTop,
-              self.dom.canvasWrapper.scrollLeft,
-              tool.imgObj.width,
-              tool.imgObj.height
+                self.dom.canvasWrapper.scrollTop,
+                self.dom.canvasWrapper.scrollLeft,
+                tool.imgObj.width,
+                tool.imgObj.height
             );
           };
           tool.imgObj.src = b64;
@@ -1528,14 +1528,14 @@ function Painter(containerPaitner, conf) {
         var nh = params.top + params.height;
         if (nw > self.dom.canvas.width || nh > self.dom.canvas.height) {
           self.helper.setDimensions(
-            Math.max(nw, self.dom.canvas.width),
-            Math.max(nh, self.dom.canvas.height)
+              Math.max(nw, self.dom.canvas.width),
+              Math.max(nh, self.dom.canvas.height)
           );
           self.ctx.putImageData(data, 0, 0);
         }
         self.helper.drawImage(tool.imgObj,
-          0, 0, tool.imgObj.width, tool.imgObj.height,
-          params.left, params.top, params.width, params.height);
+            0, 0, tool.imgObj.width, tool.imgObj.height,
+            params.left, params.top, params.width, params.height);
         self.buffer.finishAction();
         self.setMode('pen');
       };
@@ -1797,10 +1797,10 @@ function Painter(containerPaitner, conf) {
         to.push(current);
         current = restore;
         if (self.dom.canvas.width != current.width
-          || self.dom.canvas.height != current.height) {
+            || self.dom.canvas.height != current.height) {
           logger.debug("Resizing canvas from {}x{} to {}x{}",
-            self.dom.canvas.width, self.dom.canvas.height,
-            current.width, current.height
+              self.dom.canvas.width, self.dom.canvas.height,
+              current.width, current.height
           )();
           self.helper.setDimensions(current.width, current.height)
         }

@@ -1,39 +1,39 @@
 <div class="toolsAndCanvas">
-    <div class="painterTools">
+  <div class="painterTools">
+  </div>
+  <div class="canvasWrapper">
+    <canvas></canvas>
+    <div class="canvasResize"></div>
+    <span class="text spainterHidden paintTextSpan" tabindex="-1"
+          contenteditable="true"></span>
+    <div pos="m" class="paint-crp-rect spainterHidden">
+      <div pos="l"></div>
+      <div pos="r"></div>
+      <div pos="t"></div>
+      <div pos="b"></div>
+      <div pos="tl"></div>
+      <div pos="tr"></div>
+      <div pos="bl"></div>
+      <div pos="br"></div>
+      <img class="paintPastedImg" pos="m"/>
     </div>
-    <div class="canvasWrapper">
-        <canvas></canvas>
-        <div class="canvasResize"></div>
-        <span class="text spainterHidden paintTextSpan" tabindex="-1"
-              contenteditable="true"></span>
-        <div pos="m" class="paint-crp-rect spainterHidden">
-            <div pos="l"></div>
-            <div pos="r"></div>
-            <div pos="t"></div>
-            <div pos="b"></div>
-            <div pos="tl"></div>
-            <div pos="tr"></div>
-            <div pos="bl"></div>
-            <div pos="br"></div>
-            <img class="paintPastedImg" pos="m"/>
-        </div>
-    </div>
+  </div>
 </div>
 <div class="bottomTools">
-    <div class="paintResizeTools spainterHidden">
-        <input type="text" placeholder="width"/>
-        <span>X</span>
-        <input type="text" placeholder="height"/>
-    </div>
+  <div class="paintResizeTools spainterHidden">
+    <input type="text" placeholder="width"/>
+    <span>X</span>
+    <input type="text" placeholder="height"/>
+  </div>
 
-    <div class="paintXYdimens">
-        <div>
-            <div class="paintXY" title="[x, y] zoom"></div>
-            <div>
-                <span class="paintDimensions" title="width x height"></span>
-                <input type="checkbox" checked title="Trim image on send" class="trimImage"/>
-            </div>
-        </div>
-        <input type="button" value="Paste" class="paintSend"/>
+  <div class="paintXYdimens">
+    <div>
+      <div class="paintXY" title="[x, y] zoom"></div>
+      <div>
+        <span class="paintDimensions" title="width x height"></span>
+        <input type="checkbox" checked title="Trim image on send" class="trimImage"/>
+      </div>
     </div>
+    <input type="button" value="Paste" class="paintSend"/>
+  </div>
 </div>

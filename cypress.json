@@ -1,0 +1,16 @@
+{
+  "videosFolder" : "nyc/video",
+  "screenshotsFolder" : "nyc/screenshots",
+  "fixturesFolder": "cypress/fixtures",
+  "reporter": "cypress-multi-reporters",
+  "reporterOptions": {
+    "reporterEnabled": "mochawesome",
+    "mochawesomeReporterOptions": {
+      "reportDir": "nyc/mocha-reports",
+      "quite": true,
+      "overwrite": false,
+      "html": false,
+      "json": true
+    }
+  }
+}

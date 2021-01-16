@@ -1,0 +1,10 @@
+{
+  "require": [
+    "tsconfig-paths/register",
+    "ts-node/register",
+    "tsconfig-paths/register",
+    "./test/define.ts"
+  ],
+  "ui": "bdd",
+  "file": ["test/index.ts"]
+}
