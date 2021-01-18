@@ -1662,6 +1662,9 @@ function Painter(containerPaitner, conf) {
         tool.lastCoord = {x: pxy.pageX, y: pxy.pageY};
       };
       tool.onMouseMove = function (e) {
+        if (e.type === 'touchmove') {
+          return // touchmove already has this in default behaviour
+        }
         var pxy = self.helper.getPageXY(e);
         var x = tool.lastCoord.x - pxy.pageX;
         var y = tool.lastCoord.y - pxy.pageY;
