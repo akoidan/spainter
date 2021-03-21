@@ -25,14 +25,14 @@ If you use [fontello](http://fontello.com/) in your server, you can generate sin
  - If you use server rendering and cdn:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/spainter@1.0.0/index.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spainter@1.0.1/index.css"/>
+<script src="https://cdn.jsdelivr.net/npm/spainter@1.2.10/index.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spainter@1.2.10/index.css"/>
 <div id="containerPainter"></div>
 <script>
 var p = new Painter(containerPainter);
 </script>
 ```
-Target the latest version instead of `1.0.0` [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter)
+Target the latest version instead of `1.2.10` [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter)
 
  - You can find an example on [pychat](https://github.com/akoidan/pychat/blob/3c82c75c719dc5d84700efde415e2842d355dcf3/fe/src/components/pages/PainterPage.vue)
 
