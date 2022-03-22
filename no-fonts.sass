@@ -170,7 +170,7 @@
 				background-image: -moz-linear-gradient(45deg, $c1 25%, $c2 25%), -moz-linear-gradient(-45deg, $c1 25%, $c2 25%), -moz-linear-gradient(45deg, $c2 75%, $c1 75%), -moz-linear-gradient(-45deg, $c2 75%, $c1 75%)
 				background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, $c1), color-stop(.25, $c2)), -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, $c1), color-stop(.25, $c2)), -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.75, $c2), color-stop(.75, $c1)), -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.75, $c2), color-stop(.75, $c1))
 				$width: 50px
-				$h_width: $width/2
+				$h_width: calc($width / 2)
 				-moz-background-size: $width $width
 				background-size: $width $width
 				-webkit-background-size: $width $width /* override value for shitty webkit */
