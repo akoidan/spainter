@@ -23,6 +23,11 @@
 	flex-direction: column
 	position: relative
 
+	.active-icon
+		color: red
+	.disabled
+		color: grey
+
 	.spainterHidden
 		display: none !important
 
@@ -134,6 +139,7 @@
 			margin-left: -5px
 			height: fit-content
 			*
+				cursor: pointer
 				display: block
 				padding: 5px 5px 5px 0
 			@media screen and (max-height: $two-columns-painter)
@@ -143,7 +149,8 @@
 				flex-wrap: wrap
 		.canvasWrapper
 			width: 100%
-			height: 100%
+			// height: 100% DO not set it to 100%, since parent has flex grow it will automatically collaps to 100%
+			// if height is set, safari won't make it work right, it would no have scroll at all
 			position: relative
 			overflow: auto
 			// select none prevent paste event  https://stackoverflow.com/questions/31207253/onpaste-paste-event-not-firing-for-table-on-first-few-attempts
@@ -163,7 +170,7 @@
 				background-image: -moz-linear-gradient(45deg, $c1 25%, $c2 25%), -moz-linear-gradient(-45deg, $c1 25%, $c2 25%), -moz-linear-gradient(45deg, $c2 75%, $c1 75%), -moz-linear-gradient(-45deg, $c2 75%, $c1 75%)
 				background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, $c1), color-stop(.25, $c2)), -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, $c1), color-stop(.25, $c2)), -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.75, $c2), color-stop(.75, $c1)), -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.75, $c2), color-stop(.75, $c1))
 				$width: 50px
-				$h_width: $width/2
+				$h_width: calc($width / 2)
 				-moz-background-size: $width $width
 				background-size: $width $width
 				-webkit-background-size: $width $width /* override value for shitty webkit */
@@ -205,6 +212,7 @@
 				width: 120px
 
 		.paintSend
+			cursor: pointer
 			vertical-align: top
 		.paintXYdimens
 			font-size: 12px

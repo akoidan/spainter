@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta http-equiv="cache-control" content="no-cache" />
     <link rel="stylesheet" type="text/css" href="./index.css"/>
     <style>
@@ -14,9 +15,6 @@
             width: 100%;
             margin: 0;
             height:100%;
-        }
-        .active-icon {
-            color: red;
         }
         #saveBlobExampleHolder {
             position: absolute;
@@ -86,6 +84,7 @@
       }
     }
   })
+  window.painter = p;
   closebtn.onclick = function() {
     saveBlobExampleHolder.style.display = 'none';
   }

@@ -1,6 +1,6 @@
 {
   "name": "spainter",
-  "version": "1.2.5",
+  "version": "1.2.12",
   "description": "Web browser painter, like mspaint. ",
   "main": "index.js",
   "files": [
@@ -33,6 +33,6 @@
   "typings": "./index.d.ts",
   "devDependencies": {
     "node-sass": "^5.0.0",
-    "sass": "^1.29.0"
+    "sass": "^1.49.9"
   }
 }
