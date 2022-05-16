@@ -66,6 +66,7 @@
       }
     },
     onBlobPaste: function(blob) {
+      let link;
       saveBlobExample.src = URL.createObjectURL(blob);
       saveBlobExampleHolder.style.display = 'block';
       textValue.textContent = 'Uploading image...'
@@ -79,8 +80,17 @@
       }).then(e => {
         let href = `${host}${e}`;
         textValue.href = href;
-        textValue.textContent = href
-      });
+        textValue.textContent = href;
+        link = href;
+      }).then(
+        () => navigator.permissions.query({name: "clipboard-write"})
+      ).then(result => {
+        if (result.state == "granted" || result.state == "prompt") {
+          return navigator.clipboard.writeText(link).then(() => {
+              console.log("Clipboard is modified with link");
+          });
+        }
+      })
     }
   })
   window.painter = p;
