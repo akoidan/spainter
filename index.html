@@ -24,11 +24,15 @@
             padding: 10px;
             left: 50%;
             top: 50%;
-            max-width: calc(100vw - 200px);
-            max-height: calc(100vh - 200px);
             transform: translate(-50%, -50%);
             border: 1px dashed red;
-
+        }
+        #textValue {
+          display: block;
+        }
+        #saveBlobExampleHolder img {
+            max-width: calc(100vw - 200px);
+            max-height: calc(100vh - 200px);
         }
     </style>
     <script src="./index.js?v=1"></script>
@@ -39,9 +43,8 @@
     <div id="containerPainer"></div>
     <div id="saveBlobExampleHolder" style="display: none">
         <img id="saveBlobExample"/>
-        <input type="button" value="upload" id="uploadBtn"/>
-        <input type="button" value="close" id="closebtn"/>
         <a id="textValue"></a>
+        <input type="button" value="close" id="closebtn"/>
     </div>
 </div>
 
@@ -65,23 +68,19 @@
     onBlobPaste: function(blob) {
       saveBlobExample.src = URL.createObjectURL(blob);
       saveBlobExampleHolder.style.display = 'block';
-      textValue.style.display = 'none';
-
-      uploadBtn.onclick = function() {
-        var formData = new FormData();
-        formData.append('file', blob, new Date().toDateString() + '.png');
-        fetch(`${host}/upload_file`, {
-          method: "POST",
-          body: formData,
-        }).then(e => {
-          return e.text();
-        }).then(e => {
-          textValue.style.display = 'block';
-          let href = `${host}${e}`;
-          textValue.href = href;
-          textValue.textContent = href
-        });
-      }
+      textValue.textContent = 'Uploading image...'
+      var formData = new FormData();
+      formData.append('file', blob, new Date().toDateString() + '.png');
+      fetch(`${host}/upload_file`, {
+        method: "POST",
+        body: formData,
+      }).then(e => {
+        return e.text();
+      }).then(e => {
+        let href = `${host}${e}`;
+        textValue.href = href;
+        textValue.textContent = href
+      });
     }
   })
   window.painter = p;

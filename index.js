@@ -381,15 +381,17 @@ function Painter(containerPaitner, conf) {
             var charCode = e.which || e.keyCode;
             return charCode > 47 && charCode < 58;
           });
+          var div = document.createElement('div');
           if (conf.rangeFactory) {
-            instr.range = conf.rangeFactory();
+            instr.range = conf.rangeFactory(div);
           } else {
             instr.range = document.createElement('input');
             instr.range.type = 'range';
           }
           instr.range.max = 66;
-          var div = document.createElement('div');
-          div.appendChild(instr.range);
+          if (!div.contains(instr.range)) {
+            div.appendChild(instr.range);
+          }
           instr.holder.appendChild(div);
           instr.range.addEventListener('input', function (e) {
             // exponential growth
@@ -534,6 +536,9 @@ function Painter(containerPaitner, conf) {
       }
     },
     pasteToTextArea: function () {
+      if (self.tools[self.mode].onApply) {
+        self.tools[self.mode].onApply();
+      }
       if (self.dom.trimImage.checked) {
         var trimImage = self.helper.trimImage();
         if (trimImage) {
@@ -617,16 +622,19 @@ function Painter(containerPaitner, conf) {
         return false;
       }
     },
-    setZoom: function (isIncrease) {
+    applyThatZoom: function() {
+      self.helper.setUIText(self.dom.paintXY.textContent.split(' ')[0]);
+      if (self.tools[self.mode].onZoomChange) {
+        self.tools[self.mode].onZoomChange(self.zoom);
+      }
+    },
+    changeZoom: function (isIncrease) {
       if (isIncrease) {
         self.zoom *= self.ZOOM_SCALE;
       } else {
         self.zoom /= self.ZOOM_SCALE;
       }
-      self.helper.setUIText(self.dom.paintXY.textContent.split(' ')[0]);
-      if (self.tools[self.mode].onZoomChange) {
-        self.tools[self.mode].onZoomChange(self.zoom);
-      }
+      self.helper.applyThatZoom();
     },
     applyZoom: function() {
       self.dom.canvas.style.width = self.dom.canvas.width * self.zoom + 'px';
@@ -728,7 +736,7 @@ function Painter(containerPaitner, conf) {
       e.preventDefault();
       self.helper.setOffset(e);
       var xy = self.helper.getXY(e)
-      self.helper.setZoom(e.detail < 0 || e.wheelDelta > 0); // isTop
+      self.helper.changeZoom(e.detail < 0 || e.wheelDelta > 0); // isTop
       self.helper.applyZoom()
       var clientRect = self.dom.canvasWrapper.getBoundingClientRect();
       var scrollLeft = (xy.x * self.zoom) - (e.clientX - clientRect.left);
@@ -1520,6 +1528,12 @@ function Painter(containerPaitner, conf) {
               tool.imgObj.width,
               tool.imgObj.height
             );
+            let scale = Math.max(tool.imgObj.width/self.dom.canvasWrapper.clientWidth/self.dom.canvas.clientWidth, tool.imgObj.height/self.dom.canvasWrapper.clientHeight);
+            if (scale > 0.99) {
+              self.zoom = self.zoom / 1.1 / scale ;
+              self.helper.applyThatZoom();
+              self.helper.applyZoom();
+            }
           };
           tool.imgObj.src = b64;
         };
@@ -1746,7 +1760,7 @@ function Painter(containerPaitner, conf) {
         title: 'Zoom In (Ctrl+)/(Mouse Wheel)'
       },
       handler: function () {
-        self.helper.setZoom(true);
+        self.helper.changeZoom(true);
       }
     }, {
       keyActivator: {
@@ -1755,7 +1769,7 @@ function Painter(containerPaitner, conf) {
         title: 'Zoom Out (Ctrl-)/(Mouse Wheel)'
       },
       handler: function () {
-        self.helper.setZoom(false);
+        self.helper.changeZoom(false);
       }
     }, {
       keyActivator: {

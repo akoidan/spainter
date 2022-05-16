@@ -43,9 +43,10 @@ new Painter(containerPainer, {
   textClass: 'input-txt-class', // set class for all input[type=text] elements
   buttonClass: 'input-button-class', // set class for all input[type=button] elements
   rangeClass: 'input-range-class', // set class for all input[type=range]elements
-  rangeFactory: () => { // use this div for input[range], e.g. you can use material-design
+  rangeFactory: (parentElement) => { // use this div for input[range], e.g. you can use material-design
     var input = document.createElement('input');
     input.type = 'range';
+    // you can also do parentElement.
     return input;
   },
   onBlobPaste: function(blob) { // example of uploading image to server
