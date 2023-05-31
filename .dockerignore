@@ -1,0 +1,13 @@
+**
+!docker/
+!docker/Dockerfile
+!docker/nginx.conf
+!config.json
+!generate-fontello.sh
+!index.d.ts
+!index.html
+!index.js
+!index.sass
+!no-fonts.sass
+!package.json
+!yarn.lock

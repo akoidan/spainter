@@ -1,11 +1,10 @@
-<!DOCTYPE html>
+const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta http-equiv="cache-control" content="no-cache" />
-    <link rel="stylesheet" type="text/css" href="./index.css"/>
     <style>
         .pad1 {
             padding: 10px;
@@ -35,7 +34,8 @@
             max-height: calc(100vh - 200px);
         }
     </style>
-    <script src="./index.js?v=1"></script>
+<script src="https://cdn.jsdelivr.net/npm/spainter/index.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spainter/index.css"/>
 </head>
 <body>
 
@@ -49,7 +49,7 @@
 </div>
 
 <script>
-  const host =  location.protocol + '//api.pychat.org';
+  const host =  location.origin;
   var p = new Painter(containerPainer, {
     logger: {
       debug: function log() {
@@ -72,13 +72,13 @@
       textValue.textContent = 'Uploading image...'
       var formData = new FormData();
       formData.append('file', blob, new Date().toDateString() + '.png');
-      fetch(`${host}/upload_file`, {
+      fetch(host + '/upload_file', {
         method: "POST",
         body: formData,
       }).then(e => {
         return e.text();
       }).then(e => {
-        let href = `${host}${e}`;
+        let href = host+ e;
         textValue.href = href;
         textValue.textContent = href;
         link = href;
@@ -101,3 +101,57 @@
 </script>
 </body>
 </html>
+`;
+
+function makeid(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+
+
+async function ulpoadUrlAndReturnResponse(request, searchString) {
+  let uploadToUrl = request.url.substring(0, request.url.length - searchString.length);
+  let cache = caches.default;
+  let body = await request.formData();
+  let file = await body.get('file');
+  let fileData = await file.arrayBuffer();
+  let imageUrl = "/" + makeid(10) + ".png";
+  let uploadedUrl = uploadToUrl + imageUrl
+  await cache.put(new Request(uploadedUrl), new Response(fileData, {
+    headers: {
+      "content-type": file.type,
+      "Content-Disposition": 'inline; filename="' + file.name + '"',
+    },
+  }));
+  return new Response(imageUrl, {
+    headers: {
+      "content-type": "text/plain",
+    },
+  });
+}
+
+export default {
+  async fetch(request) {
+    console.log(request.url);
+    const searchString = '/upload_file';
+    if (request.url.endsWith(".png")) {
+      let cache = caches.default;
+      return cache.match(request);
+    } else if (request.url.endsWith(searchString)) {
+      return await ulpoadUrlAndReturnResponse(request, searchString);
+    } else {
+      return new Response(html, {
+        headers: {
+          "content-type": "text/html;charset=UTF-8",
+        },
+      });
+    }
+  },
+};

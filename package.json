@@ -15,7 +15,8 @@
     "no-fonts.sass"
   ],
   "scripts": {
-    "build": "bash generate-fontello.sh generate && node-sass index.sass index.css"
+    "build": "bash generate-fontello.sh generate && node-sass index.sass index.css",
+    "dev": "wrangler dev ./cloudflareworker.js "
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,8 @@
   "typings": "./index.d.ts",
   "devDependencies": {
     "node-sass": "^5.0.0",
-    "sass": "^1.49.9"
+    "sass": "^1.49.9",
+    "create-cloudflare": "^2.0.8",
+    "wrangler": "^3.0.1"
   }
 }

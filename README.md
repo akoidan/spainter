@@ -85,5 +85,27 @@ To build spainter you need
  - yarn run build
  - Open [index.html](index.html) in browser
 To modify icons use `bash generate-fontello.sh`. it will show you help.
+node sass requires a lot of libs to build as well as NODE max version of 14, you can use dockerfile inside docker directory if it's much of a pain.
 
 I also intentionally leaved styles empty so you can easily override them according to your website design. If you want to prettify it a bit, you're wellcome to create a separate .css file with styles.
+
+
+# spainter.pychat.org
+
+Spainter is hosted with cloudflare workers
+Cloudflare workers js file should contain all the css/html/js. There's no way to pull data from local fs according to [this](https://community.cloudflare.com/t/is-it-possible-to-pull-data-from-a-local-json-file-hosted-on-a-worker/134982) answer.
+This is why static files are served with cdnjs
+
+- Go to main page, 'Worker & Pages' -> Create application, router `spainter.pychat.org/*` Note star in the end.
+- Go to your dns settings and create 'A' record pointing to any ip with a proxy status.
+
+put this envs for local debugging CF_API_KEY can be got from Profile -> Api Tokens -. Api Keys Global API KEY
+
+
+```bash
+yarn global add wrangler@2
+export CF_API_KEY=
+export CF_EMAIL=youremail@gmail.com
+wrangler dev
+```
+Now you can debug in Webstorm by pressing debug on package.json dev script. In ordet for debug to work switch to local mode by pressing  `l`
