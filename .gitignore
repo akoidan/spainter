@@ -6,3 +6,6 @@ node_modules
 *.scss
 demo.html
 .fontello
+terraform/terraform.tfvars
+terraform/terraform.tfstate
+terraform/.terraform

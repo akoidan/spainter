@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "build": "bash generate-fontello.sh generate && node-sass index.sass index.css",
-    "dev": "wrangler dev ./cloudflareworker.js "
+    "dev": "wrangler dev terraform/cloudflareworker.js "
   },
   "repository": {
     "type": "git",
