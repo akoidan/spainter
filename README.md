@@ -2,7 +2,7 @@
 
 # Spainter. Web browSer painter
 
-## [DEMO](http://spainter.pychat.org/)
+## [DEMO](http://spainter.akoidan.com)
 
 ### Integrating into you server:
 
