@@ -11,7 +11,7 @@ function makeid(length) {
 }
 
 
-async function ulpoadUrlAndReturnResponse(request, env) {
+async function uploadFileAndGetResponse(request, env) {
     // https://github.com/TomasHubelbauer/mime-multipart/issues/1
     let body = await request.formData();
     let file = await body.get('file');
@@ -34,7 +34,7 @@ async function ulpoadUrlAndReturnResponse(request, env) {
 export default {
     async fetch(request, env) {
         if (request.method === 'POST') {
-            return await ulpoadUrlAndReturnResponse(request, env);
+            return await uploadFileAndGetResponse(request, env);
         } else {
             return new Response(env.html, {
                 headers: {
