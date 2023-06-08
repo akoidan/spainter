@@ -29,9 +29,20 @@
         #textValue {
             display: block;
         }
+        input[type=button] {
+            width: 100%;
+            margin-top: 10px;
+            height: 50px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
         #saveBlobExampleHolder img {
             max-width: calc(100vw - 200px);
             max-height: calc(100vh - 200px);
+        }
+        .inactive {
+            opacity: 0.3;
+            pointer-events: none;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/spainter/index.js"></script>
@@ -40,17 +51,23 @@
 <body>
 
 <div class="pad1">
-    <div id="containerPainer"></div>
+    <div id="containerPainter"></div>
     <div id="saveBlobExampleHolder" style="display: none">
         <img id="saveBlobExample"/>
+        <div id="statusText"></div>
         <a id="textValue"></a>
+        <button id="copyLink">Copy link to clipboard</button>
         <input type="button" value="close" id="closebtn"/>
     </div>
 </div>
 
 <script>
     const host =  location.origin;
-    var p = new Painter(containerPainer, {
+    let link = "";
+    const btnClick = async (e) => {
+        await navigator.clipboard.write(link);
+    }
+    var p = new Painter(containerPainter, {
         logger: {
             debug: function log() {
                 var args = Array.prototype.slice.call(arguments);
@@ -65,35 +82,44 @@
                 return Function.prototype.bind.apply(console.log, params);
             }
         },
-        onBlobPaste: function(blob) {
-            let link;
+        onBlobPaste: async function(blob) {
+            copyLink.removeEventListener('click', btnClick);
+            copyLink.style.display = 'None';
+            statusText.textContent ="Uploading image...";
+            containerPainter.classList.add("inactive");
             saveBlobExample.src = URL.createObjectURL(blob);
             saveBlobExampleHolder.style.display = 'block';
-            textValue.textContent = 'Uploading image...'
+            textValue.textContent = ''
             var formData = new FormData();
             formData.append('file', blob, new Date().toDateString() + '.png');
-            fetch(host + '/upload_file', {
+            const response = await fetch(host + '/upload_file', {
                 method: "POST",
                 body: formData,
-            }).then(e => {
-                return e.text();
-            }).then(url => {
-                textValue.href = url;
-                textValue.textContent = url;
-                link = url;
-            }).then(
-                () => navigator.permissions.query({name: "clipboard-write"})
-            ).then(result => {
-                if (result.state == "granted" || result.state == "prompt") {
-                    return navigator.clipboard.writeText(link).then(() => {
-                        console.log("Clipboard is modified with link");
-                    });
+            });
+            link = await response.text();
+            if (link.startsWith("<")) {
+                textValue.innerHTML = link;
+                textValue.removeAttribute('href');
+                statusText.textContent = "Failed to upload an image"
+            } else {
+                textValue.href = link;
+                statusText.textContent = "Image has been uploaded";
+                textValue.textContent = link;
+                let clipBoardWriteRes = await navigator.permissions.query({name: "clipboard-write"});
+                if (clipBoardWriteRes.state == "granted" || clipBoardWriteRes.state == "prompt") {
+                    statusText.textContent = "The link below has been copied to your clipboard";
+                    await navigator.clipboard.writeText(link);
+                    console.log("Clipboard is modified with link");
+                } else {
+                    copyLink.style.display = 'inline-block';
+                    copyLink.addEventListener('click', btnClick)
                 }
-            })
+            }
         }
     })
     window.painter = p;
     closebtn.onclick = function() {
+        containerPainter.classList.remove("inactive");
         saveBlobExampleHolder.style.display = 'none';
     }
 

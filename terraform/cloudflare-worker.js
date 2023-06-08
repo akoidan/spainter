@@ -1,13 +1,9 @@
-function makeid(length) {
-    let result = '';
+function makeid(length = 10) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        counter += 1;
-    }
-    return result;
+    return Array.from(
+        {length},
+        () => characters.charAt(Math.floor(Math.random() * characters.length))
+    ).join('')
 }
 
 
@@ -16,7 +12,7 @@ async function uploadFileAndGetResponse(request, env) {
     let body = await request.formData();
     let file = await body.get('file');
     const blob = await file.arrayBuffer();
-    const id = makeid(10) + ".png";
+    const id = makeid() + ".png";
     await env.spainter.put(id, blob, {
         httpMetadata: {
             "contentType": file.type,
