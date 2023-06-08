@@ -120,6 +120,7 @@ terraform apply
 Some actions are not doable via CF api. We have to do them manually:
 GO to CloudFlare Dashboard. From Home menu -> R2 -> Overview -> Select Spainter bucket -> Settings:
  - Custom Domains ->  Connect Domain -> img.spainter.akoidan.com -> Continue -> Connect Domain
+ - Object lifecycle rules -> Default Multipart Abort Rule -> Edit -> Set high number, e.g. 3650 days (10 years)
  - CORS Policy -> Add Cors policy ->
 ```json
 {
