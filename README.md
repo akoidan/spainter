@@ -2,7 +2,7 @@
 
 # Spainter. Web browSer painter
 
-## [DEMO](http://spainter.akoidan.com)
+## DEMO [spainter.akoidan.com](https://spainter.akoidan.com)
 
 ### Integrating into you server:
 
