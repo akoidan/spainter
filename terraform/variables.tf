@@ -11,7 +11,7 @@ variable "img_domain_name" {
   default = "img.spainter.akoidan.com"
   description = "img r2 domain"
   validation {
-    condition     = can(regex("^.+$", var.domain_name))
+    condition     = can(regex("^.+$", var.img_domain_name))
     error_message = "domain_name is required"
   }
 }

@@ -15,7 +15,7 @@ async function uploadFileAndGetResponse(request, env) {
     // https://github.com/TomasHubelbauer/mime-multipart/issues/1
     let body = await request.formData();
     let file = await body.get('file');
-    const blob = file.arrayBuffer();
+    const blob = await file.arrayBuffer();
     const id = makeid(10) + ".png";
     await env.spainter.put(id, blob, {
         httpMetadata: {

@@ -4,7 +4,8 @@ resource "cloudflare_worker_script" "spainter_script" {
   content = file("./cloudflare-worker.js")
   module = true
 
-  compatibility_flags = ["formdata_parser_supports_files"]
+  # this is required to enable formData to return arrayBufferInstead of strings
+  compatibility_date = "2023-06-08"
   plain_text_binding {
     name = "html"
     text = file("./index.html")
