@@ -3,6 +3,8 @@ resource "cloudflare_worker_script" "spainter_script" {
   account_id = var.cloud_flare_account_id
   content = file("./cloudflare-worker.js")
   module = true
+
+  compatibility_flags = ["formdata_parser_supports_files"]
   plain_text_binding {
     name = "html"
     text = file("./index.html")
