@@ -1,15 +1,3 @@
-function makeid(length) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        counter += 1;
-    }
-    return result;
-}
-
 // https://github.com/TomasHubelbauer/mime-multipart
 function* parseMimeMultipart(/** @type {Uint8Array} */ uint8Array) {
     const textDecoder = new TextDecoder();
@@ -19,7 +7,7 @@ function* parseMimeMultipart(/** @type {Uint8Array} */ uint8Array) {
     /** @typedef {{ type: 'header-value'; boundary: string; name: string; value: string; values: string[]; headers: Header[]; }} HeaderValue */
     /** @typedef {{ type: 'content'; boundary: string; headers: Headers[]; index: number; length: number; }} Content */
     /** @type {Boundary | HeaderName | HeaderValue | Content} */
-    let state = { type: 'boundary', boundary: '' };
+    let state = {type: 'boundary', boundary: ''};
     let index = 0;
     let line = 0;
     let column = 0;
@@ -44,7 +32,7 @@ function* parseMimeMultipart(/** @type {Uint8Array} */ uint8Array) {
                 }
 
                 if (character === '\n') {
-                    state = { type: 'header-name', boundary: state.boundary, name: '', value: '', headers: [] };
+                    state = {type: 'header-name', boundary: state.boundary, name: '', value: '', headers: []};
                     break;
                 }
 
@@ -63,16 +51,28 @@ function* parseMimeMultipart(/** @type {Uint8Array} */ uint8Array) {
 
                 if (character === '\n') {
                     if (state.name === '') {
-                        state = { type: 'content', boundary: state.boundary, headers: state.headers, index: index + 1, length: 0 };
+                        state = {
+                            type: 'content',
+                            boundary: state.boundary,
+                            headers: state.headers,
+                            index: index + 1,
+                            length: 0
+                        };
                         break;
-                    }
-                    else {
+                    } else {
                         throw new Error(`At ${index} (${line}:${column}): a newline in a header name '${state.name}' is not allowed.`);
                     }
                 }
 
                 if (character === ':') {
-                    state = { type: 'header-value', boundary: state.boundary, name: state.name, value: '', values: [], headers: state.headers };
+                    state = {
+                        type: 'header-value',
+                        boundary: state.boundary,
+                        name: state.name,
+                        value: '',
+                        values: [],
+                        headers: state.headers
+                    };
                     break;
                 }
 
@@ -104,7 +104,13 @@ function* parseMimeMultipart(/** @type {Uint8Array} */ uint8Array) {
 
                 if (character === '\n') {
                     state.values.push(state.value);
-                    state = { type: 'header-name', boundary: state.boundary, name: '', value: '', headers: [{ name: state.name, values: state.values }, ...state.headers] };
+                    state = {
+                        type: 'header-name',
+                        boundary: state.boundary,
+                        name: '',
+                        value: '',
+                        headers: [{name: state.name, values: state.values}, ...state.headers]
+                    };
                     break;
                 }
 
@@ -123,7 +129,7 @@ function* parseMimeMultipart(/** @type {Uint8Array} */ uint8Array) {
                         const conclusionCheck = textDecoder.decode(uint8Array.slice(index + '\n'.length + state.boundary.length, index + '\n'.length + state.boundary.length + '--'.length));
                         if (conclusionCheck === '--') {
                             index += '\n'.length + state.boundary.length + '--'.length;
-                            yield { headers: state.headers, index: state.index, length: state.length };
+                            yield {headers: state.headers, index: state.index, length: state.length};
 
                             if (index !== uint8Array.byteLength) {
                                 const excess = uint8Array.slice(index);
@@ -135,10 +141,9 @@ function* parseMimeMultipart(/** @type {Uint8Array} */ uint8Array) {
                             }
 
                             return;
-                        }
-                        else {
-                            yield { headers: state.headers, index: state.index, length: state.length };
-                            state = { type: 'boundary', boundary: '' };
+                        } else {
+                            yield {headers: state.headers, index: state.index, length: state.length};
+                            state = {type: 'boundary', boundary: ''};
                             break;
                         }
                     }
@@ -159,14 +164,8 @@ function* parseMimeMultipart(/** @type {Uint8Array} */ uint8Array) {
 };
 
 
-async function ulpoadUrlAndReturnResponse(request, searchString) {
-    let uploadToUrl = request.url.substring(0, request.url.length - searchString.length);
-    let cache = caches.default;
-
-
-
-    const uint8Arrray = await request.arrayBuffer();
-    const parts = [...parseMimeMultipart(uint8Arrray)];
+function arrayToBlob(uint8Arrray) {
+    let parts = [...parseMimeMultipart(uint8Arrray)]
     if (parts.length === 0) {
         return new Response('No parts!');
     }
@@ -176,20 +175,41 @@ async function ulpoadUrlAndReturnResponse(request, searchString) {
     }
 
     const [part] = parts;
-    const type = part.headers.find(h => h.name === 'Content-Type')?.values[0] || 'application/octet-stream';
+    const type = part.headers.find(h => h.name === 'Content-Type')?.values[0] || 'image/png';
     const blob = uint8Arrray.slice(part.index, part.index + part.length);
+    return {blob, type};
+}
 
 
+function makeid(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        counter += 1;
+    }
+    return result;
+}
 
-    let imageUrl = "/" + makeid(10) + ".png";
-    let uploadedUrl = uploadToUrl + imageUrl
-    await cache.put(new Request(uploadedUrl), new Response(blob, {
-        headers: {
-            "content-type": "image/png",
-            // "Content-Disposition": 'inline; filename="' + file.name + '"',
+
+async function ulpoadUrlAndReturnResponse(request, env) {
+    // TODO this worked some day
+    // https://github.com/TomasHubelbauer/mime-multipart/issues/1
+    // let body = await request.formData();
+    // let file = await body.get('file');
+    // const blob = file.arrayBuffer();
+    const uint8Arrray = await request.arrayBuffer();
+    const {blob, type} = arrayToBlob(uint8Arrray);
+    const id = makeid(10) + ".png";
+    await env.spainter.put(id, blob, {
+        httpMetadata: {
+            "contentType": type,
         },
-    }));
-    return new Response(imageUrl, {
+    })
+    let uploadedUrl = env.imgUrl + id
+    return new Response(uploadedUrl, {
         headers: {
             "content-type": "text/plain",
         },
@@ -198,13 +218,8 @@ async function ulpoadUrlAndReturnResponse(request, searchString) {
 
 export default {
     async fetch(request, env) {
-        console.log(request.url);
-        const searchString = '/upload_file';
-        if (request.url.endsWith(".png")) {
-            let cache = caches.default;
-            return cache.match(request);
-        } else if (request.url.endsWith(searchString)) {
-            return await ulpoadUrlAndReturnResponse(request, searchString);
+        if (request.method === 'POST') {
+            return await ulpoadUrlAndReturnResponse(request, env);
         } else {
             return new Response(env.html, {
                 headers: {

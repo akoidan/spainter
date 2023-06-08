@@ -7,6 +7,15 @@ variable "domain_name" {
   }
 }
 
+variable "img_domain_name" {
+  default = "img.spainter.akoidan.com"
+  description = "img r2 domain"
+  validation {
+    condition     = can(regex("^.+$", var.domain_name))
+    error_message = "domain_name is required"
+  }
+}
+
 variable "cloud_flare_account_id" {
   description = "Copy Account id Zone Id from https://dash.cloudflare.com/"
   validation {
@@ -28,9 +37,8 @@ variable "cloud_flare_api_token" {
   description = <<EOT
     Go to https://dash.cloudflare.com/profile/api-tokens.
     Create a new token with set of permissions
-    Account - Worker Scripts - Edit
-    Zone    - DNS - Edit
-    Zone    - Worker Routes - Edit
+    Account: Cloudflare Pages:Edit, Workers R2 Storage:Edit, Workers Scripts:Edit, Access: Apps and Policies:Edit
+    Zone: Workers Routes:Edit, Page Rules:Edit, DNS:Edit
   EOT
   validation {
     condition     = can(regex("^.+$", var.cloud_flare_api_token))

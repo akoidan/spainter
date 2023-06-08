@@ -77,11 +77,10 @@
                 body: formData,
             }).then(e => {
                 return e.text();
-            }).then(e => {
-                let href = host+ e;
-                textValue.href = href;
-                textValue.textContent = href;
-                link = href;
+            }).then(url => {
+                textValue.href = url;
+                textValue.textContent = url;
+                link = url;
             }).then(
                 () => navigator.permissions.query({name: "clipboard-write"})
             ).then(result => {
