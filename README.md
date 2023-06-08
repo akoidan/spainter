@@ -109,3 +109,22 @@ export CF_EMAIL=youremail@gmail.com
 wrangler dev
 ```
 Now you can debug in Webstorm by pressing debug on package.json dev script. In ordet for debug to work switch to local mode by pressing  `l`
+
+
+# Terraform
+```bash
+cd terraform
+terraform apply
+# enter token by instruction
+```
+Some actions are not doable via CF api. We have to do them manually:
+GO to CloudFlare Dashboard. From Home menu -> R2 -> Overview -> Select Spainter bucket -> Settings:
+ - Custom Domains ->  Connect Domain -> img.spainter.akoidan.com -> Continue -> Connect Domain
+ - CORS Policy -> Add Cors policy ->
+```json
+{
+  "AllowedOrigins": [
+    "https://spainter.akoidan.com"
+  ]
+}
+```
