@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache"/>
     <style>
         .pad1 {
             padding: 10px;
             box-sizing: border-box;
         }
+
         html, body, .pad1 {
             width: 100%;
             margin: 0;
-            height:100%;
+            height: 100%;
         }
+
         #saveBlobExampleHolder {
             position: absolute;
             z-index: 1;
@@ -26,9 +28,11 @@
             transform: translate(-50%, -50%);
             border: 1px dashed red;
         }
+
         #textValue {
             display: block;
         }
+
         input[type=button] {
             width: 100%;
             margin-top: 10px;
@@ -36,10 +40,12 @@
             text-transform: uppercase;
             font-weight: bold;
         }
+
         #saveBlobExampleHolder img {
             max-width: calc(100vw - 200px);
             max-height: calc(100vh - 200px);
         }
+
         .inactive {
             opacity: 0.3;
             pointer-events: none;
@@ -62,11 +68,20 @@
 </div>
 
 <script>
-    const host =  location.origin;
+    const host = location.origin;
     let link = "";
-    const btnClick = async (e) => {
-        await navigator.clipboard.write(link);
+    copyLink.addEventListener('click',pasteClipboard);
+
+    async function pasteClipboard() {
+        let clipBoardWriteRes = await navigator.permissions.query({name: "clipboard-write"});
+        if (clipBoardWriteRes.state == "granted" || clipBoardWriteRes.state == "prompt") {
+            statusText.textContent = "The link below has been copied to your clipboard";
+            await navigator.clipboard.writeText(link);
+            console.log("Clipboard is modified with link");
+            return true;
+        }
     }
+
     var p = new Painter(containerPainter, {
         logger: {
             debug: function log() {
@@ -82,10 +97,9 @@
                 return Function.prototype.bind.apply(console.log, params);
             }
         },
-        onBlobPaste: async function(blob) {
-            copyLink.removeEventListener('click', btnClick);
+        onBlobPaste: async function (blob) {
             copyLink.style.display = 'None';
-            statusText.textContent ="Uploading image...";
+            statusText.textContent = "Uploading image...";
             containerPainter.classList.add("inactive");
             saveBlobExample.src = URL.createObjectURL(blob);
             saveBlobExampleHolder.style.display = 'block';
@@ -105,20 +119,14 @@
                 textValue.href = link;
                 statusText.textContent = "Image has been uploaded";
                 textValue.textContent = link;
-                let clipBoardWriteRes = await navigator.permissions.query({name: "clipboard-write"});
-                if (clipBoardWriteRes.state == "granted" || clipBoardWriteRes.state == "prompt") {
-                    statusText.textContent = "The link below has been copied to your clipboard";
-                    await navigator.clipboard.writeText(link);
-                    console.log("Clipboard is modified with link");
-                } else {
+                if (!await pasteClipboard()) {
                     copyLink.style.display = 'inline-block';
-                    copyLink.addEventListener('click', btnClick)
                 }
             }
         }
     })
     window.painter = p;
-    closebtn.onclick = function() {
+    closebtn.onclick = function () {
         containerPainter.classList.remove("inactive");
         saveBlobExampleHolder.style.display = 'none';
     }

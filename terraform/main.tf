@@ -23,6 +23,18 @@ resource "cloudflare_worker_script" "spainter_script" {
 
 }
 
+## Add a page rule to the domain
+# should be done manually
+#resource "cloudflare_page_rule" "spainter_redirect" {
+#  zone_id = var.cloud_flare_zone_id
+#  target = "${var.domain_name}/*"
+#  priority = 1
+#
+#  actions {
+#    status_code = 301
+#    url = "https://${var.domain_name}"
+#  }
+#}
 
 resource "cloudflare_worker_domain" "spainter_domain" {
   account_id = var.cloud_flare_account_id
