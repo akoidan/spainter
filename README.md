@@ -1,6 +1,6 @@
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/deathangel908/lines-logger/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/akoidan/spainter/issues/new) [![HitCount](http://hits.dwyl.io/akoidan/spainter.svg)](http://hits.dwyl.io/akoidan/spainter) ![update:spainter.pychat.org](https://github.com/akoidan/spainter/workflows/update:spainter.pychat.org/badge.svg)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/deathangel908/lines-logger/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/spainter.svg)](https://www.npmjs.com/package/spainter) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/akoidan/spainter/issues/new)  ![update:spainter.pychat.org](https://github.com/akoidan/spainter/workflows/update:spainter.pychat.org/badge.svg)
 
-# Spainter. Web browSer painter
+# <img width="50px" src="./spainter.png"/> Spainter. Web browSer painter
 
 ## DEMO [spainter.akoidan.com](https://spainter.akoidan.com)
 
