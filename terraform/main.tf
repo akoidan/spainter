@@ -16,6 +16,11 @@ resource "cloudflare_worker_script" "spainter_script" {
     text = "https://${var.img_domain_name}/"
   }
 
+  plain_text_binding {
+    name = "favicon"
+    text = filebase64("./favicon-16x16.png")
+  }
+
   r2_bucket_binding {
     name        = "spainter"
     bucket_name = cloudflare_r2_bucket.spainter.name
