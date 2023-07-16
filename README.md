@@ -25,8 +25,8 @@ If you use [fontello](http://fontello.com/) in your server, you can generate sin
  - If you use server rendering and cdn:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/spainter@1.2.10/index.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spainter@1.2.10/index.css"/>
+<script src="https://cdn.jsdelivr.net/npm/spainter@1.3.1/index.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spainter@1.3.1/index.css"/>
 <div id="containerPainter"></div>
 <script>
 var p = new Painter(containerPainter);
@@ -110,6 +110,16 @@ wrangler dev
 ```
 Now you can debug in Webstorm by pressing debug on package.json dev script. In ordet for debug to work switch to local mode by pressing  `l`
 
+
+# CSS compile
+Either use `yarn build`
+
+### Webstorm
+For webstorm you can setup
+File-watcher -> sass
+ - Program: ~/.nvm/versions/node/v18.13.0/bin/node
+ - arguments: node_modules/.bin/node-sass index.sass index.css
+ - output files to refresh: index.css
 
 # Terraform
 ```bash

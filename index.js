@@ -21,7 +21,6 @@ function Painter(containerPaitner, conf) {
         </div>\
         <div class="canvasWrapper">\
             <canvas></canvas>\
-            <div class="canvasResize"></div>\
             <span class="text spainterHidden paintTextSpan" tabindex="-1"\
                   contenteditable="true"></span>\
             <div pos="m" class="paint-crp-rect spainterHidden">\
@@ -174,7 +173,6 @@ function Painter(containerPaitner, conf) {
     paintXY: $('.paintXY'),
     trimImage :  $('.trimImage'),
     header: document.createElement('div'),
-    canvasResize: $('.canvasResize'),
     canvasWrapper: $('.canvasWrapper'),
     painterTools: $('.painterTools'),
     paintPastedImg: $('.paintPastedImg'),
@@ -203,8 +201,7 @@ function Painter(containerPaitner, conf) {
   };
   self.instruments = {
     color: {
-      title: 'Color',
-      text: "C:",
+      title: 'Main color',
       holderClass: 'paintColor',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -224,9 +221,10 @@ function Painter(containerPaitner, conf) {
       ctxSetter: function (v) {
         self.ctx.globalAlpha = v / 100;
         self.instruments.opacity.inputValue = v / 100;
+        self.instruments.color.value.style.opacity = `${v/100}`;
       },
       title: 'Alpha (color transparency)',
-      text: "A:",
+      text: "Opacity:",
       holderClass: 'paintOpacity',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -241,9 +239,9 @@ function Painter(containerPaitner, conf) {
       handler: 'onChangeColorFill',
       ctxSetter: function (v) {
         self.ctx.fillStyle = v;
+        self.instruments.color.value.style.opacity = `${v/100}`;
       },
       title: 'Fill color',
-      text: "CF:",
       holderClass: 'paintColorFill',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -259,9 +257,10 @@ function Painter(containerPaitner, conf) {
       range: true,
       ctxSetter: function (v) {
         self.instruments.opacityFill.inputValue = v / 100;
+        self.instruments.colorFill.value.style.opacity = `${v/100}`;
       },
       title: 'Fill alpha (color transparency)',
-      text: "AF:",
+      text: "Opacity:",
       holderClass: 'paintFillOpacity',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -279,7 +278,7 @@ function Painter(containerPaitner, conf) {
         self.ctx.lineWidth = v;
       },
       title: 'Width',
-      text: "W:",
+      text: "Width:",
       holderClass: 'paintRadius',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -296,7 +295,7 @@ function Painter(containerPaitner, conf) {
         self.ctx.fontFamily = v;
       },
       title: 'Font',
-      text: "F:",
+      text: "Font:",
       holderClass: 'paintFont',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -344,8 +343,6 @@ function Painter(containerPaitner, conf) {
       var width = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight,
         document.documentElement.scrollHeight, document.documentElement.offsetHeight);
       self.helper.setDimensions(500, 500);
-      // self.dom.canvasWrapper.style.height = height * 0.9 - 100 + 'px'
-      // self.dom.canvasWrapper.style.width = width * 0.9 - 80 + 'px'
     },
     initInstruments: function () { // TODO this looks bad
       Object.keys(self.instruments).forEach(function (k) {
@@ -478,7 +475,6 @@ function Painter(containerPaitner, conf) {
         {dom: document.body, listener: 'paste', handler: 'canvasImagePaste', params: false},
         {dom: self.dom.canvasWrapper, listener: mouseWheelEventName, handler: 'onmousewheel', params: {passive: false}},
         {dom: self.dom.container, listener: 'drop', handler: 'canvasImageDrop', params: {passive: false}},
-        {dom: self.dom.canvasResize, listener: 'mousedown', handler: 'painterResize'}
       ].forEach(function (e) {
         var listeners = Array.isArray(e.listener) ? e.listener: [e.listener];
         listeners.forEach(function(listener) {
@@ -762,26 +758,6 @@ function Painter(containerPaitner, conf) {
           proc.clickAction(event);
         }
       });
-    },
-    painterResize: function(e) {
-      var st = self.dom.canvasWrapper.style;
-      var w = parseInt(st.width.split('px')[0]);
-      var h = parseInt(st.height.split('px')[0]);
-      var pxy =self.helper.getPageXY(e);
-      var listener = function(e) {
-        var cxy = self.helper.getPageXY(e);
-        self.dom.canvasWrapper.style.width = w - pxy.pageX + cxy.pageX + 'px';
-        self.dom.canvasWrapper.style.height = h - pxy.pageY + cxy.pageY + 'px';
-      };
-      logger.debug("Added mousmove. touchmove")();
-      document.addEventListener('mousemove', listener);
-      document.addEventListener('touchmove', listener);
-      var remove = function() {
-        document.removeEventListener('mousemove', listener);
-        document.removeEventListener('touchmove', listener);
-      };
-      document.addEventListener('mouseup', remove);
-      document.addEventListener('touchend', remove);
     },
     canvasImageDrop: function (e) {
       self.dropImg(e.dataTransfer.files, e, function(e) {

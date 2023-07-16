@@ -189,6 +189,8 @@
 		margin-left: 24px
 		flex-grow: 0
 		display: flex
+		max-width: 100%
+		overflow-x: auto
 
 		%hideEl
 			display: inline-block
@@ -205,11 +207,11 @@
 				margin-right: 0
 			div
 				display: inline-block
-				overflow: hidden
-				width: 0
-				@include transition(width 0.5s)
-			&:hover div
-				width: 120px
+			@media (pointer:none), (pointer:coarse)
+				input[type=text]
+					display: none
+				input[type=range]
+					width: 50px
 
 		.paintSend
 			cursor: pointer
@@ -245,9 +247,14 @@
 
 		.paintApplyText
 			display: inline-block
+			input[type=button][disabled]
+				display: none
 
 		.paintColor, .paintColorFill
 			@extend %hideEl
+			width: 25px
+			height: 25px
+			border: 1px solid grey
 			input[type=color]
 				-webkit-appearance: none
 				padding: 0
