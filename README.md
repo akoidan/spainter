@@ -92,7 +92,9 @@ I also intentionally leaved styles empty so you can easily override them accordi
 
 # spainter.pychat.org
 
-Spainter is hosted with cloudflare workers
+ - update npm package to upload new code. It should be updatged manually with `npm publish`
+ - worked that upload/stores files with cloudflare workers
+ - update index.html manually from cloudflare dashboard -> workers & pages -> settings -> variables and secrets 
 Cloudflare workers js file should contain all the css/html/js. There's no way to pull data from local fs according to [this](https://community.cloudflare.com/t/is-it-possible-to-pull-data-from-a-local-json-file-hosted-on-a-worker/134982) answer.
 This is why static files are served with cdnjs
 
@@ -109,6 +111,7 @@ export CF_EMAIL=youremail@gmail.com
 wrangler dev
 ```
 Now you can debug in Webstorm by pressing debug on package.json dev script. In ordet for debug to work switch to local mode by pressing  `l`
+
 
 
 # CSS compile
