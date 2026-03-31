@@ -43,9 +43,9 @@
 		border-top: 1px solid grey
 		accent-color: #555
 		&::-webkit-slider-runnable-track
-		  height: 2px
+			height: 2px
 		&::-webkit-slider-thumb
-		  @include thumb
+			@include thumb
 		&::-moz-range-track
 			height: 2px
 		&::-moz-range-thumb
@@ -222,7 +222,7 @@
 		flex-grow: 0
 		display: flex
 		overflow-y: hidden
-		align-items: center
+		align-items: flex-end
 		max-width: 100%
 		overflow-x: auto
 
@@ -283,9 +283,26 @@
 		.paintRadius
 			@extend %hideEl
 			padding: 0 6px
-			> input[type=text]
-				width: 28px
-				font-size: 10px
+			.width-preset-buttons
+				display: flex
+				gap: 2px
+				margin-bottom: 4px
+				input[type=text]
+					width: 20px
+					font-size: 8px
+				button
+					width: 25px
+					height: 16px
+					font-size: 8px
+					padding: 0
+					border: 1px solid #ccc
+					background: #f5f5f5
+					cursor: pointer
+					border-radius: 2px
+					&:hover
+						background: #e0e0e0
+					&:active
+						background: #d0d0d0
 
 		.paintApplyText
 			display: inline-block
