@@ -468,8 +468,8 @@ function Painter(containerPaitner, conf) {
     },
     initCanvas: function () {
       [
-        {dom: self.dom.canvas, listener: ['mousedown', 'touchstart'], handler: 'onmousedown'},
-        {dom: self.dom.canvas, listener: ['mousemove', 'touchmove'], handler: 'onmousemove'},
+        {dom: self.dom.canvas, listener: 'pointerdown', handler: 'onmousedown'},
+        {dom: self.dom.canvas, listener: 'pointermove', handler: 'onmousemove'},
         {dom: self.dom.canvasWrapper, listener: ['mouseleave'], handler: 'onmouseup'},
         {dom: self.dom.container, listener: 'keydown', handler: 'contKeyPress', params: false},
         {dom: document.body, listener: 'paste', handler: 'canvasImagePaste', params: false},
@@ -639,7 +639,7 @@ function Painter(containerPaitner, conf) {
     getScaledOrdinate: function (ordinateName, clientOrdinateName, value) {
       var clientOrdinate = self.dom.canvas[clientOrdinateName];
       var ordinate = self.dom.canvas[ordinateName];
-      return ordinate == clientOrdinate ? value : Math.round(ordinate * value / clientOrdinate); // apply page zoom
+      return ordinate == clientOrdinate ? Math.round(value) : Math.round(ordinate * value / clientOrdinate); // apply page zoom
     },
     getOffset: function (el) {
       var _x = 0;
@@ -687,7 +687,12 @@ function Painter(containerPaitner, conf) {
   };
   self.events = {
     mouseDown: false,
+    eraserPrevMode: null,
     onmousedown: function (e) {
+      if (e.buttons & (1 << 5)) { // eraser button
+        self.events.eraserPrevMode = self.mode;
+        self.setMode('eraser');
+      }
       var tool = self.tools[self.mode];
       if (!tool.onMouseDown) {
         return;
@@ -712,6 +717,10 @@ function Painter(containerPaitner, conf) {
       }
     },
     onmouseup: function (e) {
+      if (self.events.eraserPrevMode) {
+        self.setMode(self.events.eraserPrevMode);
+        self.events.eraserPrevMode = null;
+      }
       if (self.events.mouseDown) {
         self.events.mouseDown = false;
         var tool = self.tools[self.mode];
@@ -1872,13 +1881,11 @@ function Painter(containerPaitner, conf) {
     });
   };
   self.show = function () {
-    document.body.addEventListener('mouseup', self.events.onmouseup, false);
-    document.body.addEventListener('touchend', self.events.onmouseup, false);
+    document.body.addEventListener('pointerup', self.events.onmouseup, false);
   };
   self.superHide = self.hide;
   self.hide = function () {
-    document.body.removeEventListener('mouseup', self.events.onmouseup, false);
-    document.body.removeEventListener('touchend', self.events.onmouseup, false);
+    document.body.removeEventListener('pointerup', self.events.onmouseup, false);
   };
   Object.keys(self.init).forEach(function (k) {
     self.init[k]()

@@ -1,6 +1,6 @@
 {
   "name": "spainter",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Web browser painter, like mspaint. ",
   "main": "index.js",
   "files": [
@@ -16,7 +16,8 @@
   ],
   "scripts": {
     "build": "bash generate-fontello.sh generate && node-sass index.sass index.css",
-    "dev": "wrangler dev terraform/cloudflare-worker.js"
+    "dev": "wrangler dev terraform/cloudflare-worker.js",
+    "serve": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -28,14 +29,18 @@
   "author": "Andrew Koidan <deathangel908@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Deathangel908/spainter/issues"
+    "url": "https://github.com/Deathangel908/spainter/issue   s"
   },
   "homepage": "https://github.com/Deathangel908/spainter#readme",
   "typings": "./index.d.ts",
+  "engines": {
+    "node": "24.x",
+    "yarn": ">=1.0.0"
+  },
   "devDependencies": {
-    "create-cloudflare": "^2.0.8",
+    "create-cloudflare": "^2.66.1",
     "node-sass": "9",
-    "sass": "^1.49.9",
-    "wrangler": "^3.0.1"
+    "sass": "^1.98.0",
+    "wrangler": "^4.79.0"
   }
 }

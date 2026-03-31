@@ -90,7 +90,7 @@ node sass requires a lot of libs to build as well as NODE max version of 14, you
 I also intentionally leaved styles empty so you can easily override them according to your website design. If you want to prettify it a bit, you're wellcome to create a separate .css file with styles.
 
 
-# spainter.pychat.org
+# spainter.akoidan.com
 
  - update npm package to upload new code. It should be updatged manually with `npm publish`
  - worked that upload/stores files with cloudflare workers
@@ -98,7 +98,7 @@ I also intentionally leaved styles empty so you can easily override them accordi
 Cloudflare workers js file should contain all the css/html/js. There's no way to pull data from local fs according to [this](https://community.cloudflare.com/t/is-it-possible-to-pull-data-from-a-local-json-file-hosted-on-a-worker/134982) answer.
 This is why static files are served with cdnjs
 
-- Go to main page, 'Worker & Pages' -> Create application, router `spainter.pychat.org/*` Note star in the end.
+- Go to main page, 'Worker & Pages' -> Create application, router `spainter.akoidan.com/*` Note star in the end.
 - Go to your dns settings and create 'A' record pointing to any ip with a proxy status.
 
 put this envs for local debugging CF_API_KEY can be got from Profile -> Api Tokens -. Api Keys Global API KEY
