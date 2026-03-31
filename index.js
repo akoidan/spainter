@@ -358,8 +358,15 @@ function Painter(containerPaitner, conf) {
           instr.labelSpan = span;
         }
         instr.value =  instr.inputFactory();
+        var buttonsHolder = document.createElement('div')
         if (!instr.embedInto) {
-          instr.holder.appendChild(instr.value);
+          if (k === 'width') {
+            instr.holder.appendChild(buttonsHolder);
+            buttonsHolder.className = 'width-preset-buttons'
+            buttonsHolder.appendChild(instr.value)
+          } else {
+            instr.holder.appendChild(instr.value);
+          }
           self.dom.bottomTools.appendChild(instr.holder);
         }
         instr.value.addEventListener(instr.trigger || 'input', function (e) {
@@ -373,6 +380,23 @@ function Painter(containerPaitner, conf) {
             instr.range.value = e.target.value;
           }
         });
+        if (k === 'width') {
+          [1, 3, 5].forEach(function(presetValue) {
+            var presetBtn = document.createElement('input');
+            presetBtn.type = 'button';
+            presetBtn.value = presetValue;
+            presetBtn.className = conf.buttonClass || '';
+
+            presetBtn.addEventListener('click', function(e) {
+              instr.range.value = presetValue;
+              instr.value.value = presetValue;
+              instr.ctxSetter(presetValue);
+              var handler = self.tools[self.mode][instr.handler];
+              handler && handler(e);
+            });
+            buttonsHolder.appendChild(presetBtn);
+          });
+        }
         if (instr.range) {
           instr.value.addEventListener('keypress', function (e) {
             var charCode = e.which || e.keyCode;
