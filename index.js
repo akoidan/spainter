@@ -381,16 +381,26 @@ function Painter(containerPaitner, conf) {
           }
         });
         if (k === 'width') {
-          [1, 3, 5].forEach(function(presetValue) {
+          ['s', 'm', 'l'].forEach(function(presetValue) {
             var presetBtn = document.createElement('input');
+            if (presetValue === 'm') {
+              self.mediumButton = presetBtn;
+            }
             presetBtn.type = 'button';
             presetBtn.value = presetValue;
             presetBtn.className = conf.buttonClass || '';
-
             presetBtn.addEventListener('click', function(e) {
-              instr.range.value = presetValue;
-              instr.value.value = presetValue;
-              instr.ctxSetter(presetValue);
+              var mapToText;
+              if (self.mode === 'text') {
+                mapToText = {'s': 10, 'm': 14, 'l': 20};
+              } else if (self.mode === 'eraser') {
+                mapToText = {'s': 5, 'm': 20, 'l': 50};
+              } else {
+                mapToText = {'s': 1, 'm': 3, 'l': 5};
+              }
+              instr.range.value = mapToText[presetValue];
+              instr.value.value = mapToText[presetValue];
+              instr.ctxSetter(mapToText[presetValue]);
               var handler = self.tools[self.mode][instr.handler];
               handler && handler(e);
             });
@@ -1913,6 +1923,7 @@ function Painter(containerPaitner, conf) {
   })();
   self.setMode = function (mode) {
     var oldMode = self.tools[self.mode];
+    var oldModeName = self.mode;
     self.mode = mode;
     if (oldMode) {
       oldMode.onDeactivate && oldMode.onDeactivate();
@@ -1935,6 +1946,25 @@ function Painter(containerPaitner, conf) {
         }
       }
     });
+    if (oldModeName !== 'eraser' && mode === 'eraser') {
+      self.mediumButton.click();
+    } else if (oldModeName === 'eraser' && mode !== 'eraser') {
+      function isVisible(element) {
+        if (!element) return false;
+
+        const style = getComputedStyle(element);
+        if (style.opacity === '0') return false;           // fully transparent
+        if (style.pointerEvents === 'none') return false;  // not interactable
+
+        const rects = element.getClientRects();
+        if (rects.length === 0) return false;             // not rendered / size 0
+
+        return true;
+      }
+      if (isVisible(self.mediumButton)) {
+        self.mediumButton.click();
+      }
+    }
   };
   self.show = function () {
     document.body.addEventListener('pointerup', self.events.onmouseup, false);
