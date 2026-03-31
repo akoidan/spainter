@@ -274,6 +274,29 @@ function Painter(containerPaitner, conf) {
       ctxSetter: function (v) {
         self.ctx.lineWidth = v;
       },
+      init: function() {
+        var btnHolder = document.createElement('div');
+        ['s', 'm', 'l'].forEach(function(presetValue) {
+          var presetBtn = document.createElement('input');
+          if (presetValue === 'm') {
+            self.mediumButton = presetBtn;
+          }
+          presetBtn.type = 'button';
+          presetBtn.value = presetValue;
+          presetBtn.className = conf.buttonClass || '';
+
+          presetBtn.addEventListener('click', function(e) {
+            var mapToText = self.tools[self.mode].mapToText ?? {'s': 1, 'm': 3, 'l': 5};
+            self.instruments.width.range.value = mapToText[presetValue];
+            self.instruments.width.value.value = mapToText[presetValue];
+            self.instruments.width.ctxSetter(mapToText[presetValue]);
+            var handler = self.tools[self.mode][self.instruments.width.handler];
+            handler && handler({target: {value: mapToText[presetValue]}}); // 5 the same which is calculated on text size
+          });
+          btnHolder.appendChild(presetBtn);
+        });
+        return btnHolder;
+      },
       title: 'Width',
       text: "Width",
       holderClass: 'paintRadius',
@@ -282,7 +305,7 @@ function Painter(containerPaitner, conf) {
         var input = document.createElement('input');
         input.type = 'text';
         input.setAttribute('step', 1);
-        input.value = '10';
+        input.value = '3';
         return input;
       },
     },
@@ -339,7 +362,7 @@ function Painter(containerPaitner, conf) {
         document.documentElement.scrollHeight, document.documentElement.offsetHeight);
       var width = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight,
         document.documentElement.scrollHeight, document.documentElement.offsetHeight);
-      self.helper.setDimensions(500, 500);
+      self.helper.setDimensions(1200, 700);
     },
     initInstruments: function () { // TODO this looks bad
       Object.keys(self.instruments).forEach(function (k) {
@@ -380,33 +403,6 @@ function Painter(containerPaitner, conf) {
             instr.range.value = e.target.value;
           }
         });
-        if (k === 'width') {
-          ['s', 'm', 'l'].forEach(function(presetValue) {
-            var presetBtn = document.createElement('input');
-            if (presetValue === 'm') {
-              self.mediumButton = presetBtn;
-            }
-            presetBtn.type = 'button';
-            presetBtn.value = presetValue;
-            presetBtn.className = conf.buttonClass || '';
-            presetBtn.addEventListener('click', function(e) {
-              var mapToText;
-              if (self.mode === 'text') {
-                mapToText = {'s': 10, 'm': 14, 'l': 20};
-              } else if (self.mode === 'eraser') {
-                mapToText = {'s': 5, 'm': 20, 'l': 50};
-              } else {
-                mapToText = {'s': 1, 'm': 3, 'l': 5};
-              }
-              instr.range.value = mapToText[presetValue];
-              instr.value.value = mapToText[presetValue];
-              instr.ctxSetter(mapToText[presetValue]);
-              var handler = self.tools[self.mode][instr.handler];
-              handler && handler(e);
-            });
-            buttonsHolder.appendChild(presetBtn);
-          });
-        }
         if (instr.range) {
           instr.value.addEventListener('keypress', function (e) {
             var charCode = e.which || e.keyCode;
@@ -420,6 +416,7 @@ function Painter(containerPaitner, conf) {
             instr.range.type = 'range';
           }
           instr.range.max = 66;
+          instr.range.value = 3;
           if (!div.contains(instr.range)) {
             div.appendChild(instr.range);
           }
@@ -436,6 +433,10 @@ function Painter(containerPaitner, conf) {
             var handler = self.tools[self.mode][instr.handler];
             handler && handler(e);
           });
+        }
+        if (instr.init) {
+          var element = instr.init();
+          buttonsHolder.appendChild(element)
         }
       });
     },
@@ -1117,7 +1118,6 @@ function Painter(containerPaitner, conf) {
         description: 'Brush — freehand drawing'
       };
       tool.labels = { color: 'Color', width: 'Thickness' };
-      tool.widthPresets = [1, 3, 5]; // Add preset flags
       tool.onChangeColor = function (e) {
         self.helper.setCursor(tool.getCursor());
       };
@@ -1169,7 +1169,6 @@ function Painter(containerPaitner, conf) {
         description: 'Line — draw straight lines'
       };
       tool.labels = { color: 'Color', width: 'Width' };
-      tool.widthPresets = [1, 3, 5]; // Add preset flags
       tool.getCursor = function () {
         return 'crosshair';
       };
@@ -1323,7 +1322,6 @@ function Painter(containerPaitner, conf) {
         description: 'Rectangle — draw rectangles'
       };
       tool.labels = { color: 'Border', colorFill: 'Fill', width: 'Border width' };
-      tool.widthPresets = [1, 3, 5]; // Add preset flags
       tool.getCursor = function () {
         return 'crosshair';
       };
@@ -1370,7 +1368,6 @@ function Painter(containerPaitner, conf) {
         description: 'Ellipse — draw ellipses'
       };
       tool.labels = { color: 'Border', colorFill: 'Fill', width: 'Border width' };
-      tool.widthPresets = [1, 3, 5]; // Add preset flags
       tool.getCursor = function () {
         return 'crosshair';
       };
@@ -1433,7 +1430,6 @@ function Painter(containerPaitner, conf) {
         description: 'Text — add text to canvas'
       };
       tool.labels = { colorFill: 'Color', font: 'Font', width: 'Size' };
-      tool.widthPresets = [10, 14, 20]; // Text has different presets
       tool.span = self.dom.paintTextSpan;
       //prevent self.events.contKeyPress
       tool.span.addEventListener('keypress', function (e) {
@@ -1441,6 +1437,7 @@ function Painter(containerPaitner, conf) {
           e.stopPropagation(); //proxy onapply
         }
       });
+      tool.mapToText = {'s': 10, 'm': 14, 'l': 20};
       tool.bufferHandler = true;
       tool.onChangeFont = function (e) {
         tool.span.style.fontFamily = e.target.value;
@@ -1475,7 +1472,7 @@ function Painter(containerPaitner, conf) {
         self.setMode('pen');
       };
       tool.onZoomChange = function () {
-        tool.span.style.fontSize = (self.zoom * (self.ctx.lineWidth + 5)) + 'px';
+        tool.span.style.fontSize = (self.zoom * (self.ctx.lineWidth)) + 'px';
         tool.span.style.top = (tool.originOffest.y * self.zoom  / tool.originOffest.z) + 'px';
         tool.span.style.left = (tool.originOffest.x * self.zoom  / tool.originOffest.z) + 'px';
       };
@@ -1483,7 +1480,7 @@ function Painter(containerPaitner, conf) {
         return 'text';
       };
       tool.onChangeRadius = function (e) {
-        tool.span.style.fontSize = (self.zoom * (5 + parseInt(e.target.value))) + 'px';
+        tool.span.style.fontSize = (self.zoom * (parseInt(e.target.value))) + 'px';
       };
       tool.onChangeFillOpacity = function (e) {
         tool.span.style.opacity = e.target.value / 100
@@ -1515,8 +1512,8 @@ function Painter(containerPaitner, conf) {
         title: 'Eraser (Shift+D)',
         description: 'Eraser — erase parts of the canvas'
       };
+      tool.mapToText = {'s': 5, 'm': 20, 'l': 50};
       tool.labels = { width: 'Radius' };
-      tool.widthPresets = [1, 3, 5]; // Add preset flags
       tool.onZoomChange = function (e) {
         self.helper.setCursor(tool.getCursor());
       };
