@@ -191,24 +191,30 @@
 		margin-left: 24px
 		flex-grow: 0
 		display: flex
+		align-items: center
 		max-width: 100%
 		overflow-x: auto
 
 		%hideEl
-			display: inline-block
+			display: inline-flex
+			flex-direction: column
 			vertical-align: top
+			> span
+				font-size: 10px
+				opacity: 0.6
+				margin-bottom: 1px
+				display: block
+				white-space: nowrap
 			input[type=text]
 				width: 30px
-				padding: 5px
+				padding: 2px 4px
 				vertical-align: top
-			> span
-				vertical-align: top
-				display: inline-block
-				padding-top: 3px
 			> input
 				margin-right: 0
 			div
-				display: inline-block
+				display: flex
+				align-items: center
+				gap: 4px
 			@media (pointer:none), (pointer:coarse)
 				input[type=text]
 					display: none
@@ -230,9 +236,8 @@
 
 		.paintFont
 			@extend %hideEl
+			padding: 0 6px
 			select
-				display: inline-block
-				text-decoration: none
 				text-overflow: ellipsis
 				overflow: hidden
 				white-space: nowrap
@@ -246,6 +251,44 @@
 
 		.paintRadius
 			@extend %hideEl
+			padding: 0 6px
+			> input[type=text]
+				width: 28px
+				font-size: 10px
+			input[type=range]
+				width: 50px
+				accent-color: #555
+				cursor: pointer
+				&::-webkit-slider-runnable-track
+					height: 2px
+				&::-webkit-slider-thumb
+					-webkit-appearance: none
+					appearance: none
+					width: 4px !important
+					height: 4px !important
+					min-width: 4px
+					min-height: 4px
+					max-width: 4px
+					max-height: 4px
+					border-radius: 50%
+					background: #555
+					box-sizing: border-box
+					margin-top: -1px
+				&::-moz-range-track
+					height: 2px
+				&::-moz-range-thumb
+					-moz-appearance: none
+					appearance: none
+					width: 4px
+					height: 4px
+					min-width: 4px
+					min-height: 4px
+					max-width: 4px
+					max-height: 4px
+					border-radius: 50%
+					background: #555
+					border: none
+					box-sizing: border-box
 
 		.paintApplyText
 			display: inline-block
@@ -254,17 +297,58 @@
 
 		.paintColor, .paintColorFill
 			@extend %hideEl
-			width: 25px
-			height: 25px
-			border: 1px solid grey
+			padding: 0 6px
+			border: none
+			> span
+				font-size: 10px
 			input[type=color]
 				-webkit-appearance: none
 				padding: 0
 				border: 1px solid grey
 				border-radius: 1px
-				height: 25px
-				width: 25px
+				height: 18px
+				width: 40px
+				display: block
+				cursor: pointer
 				&::-webkit-color-swatch-wrapper
 					padding: 0
 				&::-webkit-color-swatch
 					border: none
+			input[type=range]
+				width: 40px
+				margin: 0
+				padding: 0
+				display: block
+				cursor: pointer
+				border-top: 1px solid grey
+				accent-color: #555
+				&::-webkit-slider-runnable-track
+					height: 2px
+				&::-webkit-slider-thumb
+					-webkit-appearance: none
+					appearance: none
+					width: 4px
+					height: 4px
+					min-width: 4px
+					min-height: 4px
+					max-width: 4px
+					max-height: 4px
+					border-radius: 50%
+					background: #555
+					box-sizing: border-box
+					margin-top: -1px
+				&::-moz-range-track
+					height: 2px
+				&::-moz-range-thumb
+					-moz-appearance: none
+					appearance: none
+					width: 4px
+					height: 4px
+					min-width: 4px
+					min-height: 4px
+					max-width: 4px
+					max-height: 4px
+					border-radius: 50%
+					background: #555
+					border: none
+					box-sizing: border-box

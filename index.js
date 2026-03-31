@@ -202,6 +202,7 @@ function Painter(containerPaitner, conf) {
   self.instruments = {
     color: {
       title: 'Main color',
+      text: 'Color',
       holderClass: 'paintColor',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -218,13 +219,13 @@ function Painter(containerPaitner, conf) {
     opacity: {
       handler: 'onChangeOpacity',
       range: true,
+      embedInto: 'color',
       ctxSetter: function (v) {
         self.ctx.globalAlpha = v / 100;
         self.instruments.opacity.inputValue = v / 100;
         self.instruments.color.value.style.opacity = `${v/100}`;
       },
       title: 'Alpha (color transparency)',
-      text: "Opacity:",
       holderClass: 'paintOpacity',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -242,6 +243,7 @@ function Painter(containerPaitner, conf) {
         self.instruments.color.value.style.opacity = `${v/100}`;
       },
       title: 'Fill color',
+      text: 'Fill',
       holderClass: 'paintColorFill',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -255,12 +257,12 @@ function Painter(containerPaitner, conf) {
     opacityFill: {
       handler: 'onChangeFillOpacity',
       range: true,
+      embedInto: 'colorFill',
       ctxSetter: function (v) {
         self.instruments.opacityFill.inputValue = v / 100;
         self.instruments.colorFill.value.style.opacity = `${v/100}`;
       },
       title: 'Fill alpha (color transparency)',
-      text: "Opacity:",
       holderClass: 'paintFillOpacity',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -278,7 +280,7 @@ function Painter(containerPaitner, conf) {
         self.ctx.lineWidth = v;
       },
       title: 'Width',
-      text: "Width:",
+      text: "Width",
       holderClass: 'paintRadius',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -295,7 +297,7 @@ function Painter(containerPaitner, conf) {
         self.ctx.fontFamily = v;
       },
       title: 'Font',
-      text: "Font:",
+      text: "Font",
       holderClass: 'paintFont',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -358,10 +360,13 @@ function Painter(containerPaitner, conf) {
           var span = document.createElement('span');
           span.innerText = instr.text;
           instr.holder.appendChild(span);
+          instr.labelSpan = span;
         }
         instr.value =  instr.inputFactory();
-        instr.holder.appendChild(instr.value);
-        self.dom.bottomTools.appendChild(instr.holder);
+        if (!instr.embedInto) {
+          instr.holder.appendChild(instr.value);
+          self.dom.bottomTools.appendChild(instr.holder);
+        }
         instr.value.addEventListener(instr.trigger || 'input', function (e) {
           if (instr.range && instr.value.value.length > 2 && this.value != 100) { // != isntead !== in case it's a string
             instr.value.value = this.value.slice(0, 2)
@@ -389,7 +394,11 @@ function Painter(containerPaitner, conf) {
           if (!div.contains(instr.range)) {
             div.appendChild(instr.range);
           }
-          instr.holder.appendChild(div);
+          if (instr.embedInto) {
+            self.instruments[instr.embedInto].holder.appendChild(instr.range);
+          } else {
+            instr.holder.appendChild(div);
+          }
           instr.range.addEventListener('input', function (e) {
             // exponential growth
             var value = exponentialMap[instr.range.value];
@@ -988,7 +997,8 @@ function Painter(containerPaitner, conf) {
         code: 'KeyS',
         icon: '' +
         'icon-selection',
-        title: 'Select (Shift+S)'
+        title: 'Select (Shift+S)',
+        description: 'Select & move a region'
       };
       tool.bufferHandler = true;
       tool.domImg = self.dom.paintPastedImg;
@@ -1074,8 +1084,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyB',
         icon: 'icon-brush-1',
-        title: 'Brush (Shift+B)'
+        title: 'Brush (Shift+B)',
+        description: 'Brush — freehand drawing'
       };
+      tool.labels = { color: 'Color', width: 'Thickness' };
       tool.onChangeColor = function (e) {
         self.helper.setCursor(tool.getCursor());
       };
@@ -1123,8 +1135,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyL',
         icon: 'icon-line',
-        title: 'Line (Shift+L)'
+        title: 'Line (Shift+L)',
+        description: 'Line — draw straight lines'
       };
+      tool.labels = { color: 'Color', width: 'Width' };
       tool.getCursor = function () {
         return 'crosshair';
       };
@@ -1167,8 +1181,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyF',
         icon: 'icon-fill',
-        title: 'Flood Fill (Shift+F)'
+        title: 'Flood Fill (Shift+F)',
+        description: 'Flood fill — fill area with color'
       };
+      tool.labels = { colorFill: 'Color' };
       tool.bufferHandler = true;
       tool.buildCursor = function() {
         var rawString = format(FLOOD_FILL_CURSOR, self.ctx.fillStyle);
@@ -1272,8 +1288,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyQ',
         icon: 'icon-rect',
-        title: 'Rectangle (Shift+Q)'
+        title: 'Rectangle (Shift+Q)',
+        description: 'Rectangle — draw rectangles'
       };
+      tool.labels = { color: 'Border', colorFill: 'Fill', width: 'Border width' };
       tool.getCursor = function () {
         return 'crosshair';
       };
@@ -1316,8 +1334,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyE',
         icon: 'icon-ellipse',
-        title: 'Eclipse (Shift+E)'
+        title: 'Eclipse (Shift+E)',
+        description: 'Ellipse — draw ellipses'
       };
+      tool.labels = { color: 'Border', colorFill: 'Fill', width: 'Border width' };
       tool.getCursor = function () {
         return 'crosshair';
       };
@@ -1376,8 +1396,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyT',
         icon: 'icon-text',
-        title: 'Text (Shift+T)'
+        title: 'Text (Shift+T)',
+        description: 'Text — add text to canvas'
       };
+      tool.labels = { colorFill: 'Color', font: 'Font', width: 'Size' };
       tool.span = self.dom.paintTextSpan;
       //prevent self.events.contKeyPress
       tool.span.addEventListener('keypress', function (e) {
@@ -1456,8 +1478,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyD',
         icon: 'icon-eraser',
-        title: 'Eraser (Shift+D)'
+        title: 'Eraser (Shift+D)',
+        description: 'Eraser — erase parts of the canvas'
       };
+      tool.labels = { width: 'Radius' };
       tool.onZoomChange = function (e) {
         self.helper.setCursor(tool.getCursor());
       };
@@ -1561,7 +1585,8 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyC',
         icon: 'icon-crop',
-        title: 'Crop Image (Shift+C)'
+        title: 'Crop Image (Shift+C)',
+        description: 'Crop — trim the canvas to selection'
       };
       tool.bufferHandler = true;
       tool.getCursor = function () {
@@ -1609,7 +1634,8 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyW',
         icon: 'icon-resize',
-        title: 'Change dimensions (Shift+W)'
+        title: 'Change dimensions (Shift+W)',
+        description: 'Resize — change canvas dimensions'
       };
       tool.container = self.dom.paintResizeTools;
       tool.width = tool.container.querySelector('[placeholder=width]');
@@ -1651,7 +1677,8 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyM',
         icon: 'icon-move',
-        title: 'Move (Shift+M)'
+        title: 'Move (Shift+M)',
+        description: 'Move — pan the canvas'
       };
       tool.getCursor = function () {
         return 'move';
@@ -1872,11 +1899,15 @@ function Painter(containerPaitner, conf) {
     newMode.icon && CssUtils.addClass(newMode.icon, self.PICKED_TOOL_CLASS);
     Object.keys(self.instruments).forEach(function (k) {
       var instr = self.instruments[k];
+      if (instr.embedInto) return;
       if (oldMode && oldMode[instr.handler]) {
         CssUtils.hideElement(instr.holder);
       }
       if (newMode[instr.handler]) {
         CssUtils.showElement(instr.holder);
+        if (instr.labelSpan && newMode.labels && newMode.labels[k]) {
+          instr.labelSpan.innerText = newMode.labels[k];
+        }
       }
     });
   };

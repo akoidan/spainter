@@ -15,7 +15,7 @@
     "no-fonts.sass"
   ],
   "scripts": {
-    "build": "bash generate-fontello.sh generate && node-sass index.sass index.css",
+    "build": "bash generate-fontello.sh generate && sass index.sass index.css",
     "dev": "wrangler dev terraform/cloudflare-worker.js",
     "serve": "node server.js"
   },
