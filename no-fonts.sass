@@ -28,6 +28,12 @@
 	margin-top: -1px
 
 .spainterContainer
+	display: flex
+	outline: none
+	width: 100%
+	height: 100%
+	flex-direction: column
+	position: relative
 	input[type=range]
 		width: 40px
 		margin: 0
@@ -44,13 +50,6 @@
 			height: 2px
 		&::-moz-range-thumb
 			@include thumb
-
-	display: flex
-	outline: none
-	width: 100%
-	height: 100%
-	flex-direction: column
-	position: relative
 
 	.active-icon
 		color: red
@@ -178,6 +177,8 @@
 				flex-wrap: wrap
 		.canvasWrapper
 			width: 100%
+			//flex: 1
+			//min-height: 0
 			// height: 100% DO not set it to 100%, since parent has flex grow it will automatically collaps to 100%
 			// if height is set, safari won't make it work right, it would no have scroll at all
 			position: relative
@@ -220,6 +221,7 @@
 		margin-left: 24px
 		flex-grow: 0
 		display: flex
+		overflow-y: hidden
 		align-items: center
 		max-width: 100%
 		overflow-x: auto
