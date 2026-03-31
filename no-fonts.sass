@@ -13,8 +13,37 @@
 	-ms-transition: $text
 	transition: $text
 
+@mixin thumb()
+	@content
+	appearance: none
+	width: 4px !important
+	height: 4px !important
+	min-width: 4px
+	min-height: 4px
+	max-width: 4px
+	max-height: 4px
+	border-radius: 50%
+	background: #555
+	box-sizing: border-box
+	margin-top: -1px
 
 .spainterContainer
+	input[type=range]
+		width: 40px
+		margin: 0
+		padding: 0
+		display: block
+		cursor: pointer
+		border-top: 1px solid grey
+		accent-color: #555
+		&::-webkit-slider-runnable-track
+		  height: 2px
+		&::-webkit-slider-thumb
+		  @include thumb
+		&::-moz-range-track
+			height: 2px
+		&::-moz-range-thumb
+			@include thumb
 
 	display: flex
 	outline: none
@@ -255,40 +284,6 @@
 			> input[type=text]
 				width: 28px
 				font-size: 10px
-			input[type=range]
-				width: 50px
-				accent-color: #555
-				cursor: pointer
-				&::-webkit-slider-runnable-track
-					height: 2px
-				&::-webkit-slider-thumb
-					-webkit-appearance: none
-					appearance: none
-					width: 4px !important
-					height: 4px !important
-					min-width: 4px
-					min-height: 4px
-					max-width: 4px
-					max-height: 4px
-					border-radius: 50%
-					background: #555
-					box-sizing: border-box
-					margin-top: -1px
-				&::-moz-range-track
-					height: 2px
-				&::-moz-range-thumb
-					-moz-appearance: none
-					appearance: none
-					width: 4px
-					height: 4px
-					min-width: 4px
-					min-height: 4px
-					max-width: 4px
-					max-height: 4px
-					border-radius: 50%
-					background: #555
-					border: none
-					box-sizing: border-box
 
 		.paintApplyText
 			display: inline-block
@@ -314,41 +309,4 @@
 					padding: 0
 				&::-webkit-color-swatch
 					border: none
-			input[type=range]
-				width: 40px
-				margin: 0
-				padding: 0
-				display: block
-				cursor: pointer
-				border-top: 1px solid grey
-				accent-color: #555
-				&::-webkit-slider-runnable-track
-					height: 2px
-				&::-webkit-slider-thumb
-					-webkit-appearance: none
-					appearance: none
-					width: 4px
-					height: 4px
-					min-width: 4px
-					min-height: 4px
-					max-width: 4px
-					max-height: 4px
-					border-radius: 50%
-					background: #555
-					box-sizing: border-box
-					margin-top: -1px
-				&::-moz-range-track
-					height: 2px
-				&::-moz-range-thumb
-					-moz-appearance: none
-					appearance: none
-					width: 4px
-					height: 4px
-					min-width: 4px
-					min-height: 4px
-					max-width: 4px
-					max-height: 4px
-					border-radius: 50%
-					background: #555
-					border: none
-					box-sizing: border-box
+
