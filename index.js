@@ -269,13 +269,17 @@ function Painter(containerPaitner, conf) {
       },
     },
     width: {
-      range: true,
+      range: {
+        value: 3,
+        max: 100,
+      },
       handler: 'onChangeRadius',
       ctxSetter: function (v) {
         self.ctx.lineWidth = v;
       },
+      inputsHolder: document.createElement('div'),
       init: function() {
-        var btnHolder = document.createElement('div');
+        self.instruments.width.inputsHolder.className = 'width-preset-buttons';
         ['s', 'm', 'l'].forEach(function(presetValue) {
           var presetBtn = document.createElement('input');
           if (presetValue === 'm') {
@@ -293,9 +297,8 @@ function Painter(containerPaitner, conf) {
             var handler = self.tools[self.mode][self.instruments.width.handler];
             handler && handler({target: {value: mapToText[presetValue]}}); // 5 the same which is calculated on text size
           });
-          btnHolder.appendChild(presetBtn);
+          self.instruments.width.inputsHolder.appendChild(presetBtn);
         });
-        return btnHolder;
       },
       title: 'Width',
       text: "Width",
@@ -381,12 +384,10 @@ function Painter(containerPaitner, conf) {
           instr.labelSpan = span;
         }
         instr.value =  instr.inputFactory();
-        var buttonsHolder = document.createElement('div')
         if (!instr.embedInto) {
-          if (k === 'width') {
-            instr.holder.appendChild(buttonsHolder);
-            buttonsHolder.className = 'width-preset-buttons'
-            buttonsHolder.appendChild(instr.value)
+          if (instr.inputsHolder) {
+            instr.holder.appendChild(instr.inputsHolder);
+            instr.inputsHolder.appendChild(instr.value)
           } else {
             instr.holder.appendChild(instr.value);
           }
@@ -435,8 +436,7 @@ function Painter(containerPaitner, conf) {
           });
         }
         if (instr.init) {
-          var element = instr.init();
-          buttonsHolder.appendChild(element)
+          instr.init();
         }
       });
     },
