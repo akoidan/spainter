@@ -213,7 +213,11 @@ function Painter(containerPaitner, conf) {
     },
     opacity: {
       handler: 'onChangeOpacity',
-      range: true,
+      range: {
+        min: 0,
+        value: 100,
+        max: 100,
+      },
       embedInto: 'color',
       ctxSetter: function (v) {
         self.ctx.globalAlpha = v / 100;
@@ -251,7 +255,11 @@ function Painter(containerPaitner, conf) {
     },
     opacityFill: {
       handler: 'onChangeFillOpacity',
-      range: true,
+      range: {
+        min: 0,
+        value: 100,
+        max: 100,
+      },
       embedInto: 'colorFill',
       ctxSetter: function (v) {
         self.instruments.opacityFill.inputValue = v / 100;
@@ -270,8 +278,9 @@ function Painter(containerPaitner, conf) {
     },
     width: {
       range: {
+        min: 1,
         value: 3,
-        max: 100,
+        max: 99,
       },
       handler: 'onChangeRadius',
       ctxSetter: function (v) {
@@ -397,11 +406,12 @@ function Painter(containerPaitner, conf) {
           if (instr.range && instr.value.value.length > 2 && this.value != 100) { // != isntead !== in case it's a string
             instr.value.value = this.value.slice(0, 2)
           }
-          instr.ctxSetter && instr.ctxSetter(e.target.value);
+          var val = e.target.value;
+          instr.ctxSetter && instr.ctxSetter(val);
           var handler = self.tools[self.mode][instr.handler];
-          handler && handler(e);
+          handler && handler(val);
           if (instr.range) {
-            instr.range.value = e.target.value;
+            instr.range.value = val;
           }
         });
         if (instr.range) {
@@ -413,11 +423,13 @@ function Painter(containerPaitner, conf) {
           if (conf.rangeFactory) {
             instr.range = conf.rangeFactory(div);
           } else {
+            var range = instr.range;
             instr.range = document.createElement('input');
-            instr.range.type = 'range';
           }
-          instr.range.max = 66;
-          instr.range.value = 3;
+          instr.range.min = range.min;
+          instr.range.max = range.max;
+          instr.range.value = range.value;
+          instr.range.type = 'range';
           if (!div.contains(instr.range)) {
             div.appendChild(instr.range);
           }
@@ -432,7 +444,7 @@ function Painter(containerPaitner, conf) {
             instr.value.value = value;
             instr.ctxSetter(value);
             var handler = self.tools[self.mode][instr.handler];
-            handler && handler(e);
+            handler && handler(value);
           });
         }
         if (instr.init) {
@@ -1439,15 +1451,15 @@ function Painter(containerPaitner, conf) {
       });
       tool.mapToText = {'s': 10, 'm': 14, 'l': 20};
       tool.bufferHandler = true;
-      tool.onChangeFont = function (e) {
-        tool.span.style.fontFamily = e.target.value;
+      tool.onChangeFont = function (value) {
+        tool.span.style.fontFamily = value;
       };
       tool.onActivate = function () { // TODO this looks bad
         tool.disableApply();
-        tool.onChangeFont({target: {value: self.ctx.fontFamily}});
-        tool.onChangeRadius({target: {value: self.ctx.lineWidth}});
-        tool.onChangeFillOpacity({target: {value: self.instruments.opacityFill.inputValue * 100}});
-        tool.onChangeColorFill({target: {value: self.ctx.fillStyle}});
+        tool.onChangeFont(self.ctx.fontFamily);
+        tool.onChangeRadius(self.ctx.lineWidth);
+        tool.onChangeFillOpacity(self.instruments.opacityFill.inputValue * 100);
+        tool.onChangeColorFill(self.ctx.fillStyle);
         tool.span.innerHTML = '';
       };
       tool.onDeactivate = function () {
@@ -1479,14 +1491,14 @@ function Painter(containerPaitner, conf) {
       tool.getCursor = function () {
         return 'text';
       };
-      tool.onChangeRadius = function (e) {
-        tool.span.style.fontSize = (self.zoom * (parseInt(e.target.value))) + 'px';
+      tool.onChangeRadius = function (value) {
+        tool.span.style.fontSize = (self.zoom * parseInt(value)) + 'px';
       };
-      tool.onChangeFillOpacity = function (e) {
-        tool.span.style.opacity = e.target.value / 100
+      tool.onChangeFillOpacity = function (value) {
+        tool.span.style.opacity = value / 100;
       };
-      tool.onChangeColorFill = function (e) {
-        tool.span.style.color = e.target.value;
+      tool.onChangeColorFill = function (value) {
+        tool.span.style.color = value;
       };
       tool.onMouseDown = function (e) {
         CssUtils.showElement(tool.span);
