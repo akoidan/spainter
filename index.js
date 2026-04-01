@@ -371,10 +371,10 @@ function Painter(containerPaitner, conf) {
       self.ctx.imageSmoothingEnabled= false;
       self.ctx.mozImageSmoothingEnabled = false;
       var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight,
-        document.documentElement.scrollHeight, document.documentElement.offsetHeight);
-      var width = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight,
-        document.documentElement.scrollHeight, document.documentElement.offsetHeight);
-      self.helper.setDimensions(1200, 700);
+        document.documentElement.scrollHeight, document.documentElement.offsetHeight) - 80;
+      var width = Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth,
+        document.documentElement.scrollWidth, document.documentElement.offsetWidth) - 100;
+      self.helper.setDimensions(conf.dimensions?.width || width, conf.dimensions?.height || height);
     },
     initInstruments: function () { // TODO this looks bad
       Object.keys(self.instruments).forEach(function (k) {
