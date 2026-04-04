@@ -763,6 +763,9 @@ function Painter(containerPaitner, conf) {
       self.helper.setOffset(e);
       var xy = self.helper.getXY(e);
       self.helper.setUIText("["+xy.x+"," +xy.y+"]");
+      if (self.events.mouseDown && e.buttons === 0) {
+        self.events.onmouseup(e);
+      }
       if (self.events.mouseDown && tool.onMouseMove) {
         tool.onMouseMove(e, xy);
       }
