@@ -13,15 +13,43 @@
 	-ms-transition: $text
 	transition: $text
 
+@mixin thumb()
+	@content
+	appearance: none
+	width: 4px !important
+	height: 4px !important
+	min-width: 4px
+	min-height: 4px
+	max-width: 4px
+	max-height: 4px
+	border-radius: 50%
+	background: #555
+	box-sizing: border-box
+	margin-top: -1px
 
 .spainterContainer
-
 	display: flex
 	outline: none
 	width: 100%
 	height: 100%
 	flex-direction: column
 	position: relative
+	input[type=range]
+		width: 40px
+		margin: 0
+		padding: 0
+		display: block
+		cursor: pointer
+		border-top: 1px solid grey
+		accent-color: #555
+		&::-webkit-slider-runnable-track
+			height: 2px
+		&::-webkit-slider-thumb
+			@include thumb
+		&::-moz-range-track
+			height: 2px
+		&::-moz-range-thumb
+			@include thumb
 
 	.active-icon
 		color: red
@@ -129,7 +157,7 @@
 		display: flex
 		flex-direction: row
 		width: 100%
-		flex-grow: 1
+		flex: 1
 		min-height: 0
 		$two-columns-painter: 600px
 		.painterTools
@@ -149,6 +177,8 @@
 				flex-wrap: wrap
 		.canvasWrapper
 			width: 100%
+			//flex: 1
+			//min-height: 0
 			// height: 100% DO not set it to 100%, since parent has flex grow it will automatically collaps to 100%
 			// if height is set, safari won't make it work right, it would no have scroll at all
 			position: relative
@@ -187,28 +217,35 @@
 				padding: 0 1px
 
 	.bottomTools
-		padding-top: 7px
+		padding-top: 5px
 		margin-left: 24px
 		flex-grow: 0
 		display: flex
+		overflow-y: hidden
+		align-items: flex-end
 		max-width: 100%
 		overflow-x: auto
 
 		%hideEl
-			display: inline-block
+			display: inline-flex
+			flex-direction: column
 			vertical-align: top
+			> span
+				font-size: 10px
+				opacity: 0.6
+				margin-bottom: 1px
+				display: block
+				white-space: nowrap
 			input[type=text]
 				width: 30px
-				padding: 5px
+				padding: 2px 4px
 				vertical-align: top
-			> span
-				vertical-align: top
-				display: inline-block
-				padding-top: 3px
 			> input
 				margin-right: 0
 			div
-				display: inline-block
+				display: flex
+				align-items: center
+				gap: 4px
 			@media (pointer:none), (pointer:coarse)
 				input[type=text]
 					display: none
@@ -218,21 +255,22 @@
 		.paintSend
 			cursor: pointer
 			vertical-align: top
+		.paintXY
+			min-width: 100px
 		.paintXYdimens
 			font-size: 12px
+			display: flex
+			flex-direction: row
 			position: relative
 			margin-left: auto
 			order: 2
-			padding: 1px 10px
-			display: inline-block
 			> *
 				display: inline-block
 
 		.paintFont
 			@extend %hideEl
+			padding: 0 6px
 			select
-				display: inline-block
-				text-decoration: none
 				text-overflow: ellipsis
 				overflow: hidden
 				white-space: nowrap
@@ -246,6 +284,29 @@
 
 		.paintRadius
 			@extend %hideEl
+			padding: 0 6px
+			input[type=range]
+				width: 70px
+			.width-preset-buttons
+				display: flex
+				gap: 2px
+				margin-bottom: 4px
+				input[type=text]
+					width: 10px
+					font-size: 8px
+				input[type=button]
+					width: 14px
+					height: 16px
+					font-size: 8px
+					padding: 0
+					border: 1px solid #ccc
+					background: #f5f5f5
+					cursor: pointer
+					border-radius: 2px
+					&:hover
+						background: #e0e0e0
+					&:active
+						background: #d0d0d0
 
 		.paintApplyText
 			display: inline-block
@@ -254,17 +315,21 @@
 
 		.paintColor, .paintColorFill
 			@extend %hideEl
-			width: 25px
-			height: 25px
-			border: 1px solid grey
+			padding: 0 6px
+			border: none
+			> span
+				font-size: 10px
 			input[type=color]
 				-webkit-appearance: none
 				padding: 0
 				border: 1px solid grey
 				border-radius: 1px
-				height: 25px
-				width: 25px
+				height: 18px
+				width: 40px
+				display: block
+				cursor: pointer
 				&::-webkit-color-swatch-wrapper
 					padding: 0
 				&::-webkit-color-swatch
 					border: none
+

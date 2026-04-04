@@ -6,6 +6,10 @@ declare module 'spainter' {
     buttonClass?: string;
     rangeClass?: string;
     textClass?: string;
+    dimensions?: {
+      width: string;
+      height: string;
+    }
     rangeFactory?(div: HTMLElement): HTMLInputElement
   }
   class Painter {

@@ -156,11 +156,6 @@ function Painter(containerPaitner, conf) {
     }
   }
 
-
-  var reverseExponentialMap = {'0': '0', '1': 5, '2': 13, '3': 18, '4': 21, '5': 24, '6': 27, '7': 29, '8': 30, '9': 32, '10': 34, '11': 35, '12': 36, '13': 37, '14': 38, '15': 39, '16': 40, '17': 41, '18': 42, '19': 43, '21': 44, '22': 45, '24': 46, '26': 47, '28': 48, '30': 49, '32': 50, '34': 51, '36': 52, '39': 53, '42': 54, '45': 55, '48': 56, '51': 57, '55': 58, '59': 59, '63': 60, '68': 61, '72': 62, '78': 63, '83': 64, '89': 65, '100': 66};
-  // Fn(x) = Math.round(Math.exp((Math.log(1000)/100) * x
-  var exponentialMap = {'0': 1, '1': 1, '2': 1, '3': 1, '4': 1, '5': 1, '6': 2, '7': 2, '8': 2, '9': 2, '10': 2, '11': 2, '12': 2, '13': 2, '14': 3, '15': 3, '16': 3, '17': 3, '18': 3, '19': 4, '20': 4, '21': 4, '22': 5, '23': 5, '24': 5, '25': 6, '26': 6, '27': 6, '28': 7, '29': 7, '30': 8, '31': 9, '32': 9, '33': 10, '34': 10, '35': 11, '36': 12, '37': 13, '38': 14, '39': 15, '40': 16, '41': 17, '42': 18, '43': 19, '44': 21, '45': 22, '46': 24, '47': 26, '48': 28, '49': 30, '50': 32, '51': 34, '52': 36, '53': 39, '54': 42, '55': 45, '56': 48, '57': 51, '58': 55, '59': 59, '60': 63, '61': 68, '62': 72, '63': 78, '64': 83, '65': 89, '66': 100}
-
   var self = this;
   self.zoom = 1;
   self.ZOOM_SCALE = 1.1;
@@ -202,6 +197,7 @@ function Painter(containerPaitner, conf) {
   self.instruments = {
     color: {
       title: 'Main color',
+      text: 'Color',
       holderClass: 'paintColor',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -217,14 +213,18 @@ function Painter(containerPaitner, conf) {
     },
     opacity: {
       handler: 'onChangeOpacity',
-      range: true,
+      range: {
+        min: 0,
+        value: 100,
+        max: 100,
+      },
+      embedInto: 'color',
       ctxSetter: function (v) {
         self.ctx.globalAlpha = v / 100;
         self.instruments.opacity.inputValue = v / 100;
         self.instruments.color.value.style.opacity = `${v/100}`;
       },
       title: 'Alpha (color transparency)',
-      text: "Opacity:",
       holderClass: 'paintOpacity',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -242,6 +242,7 @@ function Painter(containerPaitner, conf) {
         self.instruments.color.value.style.opacity = `${v/100}`;
       },
       title: 'Fill color',
+      text: 'Fill',
       holderClass: 'paintColorFill',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -254,13 +255,17 @@ function Painter(containerPaitner, conf) {
     },
     opacityFill: {
       handler: 'onChangeFillOpacity',
-      range: true,
+      range: {
+        min: 0,
+        value: 100,
+        max: 100,
+      },
+      embedInto: 'colorFill',
       ctxSetter: function (v) {
         self.instruments.opacityFill.inputValue = v / 100;
         self.instruments.colorFill.value.style.opacity = `${v/100}`;
       },
       title: 'Fill alpha (color transparency)',
-      text: "Opacity:",
       holderClass: 'paintFillOpacity',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -272,20 +277,47 @@ function Painter(containerPaitner, conf) {
       },
     },
     width: {
-      range: true,
+      range: {
+        min: 1,
+        value: 3,
+        max: 99,
+      },
       handler: 'onChangeRadius',
       ctxSetter: function (v) {
         self.ctx.lineWidth = v;
       },
+      inputsHolder: document.createElement('div'),
+      init: function() {
+        self.instruments.width.inputsHolder.className = 'width-preset-buttons';
+        ['s', 'm', 'l'].forEach(function(presetValue) {
+          var presetBtn = document.createElement('input');
+          if (presetValue === 'm') {
+            self.mediumButton = presetBtn;
+          }
+          presetBtn.type = 'button';
+          presetBtn.value = presetValue;
+          presetBtn.className = conf.buttonClass || '';
+
+          presetBtn.addEventListener('click', function(e) {
+            var mapToText = self.tools[self.mode].mapToText ?? {'s': 1, 'm': 3, 'l': 5};
+            self.instruments.width.range.value = mapToText[presetValue];
+            self.instruments.width.value.value = mapToText[presetValue];
+            self.instruments.width.ctxSetter(mapToText[presetValue]);
+            var handler = self.tools[self.mode][self.instruments.width.handler];
+            handler && handler({target: {value: mapToText[presetValue]}}); // 5 the same which is calculated on text size
+          });
+          self.instruments.width.inputsHolder.appendChild(presetBtn);
+        });
+      },
       title: 'Width',
-      text: "Width:",
+      text: "Width",
       holderClass: 'paintRadius',
       hiddenByDefault: true,
       inputFactory: function() {
         var input = document.createElement('input');
         input.type = 'text';
         input.setAttribute('step', 1);
-        input.value = '10';
+        input.value = '3';
         return input;
       },
     },
@@ -295,7 +327,7 @@ function Painter(containerPaitner, conf) {
         self.ctx.fontFamily = v;
       },
       title: 'Font',
-      text: "Font:",
+      text: "Font",
       holderClass: 'paintFont',
       hiddenByDefault: true,
       inputFactory: function() {
@@ -339,10 +371,10 @@ function Painter(containerPaitner, conf) {
       self.ctx.imageSmoothingEnabled= false;
       self.ctx.mozImageSmoothingEnabled = false;
       var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight,
-        document.documentElement.scrollHeight, document.documentElement.offsetHeight);
-      var width = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight,
-        document.documentElement.scrollHeight, document.documentElement.offsetHeight);
-      self.helper.setDimensions(500, 500);
+        document.documentElement.scrollHeight, document.documentElement.offsetHeight) - 80;
+      var width = Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth,
+        document.documentElement.scrollWidth, document.documentElement.offsetWidth) - 100;
+      self.helper.setDimensions(conf.dimensions?.width || width, conf.dimensions?.height || height);
     },
     initInstruments: function () { // TODO this looks bad
       Object.keys(self.instruments).forEach(function (k) {
@@ -358,19 +390,28 @@ function Painter(containerPaitner, conf) {
           var span = document.createElement('span');
           span.innerText = instr.text;
           instr.holder.appendChild(span);
+          instr.labelSpan = span;
         }
         instr.value =  instr.inputFactory();
-        instr.holder.appendChild(instr.value);
-        self.dom.bottomTools.appendChild(instr.holder);
+        if (!instr.embedInto) {
+          if (instr.inputsHolder) {
+            instr.holder.appendChild(instr.inputsHolder);
+            instr.inputsHolder.appendChild(instr.value)
+          } else {
+            instr.holder.appendChild(instr.value);
+          }
+          self.dom.bottomTools.appendChild(instr.holder);
+        }
         instr.value.addEventListener(instr.trigger || 'input', function (e) {
           if (instr.range && instr.value.value.length > 2 && this.value != 100) { // != isntead !== in case it's a string
             instr.value.value = this.value.slice(0, 2)
           }
-          instr.ctxSetter && instr.ctxSetter(e.target.value);
+          var val = e.target.value;
+          instr.ctxSetter && instr.ctxSetter(val);
           var handler = self.tools[self.mode][instr.handler];
-          handler && handler(e);
+          handler && handler(val);
           if (instr.range) {
-            instr.range.value =  reverseExponentialMap[instr.value.value];
+            instr.range.value = val;
           }
         });
         if (instr.range) {
@@ -382,22 +423,32 @@ function Painter(containerPaitner, conf) {
           if (conf.rangeFactory) {
             instr.range = conf.rangeFactory(div);
           } else {
+            var range = instr.range;
             instr.range = document.createElement('input');
-            instr.range.type = 'range';
           }
-          instr.range.max = 66;
+          instr.range.min = range.min;
+          instr.range.max = range.max;
+          instr.range.value = range.value;
+          instr.range.type = 'range';
           if (!div.contains(instr.range)) {
             div.appendChild(instr.range);
           }
-          instr.holder.appendChild(div);
+          if (instr.embedInto) {
+            self.instruments[instr.embedInto].holder.appendChild(instr.range);
+          } else {
+            instr.holder.appendChild(div);
+          }
           instr.range.addEventListener('input', function (e) {
-            // exponential growth
-            var value = exponentialMap[instr.range.value];
+            // linear mapping - range value is directly the pixel width
+            var value = parseInt(instr.range.value);
             instr.value.value = value;
             instr.ctxSetter(value);
             var handler = self.tools[self.mode][instr.handler];
-            handler && handler(e);
+            handler && handler(value);
           });
+        }
+        if (instr.init) {
+          instr.init();
         }
       });
     },
@@ -712,6 +763,9 @@ function Painter(containerPaitner, conf) {
       self.helper.setOffset(e);
       var xy = self.helper.getXY(e);
       self.helper.setUIText("["+xy.x+"," +xy.y+"]");
+      if (self.events.mouseDown && e.buttons === 0) {
+        self.events.onmouseup(e);
+      }
       if (self.events.mouseDown && tool.onMouseMove) {
         tool.onMouseMove(e, xy);
       }
@@ -988,7 +1042,8 @@ function Painter(containerPaitner, conf) {
         code: 'KeyS',
         icon: '' +
         'icon-selection',
-        title: 'Select (Shift+S)'
+        title: 'Select (Shift+S)',
+        description: 'Select & move a region'
       };
       tool.bufferHandler = true;
       tool.domImg = self.dom.paintPastedImg;
@@ -1074,8 +1129,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyB',
         icon: 'icon-brush-1',
-        title: 'Brush (Shift+B)'
+        title: 'Brush (Shift+B)',
+        description: 'Brush — freehand drawing'
       };
+      tool.labels = { color: 'Color', width: 'Thickness' };
       tool.onChangeColor = function (e) {
         self.helper.setCursor(tool.getCursor());
       };
@@ -1123,8 +1180,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyL',
         icon: 'icon-line',
-        title: 'Line (Shift+L)'
+        title: 'Line (Shift+L)',
+        description: 'Line — draw straight lines'
       };
+      tool.labels = { color: 'Color', width: 'Width' };
       tool.getCursor = function () {
         return 'crosshair';
       };
@@ -1167,8 +1226,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyF',
         icon: 'icon-fill',
-        title: 'Flood Fill (Shift+F)'
+        title: 'Flood Fill (Shift+F)',
+        description: 'Flood fill — fill area with color'
       };
+      tool.labels = { colorFill: 'Color' };
       tool.bufferHandler = true;
       tool.buildCursor = function() {
         var rawString = format(FLOOD_FILL_CURSOR, self.ctx.fillStyle);
@@ -1272,8 +1333,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyQ',
         icon: 'icon-rect',
-        title: 'Rectangle (Shift+Q)'
+        title: 'Rectangle (Shift+Q)',
+        description: 'Rectangle — draw rectangles'
       };
+      tool.labels = { color: 'Border', colorFill: 'Fill', width: 'Border width' };
       tool.getCursor = function () {
         return 'crosshair';
       };
@@ -1316,8 +1379,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyE',
         icon: 'icon-ellipse',
-        title: 'Eclipse (Shift+E)'
+        title: 'Eclipse (Shift+E)',
+        description: 'Ellipse — draw ellipses'
       };
+      tool.labels = { color: 'Border', colorFill: 'Fill', width: 'Border width' };
       tool.getCursor = function () {
         return 'crosshair';
       };
@@ -1376,8 +1441,10 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyT',
         icon: 'icon-text',
-        title: 'Text (Shift+T)'
+        title: 'Text (Shift+T)',
+        description: 'Text — add text to canvas'
       };
+      tool.labels = { colorFill: 'Color', font: 'Font', width: 'Size' };
       tool.span = self.dom.paintTextSpan;
       //prevent self.events.contKeyPress
       tool.span.addEventListener('keypress', function (e) {
@@ -1385,16 +1452,17 @@ function Painter(containerPaitner, conf) {
           e.stopPropagation(); //proxy onapply
         }
       });
+      tool.mapToText = {'s': 10, 'm': 14, 'l': 20};
       tool.bufferHandler = true;
-      tool.onChangeFont = function (e) {
-        tool.span.style.fontFamily = e.target.value;
+      tool.onChangeFont = function (value) {
+        tool.span.style.fontFamily = value;
       };
       tool.onActivate = function () { // TODO this looks bad
         tool.disableApply();
-        tool.onChangeFont({target: {value: self.ctx.fontFamily}});
-        tool.onChangeRadius({target: {value: self.ctx.lineWidth}});
-        tool.onChangeFillOpacity({target: {value: self.instruments.opacityFill.inputValue * 100}});
-        tool.onChangeColorFill({target: {value: self.ctx.fillStyle}});
+        tool.onChangeFont(self.ctx.fontFamily);
+        tool.onChangeRadius(self.ctx.lineWidth);
+        tool.onChangeFillOpacity(self.instruments.opacityFill.inputValue * 100);
+        tool.onChangeColorFill(self.ctx.fillStyle);
         tool.span.innerHTML = '';
       };
       tool.onDeactivate = function () {
@@ -1419,21 +1487,21 @@ function Painter(containerPaitner, conf) {
         self.setMode('pen');
       };
       tool.onZoomChange = function () {
-        tool.span.style.fontSize = (self.zoom * (self.ctx.lineWidth + 5)) + 'px';
+        tool.span.style.fontSize = (self.zoom * (self.ctx.lineWidth)) + 'px';
         tool.span.style.top = (tool.originOffest.y * self.zoom  / tool.originOffest.z) + 'px';
         tool.span.style.left = (tool.originOffest.x * self.zoom  / tool.originOffest.z) + 'px';
       };
       tool.getCursor = function () {
         return 'text';
       };
-      tool.onChangeRadius = function (e) {
-        tool.span.style.fontSize = (self.zoom * (5 + parseInt(e.target.value))) + 'px';
+      tool.onChangeRadius = function (value) {
+        tool.span.style.fontSize = (self.zoom * parseInt(value)) + 'px';
       };
-      tool.onChangeFillOpacity = function (e) {
-        tool.span.style.opacity = e.target.value / 100
+      tool.onChangeFillOpacity = function (value) {
+        tool.span.style.opacity = value / 100;
       };
-      tool.onChangeColorFill = function (e) {
-        tool.span.style.color = e.target.value;
+      tool.onChangeColorFill = function (value) {
+        tool.span.style.color = value;
       };
       tool.onMouseDown = function (e) {
         CssUtils.showElement(tool.span);
@@ -1456,8 +1524,11 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyD',
         icon: 'icon-eraser',
-        title: 'Eraser (Shift+D)'
+        title: 'Eraser (Shift+D)',
+        description: 'Eraser — erase parts of the canvas'
       };
+      tool.mapToText = {'s': 5, 'm': 20, 'l': 50};
+      tool.labels = { width: 'Radius' };
       tool.onZoomChange = function (e) {
         self.helper.setCursor(tool.getCursor());
       };
@@ -1561,7 +1632,8 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyC',
         icon: 'icon-crop',
-        title: 'Crop Image (Shift+C)'
+        title: 'Crop Image (Shift+C)',
+        description: 'Crop — trim the canvas to selection'
       };
       tool.bufferHandler = true;
       tool.getCursor = function () {
@@ -1609,7 +1681,8 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyW',
         icon: 'icon-resize',
-        title: 'Change dimensions (Shift+W)'
+        title: 'Change dimensions (Shift+W)',
+        description: 'Resize — change canvas dimensions'
       };
       tool.container = self.dom.paintResizeTools;
       tool.width = tool.container.querySelector('[placeholder=width]');
@@ -1651,7 +1724,8 @@ function Painter(containerPaitner, conf) {
       tool.keyActivator = {
         code: 'KeyM',
         icon: 'icon-move',
-        title: 'Move (Shift+M)'
+        title: 'Move (Shift+M)',
+        description: 'Move — pan the canvas'
       };
       tool.getCursor = function () {
         return 'move';
@@ -1861,6 +1935,7 @@ function Painter(containerPaitner, conf) {
   })();
   self.setMode = function (mode) {
     var oldMode = self.tools[self.mode];
+    var oldModeName = self.mode;
     self.mode = mode;
     if (oldMode) {
       oldMode.onDeactivate && oldMode.onDeactivate();
@@ -1872,13 +1947,36 @@ function Painter(containerPaitner, conf) {
     newMode.icon && CssUtils.addClass(newMode.icon, self.PICKED_TOOL_CLASS);
     Object.keys(self.instruments).forEach(function (k) {
       var instr = self.instruments[k];
+      if (instr.embedInto) return;
       if (oldMode && oldMode[instr.handler]) {
         CssUtils.hideElement(instr.holder);
       }
       if (newMode[instr.handler]) {
         CssUtils.showElement(instr.holder);
+        if (instr.labelSpan && newMode.labels && newMode.labels[k]) {
+          instr.labelSpan.innerText = newMode.labels[k];
+        }
       }
     });
+    if (oldModeName !== 'eraser' && mode === 'eraser') {
+      self.mediumButton.click();
+    } else if (oldModeName === 'eraser' && mode !== 'eraser') {
+      function isVisible(element) {
+        if (!element) return false;
+
+        const style = getComputedStyle(element);
+        if (style.opacity === '0') return false;           // fully transparent
+        if (style.pointerEvents === 'none') return false;  // not interactable
+
+        const rects = element.getClientRects();
+        if (rects.length === 0) return false;             // not rendered / size 0
+
+        return true;
+      }
+      if (isVisible(self.mediumButton)) {
+        self.mediumButton.click();
+      }
+    }
   };
   self.show = function () {
     document.body.addEventListener('pointerup', self.events.onmouseup, false);
